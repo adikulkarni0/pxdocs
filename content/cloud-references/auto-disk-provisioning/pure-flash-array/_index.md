@@ -16,7 +16,17 @@ You can use Portworx with Pure Storage FlashArray as a cloud storage provider. T
 Just like with other cloud providers, FlashArray interacts with the underlying drives and distributes volumes between registered arrays, while Portworx runs on top of the volumes that FlashArray presents. 
 
 {{<info>}}
-**NOTE:** FlashArray volumes are not the same as Portworx volumes; multiple Portworx volumes can reside on a single FlashArray volume. This makes it theoretically possible for Portworx to place multiple replicas on the same FlashArray volume. 
+**NOTE:** 
+
+* FlashArray volumes are not the same as Portworx volumes; multiple Portworx volumes can reside on a single FlashArray volume. This makes it theoretically possible for Portworx to place multiple replicas on the same FlashArray volume. 
+* To prevent any interference from `multipathd` service on Portworx volume operations, set the following pxd device denylist rule in the `multipathd.conf` file:
+  
+  ```text
+  blacklist {
+       devnode "^pxd[0-9]*"
+       devnode "^pxd*"
+  }
+  ```
 {{</info>}}
 
 ## Architecture
