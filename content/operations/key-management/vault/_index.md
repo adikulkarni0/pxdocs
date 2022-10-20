@@ -127,6 +127,7 @@ Once you've set up Vault, you're ready to set up your development environment.
 
   * **Using Token authetication:** A static Vault token is provided to Portworx.
   * **Using Kubernetes authentication:** Portworx uses Kubernetes service account to fetch and refresh Vault tokens.
+  * **Using Vault AppRole authentication:** Portworx uses Vault AppRole's Role ID and Secret ID to authenticate and generate Vault Tokens.
 
 #### Using token authentication method
 
@@ -134,7 +135,8 @@ With this method, Portworx requires a Vault static token that you should provide
 
 Provide Vault credentials to Portworx. Refer to the [Vault credentials reference](#vault-credentials-reference) for details on the credentials. 
 
-The Vault credentials required to authenticate with Vault are provided to Portworx through a Kubernetes secret. Create a Kubernetes secret with the name `px-vault` in the `portworx` namespace. Following is an example Kubernetes secret spec:
+The Vault credentials required to authenticate with Vault are provided to Portworx through a Kubernetes secret. For **DaemonSet** installation, create the Kubernetes secret with the name `px-vault` in the `portworx` namespace. For **Operator** installation, create the Kubernetes secret with the name `px-vault` in the `kube-system` namespace. If `PX_SECRETS_NAMESPACE` is set, create the secret in the defined namespace.
+For example
 
 ```text
 apiVersion: v1
@@ -161,7 +163,6 @@ Portworx searches for this secret with name `px-vault` under the `portworx` name
 **NOTE:**
 
 * If the `VAULT_TOKEN` provided in the secret above is refreshed, then you must manually update this secret.
-* If you installed Portworx using the Operator, then you must create the Kubernetes secret in the same namespace in which you deployed Portworx.
 {{</info>}}
 
 After configuring Vault using the Vault authentication method, proceed to [Step 2](#step-2-setup-vault-as-the-secrets-provider-for-portworx).
@@ -233,7 +234,8 @@ vault write auth/kubernetes/role/portworx \
 
 1. Provide Vault credentials to Portworx. Refer to [Vault credentials reference](#vault-credentials-reference) for details on the credentials. 
 
-    Portworx reads the Vault credentials required to authenticate with Vault through a Kubernetes secret. Create a Kubernetes secret with the name `px-vault` in the `portworx` namespace. Refer to the following example Kubernetes secret specification to create your own secret:
+    Portworx reads the Vault credentials required to authenticate with Vault through a Kubernetes secret. For **DaemonSet** installation, create the Kubernetes secret with the name `px-vault` in the `portworx` namespace. For **Operator** installation, create the Kubernetes secret with the name `px-vault` in the `kube-system` namespace. If `PX_SECRETS_NAMESPACE` is set, create the secret in the defined namespace. 
+    For example:
 
     ```text
     apiVersion: v1
@@ -250,8 +252,8 @@ vault write auth/kubernetes/role/portworx \
       VAULT_CLIENT_CERT: <base64 encoded file path where the Client Certificate is present on all the nodes>
       VAULT_CLIENT_KEY: <base64 encoded file path where the Client Key is present on all the nodes>
       VAULT_TLS_SERVER_NAME: <base64 encoded value of the TLS server name>
-      VAULT_AUTH_METHOD: a3ViZXJuZXRlcw== // base64 encoded value of "kubernetes"
-      VAULT_AUTH_KUBERNETES_ROLE: cG9ydHdvcng= // base64 encoded value of the kubernetes auth role "portworx"
+      VAULT_AUTH_METHOD: a3ViZXJuZXRlcw== # base64 encoded value of "kubernetes"
+      VAULT_AUTH_KUBERNETES_ROLE: cG9ydHdvcng= # base64 encoded value of the kubernetes auth role "portworx"
       VAULT_NAMESPACE: <base64 encoded value of the global vault namespace for portworx>
     ```
 
@@ -282,12 +284,82 @@ vault write auth/kubernetes/role/portworx \
     {{<info>}}
   **NOTE:** Set the value of `VAULT_AUTH_KUBERNETES_ROLE` to the `base64` encoded value of the role created in the previous step.
     {{</info>}}
+    
+    During installation, Portworx creates a Kubernetes role binding that grants read access to Kubernetes secrets from only the defined namespace.
 
-    Portworx searches for this secret with name `px-vault` under the `portworx` namespace. While installing Portworx, it creates a Kubernetes role binding that grants access to reading Kubernetes secrets only from the `portworx` namespace.
 
-    {{<info>}}
-**NOTE:** If you installed Portworx using the Operator, then you must create the Kubernetes secret in the same namespace in which you deployed Portworx.
-    {{</info>}}
+#### Using AppRole authentication method
+This method allows Portworx to authenticate with Vault using AppRole Authentication. AppRole authentication requires a Role ID and a Secret ID. For more information about how to set up AppRole authentication, refer to the [Vault AppRole documentation](https://www.vaultproject.io/docs/auth/approle).
+
+##### Setup AppRole in Vault
+1. Enable AppRole in Vault using the following command:
+
+    ```text
+    vault auth enable approle
+    ```
+2. Create a policy that will be used by Vault tokens. Use the policies defined in [Vault security policies](#vault-security-policies), and store the policy in policy.hcl:
+    ```text
+    vault policy write my-policy policy.hcl
+    ```
+3. Create a role named `my-role` with the token policy `my-policies` using a command similar to the following:
+    ```text
+    vault write auth/approle/role/my-role \
+      token_num_uses=10 \
+      token_ttl=20m \
+      token_max_ttl=30m  \
+      token_policies=my-policy
+    ```
+    `token_num_uses`, `token_ttl`, `token_max_ttl`, and `token_policies` are restrictions on how the generated token can be used to log in to Vault using AppRole.
+{{<info>}}
+**NOTE:** There are two additional parameters, `secret_id_ttl` and `secret_id_num_uses`, that you might see in the reference. {{<companyName>}} recommends setting `secret_id_ttl` and `secret_id_num_uses` to `0`. If the Secret ID is expired, you need to update `VAULT_APPROLE_SECRET_ID` in either the Kubernetes secret or the environment variable [as specified in the following section](#provide-vault-approle-credentials-to-portworx).
+{{</info>}}
+
+4. Obtain the Role ID and Secret ID of `my-role` for authentication using the following commands:
+    ```text
+    vault read auth/approle/role/my-role/role-id
+    ```
+    ```output
+    role_id     4b02de05-fa29-4855-059b-67221c5c2f63
+    ```
+
+    ```text
+    vault write -f auth/approle/role/my-role/secret-id
+    ```
+    ```output
+    secret_id               6a174c20-f6de-a53c-74d2-6018fcceff64
+    secret_id_accessor      c454f7e5-996e-7230-6074-6ef26b7bcf86
+    ```
+
+##### Provide Vault AppRole credentials to Portworx
+Portworx reads the Vault credentials required to authenticate with Vault through a Kubernetes secret.
+
+For **DaemonSet** installation, create the Kubernetes secret with the name `px-vault` in the `portworx` namespace. For **Operator** installation, create the Kubernetes secret with the name `px-vault` in the `kube-system` namespace. In the case `PX_SECRETS_NAMESPACE` is set, create the secret in the defined namespace. 
+
+Refer to the following example Kubernetes secret specification to create your own secret:
+
+```text  
+apiVersion: v1
+kind: Secret
+metadata:
+  name: px-vault
+  namespace: portworx
+type: Opaque
+data:
+  VAULT_ADDR: <base64 encoded value of the vault endpoint address>
+  VAULT_BACKEND_PATH: <base64 encoded value of the custom backend path if different than the default "secret">
+  VAULT_CACERT: <base64 encoded file path where the CA Certificate is present on all the nodes>
+  VAULT_CAPATH: <base64 encoded file path where the Certificate Authority is present on all the nodes>
+  VAULT_CLIENT_CERT: <base64 encoded file path where the Client Certificate is present on all the nodes>
+  VAULT_CLIENT_KEY: <base64 encoded file path where the Client Key is present on all the nodes>
+  VAULT_TLS_SERVER_NAME: <base64 encoded value of the TLS server name>
+  VAULT_AUTH_METHOD: YXBwcm9sZQ== # base64 encoded value of "approle"
+  VAULT_APPROLE_ROLE_ID: <base64 encoded value of the Role ID>
+  VAULT_APPROLE_SECRET_ID: <base64 encoded value of the Secret ID>
+  VAULT_NAMESPACE: <base64 encoded value of the global vault namespace for portworx>
+```
+
+For AppRole authentication, the three additioanl parameters are `VAULT_AUTH_METHOD`,  `VAULT_APPROLE_ROLE_ID`, and `VAULT_APPROLE_SECRET_ID`.
+
 
 ### Step 2: Setup Vault as the secrets provider for Portworx
 
