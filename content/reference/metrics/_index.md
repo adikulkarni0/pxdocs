@@ -122,6 +122,15 @@ noicon: true
 | :--- | :--- |
 | px_node_stats_used_mem | Used memory in bytes |
 | px_node_stats_cpu_usage | Percent of CPU consumption |
+| px_node_stats_busy_threads_percent | Percentage of Busy Threads |
+| px_node_stats_thread_pool_high_priority_queue_size | Thread Pool High Priority Queue Size |
+| px_node_stats_writeback_list_num_dirty_pools | Writeback List Number of Dirty Pools |
+| px_node_stats_writeback_list_num_pending_log_bufs | Writeback List Number of Pending Log Buffers |
+| px_node_stats_writeback_list_low_cos_queue_size | Writeback List Low Cos Queue Size |
+| px_node_stats_writeback_list_high_cos_queue_size | Writeback List High Cos Queue Size |
+| px_node_stats_sm_run_queue_size | Statemachine Run Queue Size |
+| px_node_stats_kaio_pending_queue_size | Kaio Pending Queue Size |
+| px_node_stats_request_scheduler_queue_size | Request Scheduler Queue Size |
 | px_node_stats_procfs_mem_available_bytes | Available memory in bytes |
 | px_node_stats_procfs_mem_dirty_bytes | The total amount of memory waiting to be written back to the disk |
 | px_node_stats_procfs_mem_writeback_bytes | The total amount of memory actively being written back to the disk |

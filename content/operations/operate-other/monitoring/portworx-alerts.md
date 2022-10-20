@@ -103,6 +103,8 @@ Each alert has a severity from one of the following levels:
 | RelaxedReclaimMaxReached | NODE | WARNING | RelaxedReclaim maximum pending limit reached causing inline delete of the volume/snapshot | px_alerts_relaxedreclaimmaxreached_total |
 | VolumeIOThrottleNotSupported | NODE | NOTIFY | Volume IO Throttling feature not supported in this node due to kernel limitation | px_alerts_volumeiothrottlenotsupported_total |
 | UnsupportedOperatingSystem | NODE | WARNING | Ubuntu 16.04 will not be supported after the Portworx 2.10 release. | px_alerts_unsupportedoperatingsystem_total |
+| CCMstatusFailed | NODE | NOTIFY | CCM status check failed | px_alerts_ccmstatusfailed_total |
+| CCMuploadFailed | NODE | NOTIFY | Upload to CCM failed | px_alerts_ccmuploadfailed_total |
 | PoolExpandInProgress | POOL | NOTIFY | Triggered when a pool expand operation starts. | px_alerts_poolexpandinprogress_total |
 | PoolExpandSuccessful | POOL | NOTIFY | Triggered when a pool expand operation succeeds. | px_alerts_poolexpandsuccessful_total |
 | PoolExpandFailed | POOL | ALARM | Triggered when a pool expand operation fails. | px_alerts_poolexpandfailed_total |
@@ -162,7 +164,12 @@ Each alert has a severity from one of the following levels:
 | SharedV4FailoverAvailable | VOLUME | NOTIFY | Triggered when service failover is available for a sharedv4 volume. | px_alerts_sharedv4failoveravailable_total |
 | VolumeNodiscardMntOptsValidationFailed | VOLUME | NOTIFY | volume discard/nodiscard mount options not configured correctly | px_alerts_volumenodiscardmntoptsvalidationfailed_total |
 | VolumeIOThrottleWarning | VOLUME | WARNING | volume max_iops/max_bandwidth options not enforced | px_alerts_volumeiothrottlewarning_total |
+| VolumeUnhealthyReplicasIncreased | VOLUME | WARNING | Triggered when a the number of unhealthy volume replicas increased. | px_alerts_volumeunhealthyreplicasincreased_total |
+| VolumeUnhealthyReplicasDecreased | VOLUME | NOTIFY | Triggered when the number of unhealthy volume replicas decreases. | px_alerts_volumeunhealthyreplicasdecreased_total |
+| VolumeAutoFstrimFailed | VOLUME | ALARM | Auto fstrim failed. | px_alerts_volumeautofstrimfailed_total |
 | VolGroupOperationFailure | CLUSTER | ALARM | Triggered when a volume group operation fails. | px_alerts_volgroupoperationfailure_total |
+| VolGroupOperationSuccess | CLUSTER | NOTIFY | Triggered when a volume group operation succeeds. | px_alerts_volgroupoperationsuccess_total |
+| VolGroupStateChange | CLUSTER | WARNING | Triggered when a volume group’s state changes. | px_alerts_volgroupstatechange_total |
 | ContainerOperationFailure | CLUSTER | ALARM | Container operation failed | px_alerts_containeroperationfailure_total |
 | ContainerOperationSuccess | CLUSTER | ALARM | Container operation succeeded | px_alerts_containeroperationsuccess_total |
 | ContainerStateChange | CLUSTER | ALARM | Container state changed | px_alerts_containerstatechange_total |
