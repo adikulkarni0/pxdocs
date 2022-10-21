@@ -54,7 +54,24 @@ Cluster UUID: 199ccacd-4253-4e57-9a3d-b2249dff3501
 
 ## Enable Pure1 integration
 
+{{<info>}}
+**NOTE:** Telemetry is not supported for air-gapped clusters or when using a custom proxy.
+{{</info>}}
+
 Enabling telemetry adds a new `telemetry` sidecar container to Portworx pods. This container is responsible for uploading Portworx diagnostics to Pure1. 
+
+<!--
+**CAUTION:** If you're using a custom proxy with telemetry, you must format your proxy URL as `<endpoint>:<port>`. 
+
+For example:
+
+```text
+spec:
+  env:
+  - name: PX_HTTP_PROXY
+    value: http://10.7.69.67:8888
+```
+-->
 
 ### Fresh installs
 
