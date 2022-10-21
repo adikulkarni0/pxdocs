@@ -29,6 +29,7 @@ A `SchedulePolicy` object has the following sections:
 | policy.</br>interval.</br>retain | For backup operations, specifies how many backups Portworx will retain | number | 10 |
 | policy.</br>daily.</br>time | Specifies the time of the day when Portworx will trigger the operation, in the 12 hour AM/PM format | string |  |
 | policy.</br>daily.</br>retain | For backup operations, specifies how many backups Portworx will retain | number | 30 |
+| policy.</br>daily.</br>forceFullSnapshotDay | For backup operations, specifies on which day to trigger a full backup. By default, Portworx will perform 6 incremental and 1 full backup. This field allows you to enforce a full backup in the daily policy on a specific day. | string | Monday |
 | policy.</br>weekly.</br>day | Specifies the day of the week when Portworx will trigger the operation. You can use both the abbreviated or the full name of the day of the week | string | |
 | policy.</br>weekly.</br>time | Specifies the time of the day when Portworx will trigger the operation, in the 12 hour AM/PM format | string | |
 | policy.</br>weekly.</br>retain | For backup operations, specifies how many backups Portworx will retain | string | 7 |
