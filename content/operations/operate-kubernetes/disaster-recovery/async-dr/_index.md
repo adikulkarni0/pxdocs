@@ -164,6 +164,10 @@ kind: MigrationSchedule
 metadata:
   name: mysqlmigrationschedule
   namespace: mysql
+  annotations:
+    # Add the below annotations when PX-Security is enabled on both the clusters
+    #openstorage.io/auth-secret-namespace: <the namespace where the kubernetes secret holding the auth token resides>
+    #openstorage.io/auth-secret-name: <the name of the kubernetes secret which holds the auth token>
 spec:
   template:
     spec:
@@ -174,6 +178,10 @@ spec:
       - mysql
   schedulePolicyName: testpolicy
 ```
+
+A few things to note: 
+* The option `startApplications` is set to false so that the applications do not start when the resources are migrated. This is because the applications on the destination cluster should start only when the application fails over.
+* The auth annotations `openstorage.io/auth-*` should be set when both source and destination clusters have PX-Security enabled. These annotations should point to the kubernetes secret which will hold the token required for authorizing migrations of Portworx volumes. Use a token which will authorize for all the volumes in namespaces this migration is handling. 
 
 If the policy name is missing or invalid there will be events logged against the schedule object. Success and failures of the migrations created by the schedule will also result in events being logged against the object. These events can be seen by running a `kubectl describe` on the object
 
