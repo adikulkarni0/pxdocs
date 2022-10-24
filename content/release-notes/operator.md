@@ -9,15 +9,40 @@ aliases:
     - /reference/release-notes/operator
 ---
 
+## 1.10.0
+
+Oct 24, 2022
+
+### Notes
+
+{{<info>}}
+**IMPORTANT:** To enable telemetry for DaemonSet-based Portworx installations, you must migrate to an Operator-based installation, then upgrade to Portworx version 2.12 before enabling Pure1 integration. For more details, see [this document](/operations/operate-kubernetes/troubleshooting/enable-pure1-upgrades/).
+{{</info>}}
+
+### Updates
+
+* Pure1 integration has been re-architected to be more robust and use less memory. It is supported on Portworx version 2.12 clusters deployed with Operator version 1.10.  
+* To reduce memory usage, added a new argument `disable-cache-for` to disable Kubernetes objects from controller runtime cache. For example,`--disable-cache-for="Event,ConfigMap,Pod,PersistentVolume,PersistentVolumeClaim"`.   
+* Operator now blocks Portworx installation if Portworx is uninstalled without a wipe and then reinstalled with a different name.
+* For a new installation, Operator now sets the max number of storage nodes per zone, so that the 3 storage nodes in the entire cluster are uniformly spread across zones.
+
+### Bug fixes
+
+* Fixed a bug where DaemonSet migration was failing if the Portworx cluster ID was too long.
+
+
 ## 1.9.1
+
 Sep 8, 2022
 
 ### Updates
+
 * Added support for Kubernetes version 1.24: 
     * Added `docker.io` prefix for component images deployed by Operator.
     * To determine Kubernetes master nodes, Operator now uses the `control-plane` node role instead of `master`.
 
 ### Bug Fixes
+
 * In Operator 1.9.0, when you enabled the CSI snapshot controller explicitly in the StorageCluster, the `csi-snapshot-controller` sidecar containers might have been removed during an upgrade or restart operation. This issue is fixed in Operator 1.9.1.
 
 ## 1.9.0
