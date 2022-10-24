@@ -9,6 +9,78 @@ aliases:
 ---
 
 
+## 2.12.0
+
+Oct 24, 2022
+
+### Notes
+{{<info>}}
+Portworx 2.12.0 requires Operator 1.10.0 and Stork 2.12.0.{{</info>}}
+
+
+### New features
+
+Portworx by Pure Storage is proud to introduce the following new features:
+
+* On-prem users can now enable [PX-Fast](/operations/operate-kubernetes/storage-operations/create-pvcs/px-fastpath-pvc/) functionality that utilizes the new [PX-StoreV2 datastore](/install-portworx/on-premises/install-px-store-v2). PX-Fast enables a new accelerated IO path for volumes and is optimized for workloads requiring consistent low latencies. PX-StoreV2 is the new Portworx datastore optimized for supporting IO intensive workloads for configurations utilizing high performance NVMe class devices. 
+
+* Early access support for [Portworx Object Service](/operations/operate-kubernetes/storage-operations/object/). This feature allows storage admins to provision object storage buckets with various backing providers using custom Kubernetes objects.
+
+* You can now use [Vault AppRole's Role ID and Secret ID](/operations/key-management/vault/#using-approle-authentication-method) to authenticate with Vault. Portworx will auto-generate Vault tokens to store encryption secrets and cloud credentials in Vault. 
+
+* Metro and asynchronous disaster recovery (DR) involves migrating Kubernetes resources from a source cluster to a destination cluster. To ensure that the applications can come up correctly on the destination clusters, you may need to modify resources to work as intended on your destination cluster. The [ResourceTransformation](/reference/crd/resource-transformation-usage) feature allows you to define a set of rules that modify the Kubernetes resources before they are migrated to the destination cluster.
+
+
+### Improvements
+
+Portworx has upgraded or enhanced functionality in the following areas:
+
+| **Improvement Number** | **Improvement Description** |
+| ---- | ---- |
+| PWX-26700 | A pod that was using a sharedv4 volume might have taken a few minutes to terminate when Portworx running on one node was waiting for a response from Portworx running on another node which was down. This has been fixed by deferring the remote call when the remote node is down. |
+| PWX-26631 | In one of the error paths, Portworx was listing pods in all the namespaces in the Kubernetes cluster, which caused the Portworx process to consume a large amount of memory temporarily. The pod listing is now limited to a single namespace. |
+| PWX-24862 | At times, users create sharedv4 volumes unintentionally by using a sharedv4 storageClass with a `ReadWriteOnce` PVC. This is because previously Portworx created a sharedv4 volume when either the storageClass had `sharedv4: true` _or_ the PVC access mode was `ReadWriteMany/ReadOnlyMany`. To avoid these unintentional sharedv4 volumes, a sharedv4 volume is now created only if the PVC access mode is `ReadWriteMany/ReadOnlyMany`, and the `sharedv4` setting in the storageClass does not matter. This may require modification to the specs of some existing apps.<br><br>If an app expects a sharedv4 volume while using a `ReadWriteOnce` PVC, some of the pods may fail to start. The PVC will have to be modified to use `ReadWriteMany` or `ReadOnlyMany` access mode. |
+| PWX-23285 | Adds uniform support for `PX_HTTP_PROXY`, `PX_HTTPS_PROXY`, and `NO_PROXY` environment variables (which are equivalent to commonly used Linux `HTTP_PROXY`, `HTTPS_PROXY` and `NO_PROXY` environment vars.)<br><br>Specifying the HTTP proxy via the cluster options is now deprecated.<br><br>Also adds support for authenticated HTTP proxy, where you specify the username and password to authenticate with an HTTP proxy. For example: `PX_HTTP_PROXY=http://user:password@myproxy.acme.org`. |
+| PWX-22292 | Previously, when you updated an AKS cluster principal's password and refreshed your Kubernetes secret, you would sometimes have to restart Portworx pods to propagate the changes to Portworx. Now, Portworx automatically refreshes the AKS secrets. |
+| PWX-22927 | You can now use Vault AppRole authentication for vault integration. You need to provide VAULT_ADDR, VAULT_APPROLE_ROLE_ID, VAULT_APPROLE_SECRET_ID, and VAULT_AUTH_METHOD (approle) via Kubernetes Secrets or as environment variable.|
+| PWX-26421 | Portworx logs now display Vault's authentication method if login is successful. |
+| PWX-24437 | Added discard stats to Grafana performance dashboard. |
+|PWX-18687| Portwox now instantly detects that a replication node is down as a result of socket events, preventing high IO latencies.|
+| PD-1628 | Portworx now supports [FlashBlade and FlashArray SafeMode](https://blog.purestorage.com/products/protect-your-data-from-ransomware-with-safemode-snapshots/) feature |
+| PD-1634| Added support for [live migration](https://docs.openshift.com/container-platform/4.8/virt/live_migration/virt-live-migration.html) of virtual machines between nodes in the OpenShift environment. This feature works only with Stork version 2.12.|
+
+### Fixes
+
+| **Issue Number** | **Issue Description** |
+| ---- | ---- |
+| PWX-20808 | When Portworx was configured with external etcd v3 as its key-value database, there were delays and timeouts when running the `pxctl service kvdb members` command because the provided etcd endpoints to Portworx did not match with what were used internally.<br><br>**Resolution:** Portworx now consults both configured KVDB endpoints and configuration before displaying the KVDB information.|
+| PWX-24649 | Occasionally, a race condition in the initial setup of Portworx was leading to an invalid topology-zone set on cloud-drives, resulting in Portworx allocating and using more cloud-drives than configured.<br><br>**Resolution:** The startup issue has been fixed.|
+| PWX-26406 | Repeated CSI `NodePublish/NodeUnpublish` API calls were resulting in Portworx using more resources because these APIs did a deep Inspect on the volume.<br><br>**Resolution**: CSI `NodePublish/NodeUnpublish` now uses fewer resources because it avoids a deep Inspect and any extra API calls to the Kubernetes API server.|
+| PWX-24872 | The `pxclt cloudsnap list -x 5` command was reporting an error.<br><br>**Resolution:** The issue has been fixed. |
+|PWX-26935|  When a pod with sharedv4 volume is terminated, Portworx unmounts the nfs-mounted path on the local node. When the remote NFS server node was powered off, unmount was delaying the pod termination.<br><br>**Resolution:** This issue has been fixed. |
+| PWX-26578 | Portworx was taking a long time to run background tasks. On some clusters, this was causing long delays due to a large backlog.<br><br>**Resolution:** This issue has been fixed. |
+| PWX-23454 | Pool and node labels that are the same as volumes were ignored when applying VolumePlacementStrategies.<br><br>**Resolution:** This issue has been fixed.|
+| PWX-26445 | PVC creation could failing with an unauthorized error message if the service account token being used by Portworx is expired. <br><br>**Resolution:** For Kubernetes version 1.21 and later, refresh the `ServiceAccountToken` for the Portworx service to prevent unauthorized errors (after 1 year by default, or 3 months for an EKS cluster). |
+| PWX-24785| When installing Portworx on Rancher via helm charts, some permissions on `Secret` objects were missing in the Portworx spec.<br><br>**Resolution:** `px-role` is added to both Portworx Enterprise and Portworx Essentials with the Kubernetes secrets permissions.| 
+| PWX-19220 | The output of `pxctl clouddrive` commands did not provide cloud-storage details making it difficult to troubleshoot issues using vSphere GUI.<br><br>**Resolution:** The outputs of the commands `pxctl clouddrive list` and `pxctl clouddrive inspect` now include vSphere datastore information and drive-labels, respectively.|
+| PWX-27170 | Cloudsnap restores were not forward compatible, meaning an older version of Portworx could not restore a newer version of cloudsnap. However, in such cases, cloudsnap restore was completed without an error, but without data.<br><br>**Resolution:** Now from version 2.12.0, Portworx has a check that fails during such restore operations|
+
+
+
+### Known issues (Errata)
+
+| **Issue Number** | **Issue Description** |
+| ---- | ---- | 
+| PD-1619 |  As a result of deleting application pods that are using sharedv4 or sharedv4 service volumes in Kubernetes, part of the pod's state may not be properly cleaned up. Later, if the pod's namespace is deleted, the namespace may be stuck in the `Terminating` state.<br><br>**Workaround:** Contact {{<companyName>}} support team to clean up such namespaces.|
+| PD-1611 | When using the PX-StoreV2 datastore, running multiple concurrent resize and clone operations on the same fastpath volume may cause either resize or clone operation to fail.<br><br>**Workaround:** Retry the failed operation. |
+| PD-1595 | When using the PX-StoreV2 datastore, a pool may not automatically transition into `Online` state after completing a drive add operation. <br><br>**Workaround:** Perform a maintenance cycle on the node.|
+| PD-1592 | When using the PX-StoreV2 datastore, pool maintenance enter or exit operation may get stuck if there are encrypted PVCs attached on the node with an outstanding IOs.<br><br>**Workaround:** Reboot the node where encrypted PVC is attached.|
+| PD-1650 | When using the PX-StoreV2 datastore, a PX-Fast volume may get attached in an inactive fastpath state because of internal sanity check failure.<br><br>**Workaround**: Restart the application pod consuming the volume so that it goes through a detach and attach cycle which will reattempt fastpath activation. |
+| PD-1651 | When using the PX-StoreV2 datastore, in case of failure during installation, Portworx may get into a restart loop with an error message: `PX deployment failed with an error "failed to create MD-array:”`.<br><br>**Workaround**: Clean up the failed install using node-wiper and retry installation.
+
+
+
+
 
 ## 2.11.4
 
@@ -62,6 +134,7 @@ Portworx has upgraded or enhanced functionality in the following areas:
 | PWX-26047 | `pxctl status` now shows a deprecation warning when internal objectstore is running on a cluster. |
 
 ### Fixes
+
 | **Issue Number** | **Issue Description** |
 | ---- | ---- |
 | PWX-23465 | Backups were not encrypted if `BackupLocation` in Kubernetes had an encryption key set for cloudsnaps. (Note that this should not be confused with encrypted volumes. This encryption key, if set, is applied only to cloudsnaps irrespective of encrypted volumes.)<br><br>**Resolution:** Backups are now encrypted in this case. |
@@ -175,7 +248,7 @@ The following features have been deprecated:
 | PD-1339 | When a Portworx storage pool contains a repl 1 volume replica, pool expansion operations report following error: `service pool expand: resize for pool <pool-uuid> is already in progress. found attached volumes: [vol3] that have it's only replica on this pool.Will not proceed with pool expansion. Stop applications using these volumes or increase replicas to proceed. resizeType=RESIZE_TYPE_ADD_DISK,skipWaitForCleanVolumes=false,newSize=150`.<br><br>The actual reason of failure is not `resize for pool <pool-uuid> is already in progress`; the correct reason of failure is `found attached volumes: [vol3] that have it's only replica on this pool.Will not proceed with pool expansion. Stop applications using these volumes or increase replicas to proceed. resizeType=RESIZE_TYPE_ADD_DISK,skipWaitForCleanVolumes=false,newSize=150`.<br><br>**Workaround:** The command `pxctl sv pool show` displays the correct error message. |
 | PD-1354 | When a PVC for a FlashArray DirectAccess volume is being provisioned, Portworx makes a call to the backend FlashArray to provision the volume. If Portworx is killed or crashes while this call is in progress or just before this call is invoked, the PVC will stay in a `Pending` state forever.<br><br>**Workaround:** For a PVC which is stuck in `Pending` state, check the events for an error signature indicating that calls to the Portworx service have timed out. If such a case arises, clean up the PVC and retry PVC creation. |
 | PD-1374 | For FlashArray volumes, resizing might hang when there is a management connection failure.<br><br>**Workaround:** Manually bring out the volume from the maintenance mode.  |
-| PD-1360 | When a snapshot volume is detached, you see the `Error in stats  	 :  Volume does not have a coordinator` error message. <br><br>**Workaround:** This message appears because the volume is created, but not attached or formatted. A coordinator node is not created until a volume is attached. |
+| PD-1360 | When a snapshot volume is detached, you see the `Error in stats    :  Volume does not have a coordinator` error message. <br><br>**Workaround:** This message appears because the volume is created, but not attached or formatted. A coordinator node is not created until a volume is attached. |
 | PD-1388 | the Prometheus Operator pulls the wrong Prometheus image. In air-gapped environments, Prometheus pod deployment will fail with an `ImagePullBackOff` error. <br/><br/>**Workaround:** Before installing Portworx, upload a Prometheus image with the `latest` tag to your private registry. |
  
 ## 2.10.4 
