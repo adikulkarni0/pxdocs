@@ -28,6 +28,7 @@ Portworx has upgraded or enhanced functionality in the following areas:
 | **Issue Number** | **Issue Description** |
 | ---- | ---- |
 | PWX-27028| While performing writes on the target, the resync operation pinned down resources even when the write operation had no priority to execute.<br><br>**Resolution:** In version 2.11.4, this issue is fixed.
+
 ## 2.11.3
 
 Sep 13, 2022
@@ -177,6 +178,11 @@ The following features have been deprecated:
 | PD-1360 | When a snapshot volume is detached, you see the `Error in stats  	 :  Volume does not have a coordinator` error message. <br><br>**Workaround:** This message appears because the volume is created, but not attached or formatted. A coordinator node is not created until a volume is attached. |
 | PD-1388 | the Prometheus Operator pulls the wrong Prometheus image. In air-gapped environments, Prometheus pod deployment will fail with an `ImagePullBackOff` error. <br/><br/>**Workaround:** Before installing Portworx, upload a Prometheus image with the `latest` tag to your private registry. |
  
+## 2.10.4 
+
+Oct 21, 2022
+
+* This version addresses security vulnerabilities.
 
 ## 2.10.3
 
