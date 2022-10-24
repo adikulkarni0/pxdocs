@@ -77,7 +77,7 @@ Portworx has upgraded or enhanced functionality in the following areas:
 | PD-1592 | When using the PX-StoreV2 datastore, pool maintenance enter or exit operation may get stuck if there are encrypted PVCs attached on the node with an outstanding IOs.<br><br>**Workaround:** Reboot the node where encrypted PVC is attached.|
 | PD-1650 | When using the PX-StoreV2 datastore, a PX-Fast volume may get attached in an inactive fastpath state because of internal sanity check failure.<br><br>**Workaround**: Restart the application pod consuming the volume so that it goes through a detach and attach cycle which will reattempt fastpath activation. |
 | PD-1651 | When using the PX-StoreV2 datastore, in case of failure during installation, Portworx may get into a restart loop with an error message: `PX deployment failed with an error "failed to create MD-array:”`.<br><br>**Workaround**: Clean up the failed install using node-wiper and retry installation.
-
+| PD-1655 | You experience telemetry pod crashing issues due to port conflicts.<br><br>**Workaround:** Adjust the Portworx start port by adding the following to your StorageCluster spec:<pre>  startPort: <starting-port></pre> |
 
 
 
