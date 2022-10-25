@@ -14,9 +14,14 @@ aliases:
 Oct 24, 2022
 
 ### Notes
+
 {{<info>}}
 Portworx 2.12.0 requires Operator 1.10.0 and Stork 2.12.0.{{</info>}}
 
+Visit these pages to see if you're ready to upgrade to the latest version:
+
+* [Prerequisites](/install-portworx/prerequisites/)
+* [Supported kernels](/reference/supported-kernels/)
 
 ### New features
 
