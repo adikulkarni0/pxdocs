@@ -841,7 +841,7 @@ Metadata  Device:
 
 ### pxctl service pool cache
 
-You can use the `pxct service pool cache command` command to:
+You can use the `pxctl service pool cache command` command to:
 
 * Disable caching on a pool
 * Enable caching on a pool
