@@ -30,11 +30,41 @@ apt install linux-headers-$(uname -r)
 
 ## Qualified distros and kernel versions
 
-### 2.11
+### 2.12
 
 {{<automateTable source="qualifiedLinuxDistros">}}
 
 {{<automateTable source="cloudLinuxDistros">}}
+
+### 2.11
+
+| **Linux Distro**	| **Kernel Version** |
+| --- | --- |
+| CentOS 7.8-vanilla | 3.10.0-1127.el7.x86_64 | 
+| CentOS 8.2-vanilla | 4.18.0-193.el8.x86_64 | 
+| Ubuntu 18.04.5 LTS | 5.4.0-1040-gcp | 
+| Ubuntu 20.04.02 LTS | 5.4.0-73-generic |  
+| Ubuntu 20.10 | 5.13.0-1028-gcp |  
+| Ubuntu 21.04 | 5.11.0-1007-gcp | 
+| Fedora 27 | Up to 4.18.19-100.fc27.x86_64 | 
+| Fedora 28 | Up to 5.0.16-100.fc28.x86_64 | 
+| Fedora 33 | Up to 5.14.18-100.fc33.x86_64 | 
+| FlatCar Alpha | 5.10.93-flatcar | 
+| FlatCar Beta | 5.10.93-flatcar | 
+| FlatCar Stable | 5.10.107-flatcar |  
+| RHEL 7.6 | 4.20.13-1.el7.elrepo.x86_64 |  
+| RHEL 7.9 | Up to 3.10.0-1127.el7.x86_64 | 
+| RHEL 8.4 | Up to 4.18.0-305.25.1.el8_4.x86_64 | 
+| RHEL 8.5 (Ootpa) | Up to 4.18.0-372.16.1.el8_6.x86_64 | 
+| Debian 9 | Up to 4.9.0-13-amd64 |  
+| Debian 10 | Up to 4.19.0-20-cloud-amd64 | 
+| OEL 7.9 | Up to 3.10.0-1160.59.1.el7.x86_64 | 
+
+| **Cloud Distro** | **Kernel Version** |
+| --- | --- |
+| Amazon Linux v2 | 4.14.232-177.418.amzn2.x86_64 | 
+| Photon 3.0 | 4.19.132-6.ph3 | 
+| Photon 4.0 | 5.10.4-16.ph4 | 
 
 ### 2.10
 
