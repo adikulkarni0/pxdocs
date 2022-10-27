@@ -10,6 +10,10 @@ Follow the instructions on this page to setup a single Portworx cluster that spa
 
 ## Prerequisites
 
+{{<info>}}
+**NOTE:** A maximum replication factor of `2` is supported in a Metro-DR deployment. Using `repl: 3` may result in downtime due to a loss of volume quorum.
+{{</info>}}
+
 * **Kubernetes Clusters**: At least two Kubernetes clusters which are part of the same metropolitan area network with a
   maximum network latency of 10ms between them.
 * **Version**: A single Portworx cluster of v2.1 or later installed on across Kubernetes clusters and Stork v2.2.4 or
