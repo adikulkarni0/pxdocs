@@ -10,7 +10,6 @@ aliases:
 ---
 
 ## Installation Prerequisites
-
 The minimum supported size for a Portworx cluster is three nodes. Each node must meet the following hardware, software, and network requirements:
 
 |**Hardware** ||

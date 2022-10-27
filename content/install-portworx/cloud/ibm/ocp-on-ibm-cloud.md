@@ -1,16 +1,20 @@
 ---
-title: Install Portworx on IBM Cloud
-linkTitle: IBM Cloud
+title: Install and configure OpenShift (OCP) on IBM Cloud
 logo: /logos/ibm.png
-linkTitle: IBM Cloud
-weight: 500
-keywords: Install, IBM Cloud Kubernetes Service, k8s
-description: Deploy Portworx on IBM Cloud Kubernetes Service. See for yourself how easy it is!
+linkTitle: OCP on IBM
+weight: 600
+keywords: IBM Cloud OpenShift Service, IBM cloud drive, VPC Gen-2
+description: Learn how to install and configure Portworx on IBM with OCP using Cloud Drives.
 aliases:
-    - /portworx-install-with-kubernetes/cloud/ibm
+    - /install-portworx/cloud/ibm/ibm-cloud-drives/
 ---
 
-This document provides instructions for installing Portworx using the Portworx Operator on IBM Cloud Kubernetes Service (IKS) using the IBM catalog. This document provides a default installation configuration which is designed to get you up and running with a typical cluster configuration with the following properties:
+
+## OpenShift (OCP) on IBM Cloud
+
+OpenShift can be run on IBM Cloud with a Portworx storage cluster. 
+
+This document provides instructions for installing Portworx using the IBM catalog with OpenShift (OCP) on IBM Cloud. This document provides a default installation configuration which is designed to get you up and running with a typical cluster configuration with the following properties:
 
 * The cluster is located in a single availability zone
 * Portworx is installed using an internal KVDB
@@ -22,10 +26,10 @@ This document provides instructions for installing Portworx using the Portworx O
 
 ## Prerequisites
 
-Before you start installing Portworx, ensure that you meet the following minimum prerequisites:
+Before you start installing Portworx, ensure you meet the following minimum prerequisites:
 
 * You must have an IBM Cloud account with admin privileges. Portworx does not support using a service ID. 
-* You must have a Kubernetes cluster with at least 3 worker nodes deployed on IBM Cloud, and the cluster must meet both the Portworx [minimum requirements](/install-portworx/prerequisites/) as well as the following requirements: 
+* You must have a OpenShift cluster with at least 3 worker nodes deployed on IBM Cloud, and that cluster must meet both the Portworx [minimum requirements](/install-portworx/prerequisites/) as well as the following requirements: 
   * CPU: 16 
   * Memory: 32 GB 
   * Disk: 100 GB
@@ -47,7 +51,8 @@ Can we remove this? we're telling people to use internal KVDB. -->
   * Under **Configure your resource**, do the following:
     * Choose a service name or accept the default. 
     * Specify the resource group your Kubernetes cluster is in. 
-  * At **IBM Cloud API key**, enter your IBM Cloud API key. 
+  * At **IBM Cloud API key**, enter your IBM Cloud API key. Note, this API key is essential for populating the OpenShift cluster name for the next step.
+  * Choose the correct OpenShift cluster for **Kubernetes or OpenShift Cluster name** from the drop down list.
   * At **Portworx cluster name**, enter a valid Portworx cluster name. 
   * At **Cloud drives**, select **Use Cloud Drives** from the drop-down menu. This reveals a number of new fields:
     * For **Number of drives**, select your desired number of cloud drives. 
@@ -60,12 +65,12 @@ Can we remove this? we're telling people to use internal KVDB. -->
   * Enable CSI.
   * For **Portworx versions**, specify your desired Portworx version.
 
-3. Agree to the terms and click **Create** to launch the Portworx cluster. This can take 20 minutes or more.
+3. Agree to the terms and click **Create** to launch the Portworx cluster; this can take 20 minutes or more.
 
 {{< content "shared/post-installation.md" >}}
 
 ## Further reading
 
-* [IBM Redbooks](https://www.redbooks.ibm.com/redbooks/pdfs/sg248440.pdf)
+* [IBM Redbooks](https://www.redbooks.ibm.com/redpapers/pdfs/redp5606.pdf)
 * [IBM Cloud online reference](https://cloud.ibm.com/docs/containers?topic=containers-getting-started)
-* [Kubernetes (IBM) reference](https://www.ibm.com/cloud/kubernetes-service/kubernetes-tutorials)
+* [OpenShift on IBM cloud (IBM) reference](https://www.ibm.com/cloud/openshift)
