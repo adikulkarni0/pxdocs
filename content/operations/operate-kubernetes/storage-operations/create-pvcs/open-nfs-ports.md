@@ -7,67 +7,68 @@ hidden: true
 aliases:
     - /portworx-install-with-kubernetes/storage-operations/create-pvcs/open-nfs-ports/
 ---
-SharedV4 volumes require specific open NFS ports to allow for communication between nodes in your cluster. Depending on how your cluster is configured, your firewall may block some of these ports or your NFS ports may differ from the defaults. To solve this, you may need to manually assign NFS ports and ensure your firewall or ACL allows them to communicate.
+SharedV4 volumes utilize NFS services, and they therefore require specific open NFS ports to allow for communication between nodes in your cluster. Depending on how your cluster nodes are configured, your firewall may block some of these ports, or your NFS ports may differ from the defaults. To solve these issues, you may need to manually assign NFS ports and ensure that your firewall or ACL allows them to communicate.
 
-This document provides instructions for detecting and opening NFS ports according to various cluster configurations you may have.
+This document provides instructions for detecting and opening NFS ports according to various cluster configurations that you may have.
 
 ## Prerequistes
 
-All of the use-cases in this document require the default Portworx ranges be open between hosts: ports 9001 - 9028 and port 111.
-<!-- need to standardize cluster node and host. -->
+All of the use-cases in this document will require that the mandatory Portworx network port ranges are open between nodes in the cluster, as documented [here](/install-portworx/prerequisites/).
 
 ## Determine which ports to open
 
-Enter the `rpcinfo` command with the `-p` flag to find which ports NFS is using on your node:
+First, check what the existing NFS port configuration is for your nodes to see if they need to be remapped.
+
+Enter the following command to find which ports NFS is using on your node:
 
 ```text
 rpcinfo -p
 ```
 
-SharedV4 volumes communicate over the following ports:
+SharedV4 volumes communicate on the following standard ports/services:
 
-* portmapper: 111 (default on all linux distributions)
-* nfs service: 2049 (default on all linux distributions)
-* mountd: 20048 (depends on the linux distribution)
+* PortMapper: tcp/udp 111 (default on most Linux distributions)
+* NFSd: tcp/udp 2049 (default on most Linux distributions)
+* MountD: tcp/udp 20048 (**depends on the Linux distribution**)
 
-If the default ports your OS uses match these ports, proceed to the **Open NFS ports on most Linux distributions** section.
+If the ports listed from the above `rpcinfo` output on your nodes match these standard ports, proceed to [Open standard NFS ports (most Linux distributions)](#open-standard-nfs-ports-most-linux-distributions).
 
-If the NFS ports on your OS do not match these ports, or your ports are chosen randomly by your OS, proceed to the **Manually assign and open NFS ports** section.
+If the NFS ports on your OS do not match these ports, or your OS randomly chooses the ports for these services, proceed to [Manually assign and open NFS ports](#manually-assign-and-open-nfs-ports).
 
-## Open NFS ports on most Linux distributions
+## Open standard NFS ports (most Linux distributions)
 
-If your Linux distribution uses the default ports identified in the section above, you do not need to manually assign any ports for NFS, but you may need to open them.
+If your Linux distribution uses the standard ports identified in the previous section, you do not need to manually assign any ports for NFS, but you may need to open them.
 
-Ensure your ports are open on any firewalls and your ACL by entering the following `iptables` command:
+Ensure that your ports are open on any firewalls and your ACL by entering the following commands:
 
 ```text
 iptables -I INPUT -p tcp -m tcp --match multiport --dports 111,2049,20048 -j ACCEPT
 iptables -I OUTPUT -p tcp -m tcp --match multiport --dports 111,2049,20048 -j ACCEPT
 ```
 
-Once you've determined your hosts are using the default ports and opened those ports, you can start using sharedV4 volumes.
+Once you've determined that your hosts are using the standard ports and that you have opened those ports, you can start using SharedV4 volumes.
 
 ## Manually assign and open NFS ports
 
 For certain Linux distributions, the OS chooses the `mountd` port randomly every time the node reboots. To solve this, you must manually assign NFS ports, and how you accomplish this depends on your OS.
 
-Only perform the steps in one of the following sections if:
+Only perform the steps in one of the following sections if one of the following is true:
 
-* The `mountd` port is not fixed (and not 20048) and is chosen at random by your Linux distribution.
-* You wish to open a contiguous range of ports for Portworx and want to shift the default NFS ports to the Portworx port range.
+* The `mountd` port is not fixed (and not the standard port of 20048) and is chosen at random by your Linux distribution.
+* You wish to open a contiguous range of ports for Portworx and want to shift the default NFS ports to your Portworx port range.
 
-If you do need to manually assign and open NFS ports, follow the steps in the  section that applies for your OS:
+In order to manually assign and open NFS ports, follow the steps in the section that applies for your OS.
 
-### Assign NFS ports on CentOS and Red Hat Enterprise Linux
+### Assign NFS ports on the RedHat family of Linux (RHEL, CentOS, Fedora, etc)
 
 1. Modify the `/etc/sysconfig/nfs` file, uncommenting or adding the following fields and assigning the associated values:
 
-    * `LOCKD_TCPPORT=9023`
-    * `LOCKD_UDPPORT=9024`
-    * `MOUNTD_PORT=9025`
-    * `STATD_PORT=9026`
+    * LOCKD_TCPPORT=9023
+    * LOCKD_UDPPORT=9024
+    * MOUNTD_PORT=9025
+    * STATD_PORT=9026
 
-2. Enter the `systemctl restart nfs-server` command to restart the NFS server:
+2. Enter the following command to restart the NFS server:
 
     ```text
     systemctl restart nfs-server
@@ -82,9 +83,9 @@ If you do need to manually assign and open NFS ports, follow the steps in the  s
     iptables -I OUTPUT -p udp -m udp --dport 9024  -j ACCEPT
     ```
 
-### Open NFS ports on Debian-based Linux
+### Open NFS ports on Debian or Ubuntu Linux
 
-#### Debian 10
+#### Debian 10 / Ubuntu
 
 1. Modify the `/etc/default/nfs-kernel-server` file. Uncomment or add the `RPCMOUNTDARGS` field and add the `--port 9024` option to the value:
    
@@ -93,13 +94,13 @@ If you do need to manually assign and open NFS ports, follow the steps in the  s
    RPCMOUNTDOPTS="--manage-gids --port 9024"
    ```
 
-2. Enter the following `systemctl` command to restart the mountd service:
+2. Enter the following command to restart the `mountd` service:
 
     ```text
     systemctl restart nfs-mountd.service
     ```
 
-3. Verify that the mountd service is running on the port you configured by searching the output of `rcpinfo -p`:
+3. Verify that the `mountd` service is running on the port that you configured by searching the output of `rcpinfo -p`:
    
     ```text
     rpcinfo -p | grep 'tcp.*mountd'
@@ -146,7 +147,7 @@ The following sharedv4 NFS services run on a node when Portworx is installed wit
 * nfs and nfs_acl
 * nlockmgr
 
-View these services and the port they are using by entering the `rcpinfo -p` command:
+View these services and the ports they are using by entering the following command:
 
     ```text
     rcpinfo -p
@@ -194,7 +195,7 @@ By default, the `nfs-server.service` configuration file is located under the fol
     echo 9028 > /proc/sys/fs/nfs/nlm_tcpport
     ```
 
-5. Ensure the `lockd` manager ports persist over node reboots by creating a `100-nfs-ports.conf` file under the `/etc/sysctl.d/` folder and adding the ports to it:
+5. Ensure that the `lockd` manager ports persist over node reboots by creating a `100-nfs-ports.conf` file under the `/etc/sysctl.d/` folder and adding the ports to it:
 
     ```text
     cat /etc/sysctl.d/100-nfs-ports.conf
@@ -240,7 +241,7 @@ By default, the `nfs-server.service` configuration file is located under the fol
     systemctl status nfs-mountd
     ```
 
-2. Copy the systemd unit file from the `usr` directory into the `etc` directory:
+2. Copy the systemd unit file from `/usr` into `/etc`:
 
     ```text
     cp /usr/lib/systemd/system/nfs-mountd.service /etc/systemd/system/nfs-mountd.service
@@ -249,6 +250,7 @@ By default, the `nfs-server.service` configuration file is located under the fol
 3. Open `/etc/systemd/system/nfs-mountd.service` in a text editor and, under the `[Service]` section, add the `--port 9024` value to the `ExecStart=/usr/sbin/rpc.mountd` key:
 
     ```text
+    [Unit]
     ...
 
     [Service]
@@ -295,6 +297,7 @@ By default, the `nfs-server.service` configuration file is located under the fol
 3. Open `/etc/systemd/system/rpc-statd.service` in a text editor and, under the `[Service]` section, add the `--port 9025` and `--outgoing-port 9026` value to the `ExecStart=/usr/sbin/rpc.statd` key:
 
     ```text
+    [Unit]
     ...
 
     [Service]
@@ -323,7 +326,7 @@ By default, the `nfs-server.service` configuration file is located under the fol
 
 ### Open NFS ports on PhotonOS
 
-1. Modify the `/etc/default/nfs-utils` file, and add parameters to assign ports to services:
+1. Modify the `/etc/default/nfs-utils` file, adding parameters to assign ports to services:
 
     ```text
     MOUNTD_OPTS="--port 9024"
@@ -331,7 +334,7 @@ By default, the `nfs-server.service` configuration file is located under the fol
     STATD_OPTS="--port 9025 --outgoing-port 9026"
     ```
 
-2. Add `/etc/modprobe.d/lockd.conf` file to assign ports to `nlockmgr` service, also reconfigure runtime ports:
+2. Add the `/etc/modprobe.d/lockd.conf` file to assign ports to the `nlockmgr` service and reconfigure runtime ports:
 
     ```text
     cat > /etc/modprobe.d/lockd.conf << .
@@ -349,7 +352,7 @@ By default, the `nfs-server.service` configuration file is located under the fol
     systemctl restart nfs-server nfs-mountd rpc-statd
     ```
 
-4. Open up the ports 9001 to 9028 in `iptables` firewall, restart service:
+4. Open up the ports 9001 to 9028 in the `iptables` firewall, then restart the service:
 
     ```text
     # add Portworx ports 9001..9028 before "COMMIT"
@@ -358,7 +361,7 @@ By default, the `nfs-server.service` configuration file is located under the fol
     systemctl restart iptables
     ```
 
-5. Verify that the NFS services are running on the ports you just configured:
+5. Verify that the NFS services are running on the ports that you just configured:
 
     ```text
     rpcinfo -p
