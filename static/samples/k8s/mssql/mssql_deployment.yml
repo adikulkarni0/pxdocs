@@ -17,9 +17,13 @@ spec:
       labels:
         app: mssql
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000
       containers:
       - name: mssql
-        image: microsoft/mssql-server-linux
+        image: mcr.microsoft.com/mssql/server
         imagePullPolicy: "IfNotPresent"
         ports:
         - containerPort: 1433
