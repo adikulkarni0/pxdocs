@@ -144,8 +144,6 @@ In order to grant Portworx the necessary permissions for managing the storage bl
 
 6. Under **Select your environment**, choose **Cloud**, then choose **vSphere**. Fill in your values for **vCenter Endpoint**, **vCenter Port**, **vCenter datastore prefix**, and **Kubernetes Secret Name**, then click **Next**.
 
-    ![Environment settings](/img/ocp-vsphere-spec.png)
-
 7. Choose your network options and click **Next**.
 
 8. In the **Customize** tab, for the **Are you running on either of these?** option, select **OpenShift 4+**. In the **Registry And Image Settings** section, provide your internal-cluster address for the internal registry path, and the secret `px-image-repository` created earlier.<br><br>
