@@ -57,7 +57,7 @@ If the drive belongs to a pool that hosts Portworx metadata, then you must remov
 
 Perform the following steps to remove or replace the failed drive:
 
-1. Use the [Node decommission workflow](/operations/operate-kubernetes/uninstall/decommission-a-node/#step-1-migrate-application-pods-using-portworx-volumes-that-are-running-on-this-node) to remove a node from the cluster. This reduces the HA level for all replicated volumes which reside on the node and restores the volumes if enough storage nodes are available in the cluster.
+1. Use the [Node decommission workflow](/operations/operate-kubernetes/uninstall/decommission-a-node/#migrate-application-pods-using-portworx-volumes-that-are-running-on-this-node) to remove a node from the cluster. This reduces the HA level for all replicated volumes which reside on the node and restores the volumes if enough storage nodes are available in the cluster.
 
 2. Remove or replace the failed drive and add the node back into the cluster. Note that Portworx runs as a `DaemonSet` in Kubernetes, so when you add a node or a worker to your Kubernetes cluster, you don't need to explicitly run Portworx on it.
 

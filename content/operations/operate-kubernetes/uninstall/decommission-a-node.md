@@ -13,42 +13,42 @@ This guide describes a recommended workflow for decommissioning a Portworx node 
 **NOTE:** The following steps don't apply if you're using an auto-scaling group (ASG) to manage your Portworx nodes. For details about how you can change the size of your auto-scaling group, see the [Scaling the Size of Your Auto Scaling Group](https://docs.aws.amazon.com/autoscaling/ec2/userguide/scaling_plan.html) page of the AWS documentation.
 {{</info>}}
 
-## Step 1. Migrate application pods using Portworx volumes that are running on this node
+## Migrate application pods using Portworx volumes that are running on this node
 
 If you plan to remove Portworx from a node, applications running on that node using Portworx need to be migrated. If Portworx is not running, existing application containers will end up with read-only volumes and new ones will fail to start.
 
-Perform the following steps to migrate select pods:
+Perform the following steps to migrate select pods.
 
-1. Cordon the node using:
+1. Cordon the node using the following command:
 
     ```text
     kubectl cordon <node>
     ```
 
-2. Delete the application pods using Portworx volumes using:
+2. Reschedule application pods using Portworx volumes on different nodes:
 
     ```text
-    kubectl delete pod <pod-name>
+    kubectl delete pod <pod-name> -n <application namespace>
     ```
 
-   Since application pods are expected to be managed by a controller like `Deployement` or `StatefulSet`, Kubernetes will spin up a new replacement pod on another node.
+   Since application pods are expected to be managed by a controller like `Deployment` or `StatefulSet`, Kubernetes will spin up a new replacement pod on another node.
 
-## Step 2. Decommission Portworx
+## Decommission Portworx
 
-To decommission Portworx, perform the following steps:
+To decommission Portworx, perform the following steps.
 
-### a) Remove Portworx from the cluster
+### Remove Portworx from the cluster
 
-Follow [this guide](/operations/operate-other/scaling/scale-down) to decommission the Portworx node from the cluster.
+Follow [this guide](/operations/operate-other/scaling/scale-down) section "Removing offline Nodes" or "Removing a functional node from a cluster" to decommission the Portworx node from the cluster.
 
-### b) Remove Portworx installation from the node
+### Remove Portworx installation from the node
 
 Apply the _px/enabled=remove_ label and it will remove the existing Portworx systemd service. It will also apply the _px/enabled=false_ label to stop Portworx from running in future.
 
 For example, below command will remove existing Portworx installation from _minion2_ and also ensure that Portworx pod doesn’t run there in future.
 
 ```text
-kubectl label nodes minion2 px/enabled=remove --overwrite
+kubectl label nodes < node > px/enabled=remove --overwrite
 ```
 
 {{<info>}}
@@ -56,7 +56,7 @@ kubectl label nodes minion2 px/enabled=remove --overwrite
 If the plan is to decommission this node altogether from the Kubernetes cluster, no further steps are needed.
 {{</info>}}
 
-## Step 3. Ensure application pods using Portworx don’t run on this node
+## Ensure application pods using Portworx don’t run on this node
 
 If you need to continue using the Kubernetes node without Portworx, you will need to ensure your application pods using Portworx volumes don’t get scheduled here.
 
@@ -64,8 +64,8 @@ You can ensure this by adding the `schedulerName: stork` field to your applicati
 
 Another way to achieve this is to use [inter-pod affinity](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#inter-pod-affinity-and-anti-affinity-beta-feature)
 
-* Basically we will define a pod affinity rule in your applications that ensure that application pods get scheduled only on nodes where the Portworx pod is running.
-* Consider below nginx example:
+* You need to define a pod affinity rule in your applications that ensure that application pods get scheduled only on nodes where the Portworx pod is running.
+* Consider the following nginx example:
 
       ```text
     apiVersion: apps/v1
@@ -111,16 +111,31 @@ Another way to achieve this is to use [inter-pod affinity](https://kubernetes.io
               claimName: px-nginx-pvc
       ```
 
-## Step 4. Uncordon the node
+It can also be configured on cluster level by adding `spec.stork.args.webhook-controller` Set to `true` in StorageCluster to make Stork the default scheduler for workloads using Portworx volumes:
+
+```text
+apiVersion: core.libopenstorage.org/v1
+kind: StorageCluster
+metadata:
+  name: portworx
+  namespace: kube-system
+spec:
+  stork:
+    enabled: true
+    args:
+      webhook-controller: true
+```
+
+## Uncordon the node
 
 You can now uncordon the node using: `kubectl uncordon <node>`
 
-If you want to permanently decommision the node, you can skip **Step 5. (Optional) Rejoin node to the cluster**.
+If you want to permanently decommision the node, you can skip the following step.
 
-## Step 5. (Optional) Rejoin node to the cluster
+## (Optional) Rejoin node to the cluster
 
 If you want Portworx to start again on this node and join as a new node, follow the [node rejoin steps](/operations/operate-kubernetes/k8s-node-rejoin).
 
-## Step 6. (FlashArray cloud drives only) Disconnect or delete drives from your FlashArray
+## (FlashArray cloud drives only) Disconnect or delete drives from your FlashArray
 
 If you are using Pure FlashArray as a cloud drive provider, follow the additional instructions to [decommission FlashArray nodes](/operations/operate-kubernetes/uninstall/decomission-fa/).
