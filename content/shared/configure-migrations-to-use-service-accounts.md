@@ -66,7 +66,7 @@ Perform the following steps on the **destination cluster** to configure migratio
     NAMESPACE=default
     SERVER=https://<SERVER-ADDRESS:PORT>
 
-    SERVICE_ACCOUNT_TOKEN_NAME=$(kubectl -n ${NAMESPACE} get serviceaccount ${SERVICE_ACCOUNT} -o jsonpath='{.secrets[].name}')
+    SERVICE_ACCOUNT_TOKEN_NAME=$(kubectl -n ${NAMESPACE} get serviceaccount ${SERVICE_ACCOUNT} -o yaml | grep "name: $SERVICE_ACCOUNT-token" | cut -f 3 -d " ")
     SERVICE_ACCOUNT_TOKEN=$(kubectl -n ${NAMESPACE} get secret ${SERVICE_ACCOUNT_TOKEN_NAME} -o "jsonpath={.data.token}" | base64 --decode)
     SERVICE_ACCOUNT_CERTIFICATE=$(kubectl -n ${NAMESPACE} get secret ${SERVICE_ACCOUNT_TOKEN_NAME} -o "jsonpath={.data['ca\.crt']}")
 
