@@ -4,6 +4,11 @@ weight: 1000
 description: Set up monitoring
 keywords: Portworx, containers, storage
 ---
+## Prerequisites
+* Portworx version 2.11 or later
+* Portworx Operator version 1.9.0 or later
+
+## Monitoring function
 
 You can use the following technologies to monitor your Portworx cluster:
 
@@ -11,21 +16,21 @@ You can use the following technologies to monitor your Portworx cluster:
 * Alertmanager to provide notifications
 * Grafana to visualize your data
 
-### Verify monitoring using Prometheus
+## Verify monitoring using Prometheus
 
 You can monitor your Portworx cluster using Prometheus. Portworx deploys Prometheus by default, but you can verify the deployment:
 
-1. Verify that Prometheus pods are running by entering the following `kubectl get pods` command:
+1. Verify that Prometheus pods are running by entering the following `kubectl get pods` command in the namespace where you deployed Portworx. For example:
 
     ```text 
-    kubectl get pods -A | grep -i prometheus
+    kubectl -n kube-system get pods -A | grep -i prometheus
     ```
     ```output
     kube-system   prometheus-px-prometheus-0                              2/2     Running            0                59m
     kube-system   px-prometheus-operator-59b98b5897-9nwfv                 1/1     Running            0                60m
     ```
 
-2. Verify that the Prometheus `px-prometheus` and `prometheus operated` services exist by entering the following `kubectl get service` command:
+2. Verify that the Prometheus `px-prometheus` and `prometheus operated` services exist by entering the following command:
 
     ```text 
     kubectl -n kube-system  get service | grep -i prometheus
@@ -34,11 +39,11 @@ You can monitor your Portworx cluster using Prometheus. Portworx deploys Prometh
     prometheus-operated         ClusterIP   None             <none>        9090/TCP                       63m
     px-prometheus               ClusterIP   10.99.61.133     <none>        9090/TCP                       63m
     ```
-### Set up Alertmanager
+## Set up Alertmanager
 
 Prometheus Alertmanager handles alerts sent from the Prometheus server based on rules you set. If any Prometheus rule is triggered, Alertmanager sends a corresponding notification to the specified receivers. You can configure these receivers using an Alertmanager config file. Perform the following steps to configure and enable Alertmanager: 
 
-1. Create a valid [Alertmanager configuration](https://prometheus.io/docs/alerting/latest/configuration/) file and name it `alertmanager.yaml`. The following is a sample for Alertmanager, the settings used in your environment may be different:
+1. Create a valid [Alertmanager configuration](https://prometheus.io/docs/alerting/latest/configuration/) file and name it `alertmanager.yaml`. The following is a sample for Alertmanager, and the settings used in your environment may be different:
 
     ```text
     global:
@@ -62,13 +67,13 @@ Prometheus Alertmanager handles alerts sent from the Prometheus server based on 
         auth_password: "abc@test.com"
     ```
 
-1. Create a secret called `alertmanager-portworx` in the same namespace as your StorageCluster object:
+2. Create a secret called `alertmanager-portworx` in the same namespace as your StorageCluster object:
 
     ```text
     kubectl -n kube-system create secret generic alertmanager-portworx --from-file=alertmanager.yaml=alertmanager.yaml
     ```
 
-2. Edit your StorageCluster object to enable Alertmanager:
+3. Edit your StorageCluster object to enable Alertmanager:
 
     ```text
     kubectl -n kube-system edit stc <px-cluster-name>
@@ -88,31 +93,74 @@ Prometheus Alertmanager handles alerts sent from the Prometheus server based on 
             enabled: true
     ```
 
-3. Verify the Alertmanager pods are running by executing the following command:
+4. Verify that the Alertmanager pods are running using the following command:
 
-```text
-kubectl -n kube-system get pods | grep -i alertmanager
-```
-```output
-alertmanager-portworx-0                    2/2     Running   0              4m9s
-alertmanager-portworx-1                    2/2     Running   0              4m9s
-alertmanager-portworx-2                    2/2     Running   0              4m9s
-```
+    ```text
+    kubectl -n kube-system get pods | grep -i alertmanager
+    ```
+    ```output
+    alertmanager-portworx-0                    2/2     Running   0              4m9s
+    alertmanager-portworx-1                    2/2     Running   0              4m9s
+    alertmanager-portworx-2                    2/2     Running   0              4m9s
+    ```
 
-5. Access Alertmanager by setting up port forwarding and browsing to the specified port. In this example, port forwarding is provided for ease of access to the Alertmanager service from your local machine using the port 9093:
+    **NOTE:** To view the complete list of out-of-the-box default rules, see step 7 below.
+
+### Access the Alertmanager UI
+
+To access the Alertmanager UI and view the Alertmanager Status and alerts, you need to set up port forwarding and browse to the specified port. In this example, port forwarding is provided for ease of access to the Alertmanager service from your local machine using the port 9093.
+
+1. Set up port forwarding:
+    ```text 
+    kubectl -n kube-system port-forward service/alertmanager-portworx --address=<masternodeIP> 9093:9093
+    ```
+2. Access Prometheus UI by browsing to `http://<masternodeIP>:9093/#/status`
+
+    ![Alertmanager Status](/img/monitoring/alertmanagerstatus.png)
+
+    **NOTE:** PX-Central on-premises includes Grafana and Portworx dashboards natively, which you can use to monitor your Portworx cluster. Refer to the [PX-Central documentation](https://central.docs.portworx.com/) for further details.
+
+### Access the Prometheus UI
+
+To access the Prometheus UI to view Status, Graph and default Alerts, you also need to set up port forwarding and browse to the specified port. In this example, Port forwarding is provided for ease of access to the Prometheus UI service from your local machine using the port 9090.
+
+1. Set up port forwarding:
 
     ```text 
-    kubectl -n kube-system port-forward service/alertmanager-portworx 9093:9093
+    kubectl -n kube-system port-forward service/px-prometheus 9090:9090
     ```
-{{<info>}}
-**NOTE:** PX-Central on-premises includes Grafana and Portworx dashboards natively, which you can use to monitor your Portworx cluster. Refer to the [PX-Central documentation](https://central.docs.portworx.com/) for further details.
-{{</info>}}
+    ![Prometheus Status](/img/monitoring/prometheusstatus.png)
 
-### Configure Grafana
+2. Access the Prometheus UI by browsing to `http://localhost:9090/alerts`.
 
-You can connect to Prometheus using Grafana to visualize your data. 
+### View provided Prometheus rules
 
-1. Enter the following `curl` commands to download the Grafana dashboard and datasource configuration files:
+To view the complete list of out-of-the-box default rules used for event notifications, perform the following steps.
+
+1. Get the Prometheus rules:
+
+    ```text 
+    kubectl -n kube-system get prometheusrules
+    ```
+    ```output
+    NAME       AGE
+    portworx   46d
+    ```
+2. Save the Prometheus rules to a yaml file:
+
+    ```text 
+    kubectl -n kube-system get prometheusrules portworx -o yaml > prometheusrules.yaml
+    ```
+3. View the contents of the file:
+    ```text 
+    cat prometheusrules.yaml
+    ```
+
+## Configure Grafana
+
+You can connect to Prometheus using Grafana to visualize your data. Grafana is a multi-platform open source analytics and interactive visualization web application. It provides charts, graphs, and alerts.
+
+1. Enter the following commands to download the Grafana dashboard and datasource configuration files:
 
     ```text 
     curl -O https://docs.portworx.com/samples/k8s/pxc/grafana-dashboard-config.yaml
@@ -132,7 +180,7 @@ You can connect to Prometheus using Grafana to visualize your data.
     100  1625  100  1625    0     0   4456      0 --:--:-- --:--:-- --:--:--  4464
     ```
 
-2. Create a configmap for the dashboard and data source.
+2. Create a configmap for the dashboard and data source:
     
     ```text 
     kubectl -n kube-system create configmap grafana-dashboard-config --from-file=grafana-dashboard-config.yaml
@@ -141,7 +189,7 @@ You can connect to Prometheus using Grafana to visualize your data.
     kubectl -n kube-system create configmap grafana-source-config --from-file=grafana-datasource.yaml
     ```
 
-3. Download and install Grafana dashboards using the following `curl` and `kubectl` commands:
+3. Download and install Grafana dashboards using the following commands:
 
     ```text
     curl "https://docs.portworx.com/samples/k8s/pxc/portworx-cluster-dashboard.json" -o portworx-cluster-dashboard.json && \
@@ -160,13 +208,13 @@ You can connect to Prometheus using Grafana to visualize your data.
     --from-file=portworx-etcd-dashboard.json 
     ```
 
-4. Enter the following `kubectl apply` command to download and install Grafana YAML file:
+4. Enter the following command to download and install the Grafana YAML file:
 
     ```text 
     kubectl apply -f https://docs.portworx.com/samples/k8s/pxc/grafana.yaml
     ```
 
-5. Verify if grafana pod is running by running the following `kubectl` command:
+5. Verify if the Grafana pod is running using the following command:
 
     ```text
     kubectl -n kube-system get pods | grep -i grafana
@@ -183,7 +231,9 @@ You can connect to Prometheus using Grafana to visualize your data.
 
 7. Navigate to Grafana by browsing to `http://localhost:3000`.
     
-8. Enter the default credentials to login:
+8. Enter the default credentials to log in.<br><br>
 
     * **login:**  `admin`
     * **password:** `admin`
+
+    ![Grafana Dashboard](/img/monitoring/grafanadashboard.png)
