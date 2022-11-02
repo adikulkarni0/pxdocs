@@ -7,6 +7,7 @@ keywords: IBM Cloud OpenShift Service, IBM cloud drive, VPC Gen-2
 description: Learn how to install and configure Portworx on IBM with OCP using Cloud Drives.
 aliases:
     - /install-portworx/cloud/ibm/ibm-cloud-drives/
+hidden: true
 ---
 
 
