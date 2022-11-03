@@ -16,7 +16,7 @@ Once you've installed Portworx, you can perform the following tasks to verify th
 Enter the following `oc get pods` command to list and filter the results for Portworx pods:
 
 ```text 
-oc get pods -n kube-system -o wide | grep -e portworx -e px
+oc get pods -n portworx -o wide | grep -e portworx -e px
 ```
 
 ```output
@@ -40,7 +40,7 @@ Note the name of one of your `px-cluster` pods. You'll run `pxctl` commands from
 You can find the status of the Portworx cluster by running `pxctl status` commands from a pod. Enter the following `oc exec` command, specifying the pod name you retrieved in the previous section:
 
 ```text
-oc exec px-cluster-1c3edc42-4541-48fc-b173-3e9bf3cd834d-vpptx -n kube-system -- /opt/pwx/bin/pxctl status
+oc exec px-cluster-1c3edc42-4541-48fc-b173-3e9bf3cd834d-vpptx -n portworx -- /opt/pwx/bin/pxctl status
 ```
 ```output
 Defaulted container "portworx" out of: portworx, csi-node-driver-registrar
@@ -88,7 +88,7 @@ The Portworx status will display `PX is operational` if your cluster is running 
 * Find the storage cluster, the status should show as `Online`:
 
     ```text
-    oc -n kube-system get storagecluster
+    oc -n portworx get storagecluster
     ```
     ```output
     NAME                                              CLUSTER UUID                           STATUS   VERSION   AGE
@@ -98,7 +98,7 @@ The Portworx status will display `PX is operational` if your cluster is running 
 * Find the storage nodes, the statuses should show as `Online`:
 
     ```text
-    oc -n kube-system get storagenodes
+    oc -n portworx get storagenodes
     ```
 
     ```output
@@ -110,7 +110,7 @@ The Portworx status will display `PX is operational` if your cluster is running 
 * Verify the Portworx cluster provision status <!-- What's the success condition here?-->. Enter the following `oc exec` command, specifying the pod name you retrieved in the previous section:
 
     ```text
-    oc exec px-cluster-1c3edc42-4541-48fc-b173-3e9bf3cd834d-vpptx -n kube-system -- /opt/pwx/bin/pxctl cluster provision-status
+    oc exec px-cluster-1c3edc42-4541-48fc-b173-3e9bf3cd834d-vpptx -n portworx -- /opt/pwx/bin/pxctl cluster provision-status
     ```
 
     ```output
@@ -120,54 +120,28 @@ The Portworx status will display `PX is operational` if your cluster is running 
     f6d87392-81f4-459a-b3d4-fad8c65b8edc    Up              0 ( e06386e7-b769-4ce0-b674-97e4359e57c0 )      Online          HIGH            3.0 TiB 3.0 TiB    10 GiB   0 B             default default default
     ```
 
-## Create your first StorageClass and PVC
+## Create your first PVC
 
-For your apps to use persistent volumes powered by Portworx, you must create a StorageClass that references Portworx as the provisioner. Once you've defined a StorageClass, you can create PersistentVolumeClaims (PVCs) that reference this StorageClass. For a more general overview of how storage works within Kubernetes, refer to the [Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) section of the Kubernetes documentation. 
+For your apps to use persistent volumes powered by Portworx, you must use a StorageClass that references Portworx as the provisioner. Portworx includes a number of default StorageClasses, which you can reference with PersistentVolumeClaims (PVCs) you create. For a more general overview of how storage works within Kubernetes, refer to the [Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) section of the Kubernetes documentation.
 
-Perform the steps in this topic to create and associate StorageClass and PVC objects in your cluster.
+Perform the following steps to create a PVC:
 
-### Create a StorageClass
-
-1. Create a StorageClass spec using the following spec and save it as `sc-1.yaml`. This StorageClass uses CSI:
-
-    ```text 
-    kind: StorageClass
-    apiVersion: storage.k8s.io/v1
-    metadata:
-      name: <your-storageclass-name>
-    provisioner: pxd.portworx.com
-    parameters:
-      repl: "1"
-    ```
-
-2. Apply the spec using the following `oc apply` command to create the StorageClass:
-
-    ```text
-    oc apply -f sc-1.yaml
-    ```
-    ```output
-    storageclass.storage.k8s.io/example-storageclass created
-    ```
-
-### Create a PVC
-
-3. Create a PVC based on your defined StorageClass and save the file:
+1. Create a PVC referencing the `px-csi-db` default StorageClass and save the file:
 
     ```text
     kind: PersistentVolumeClaim
     apiVersion: v1
     metadata:
-      name: <your-pvc-name>
+        name: px-check-pvc
     spec:
-      storageClassName: <your-storageclass-name>
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: 2Gi
-    ```
-
-4. Run the `oc apply` command to create a PVC:
+        storageClassName: px-csi-db
+        accessModes:
+            - ReadWriteOnce
+        resources:
+            requests:
+                storage: 2Gi
+    ```            
+2. Run the `oc apply` command to create a PVC:
 
     ```text
     oc apply -f <your-pvc-name>.yaml
@@ -222,14 +196,14 @@ You can monitor your Portworx cluster using Prometheus. Portworx deploys Prometh
     oc get pods -A | grep -i prometheus
     ```
     ```output
-    kube-system   prometheus-px-prometheus-0                              2/2     Running            0                59m
-    kube-system   px-prometheus-operator-59b98b5897-9nwfv                 1/1     Running            0                60m
+    portworx   prometheus-px-prometheus-0                              2/2     Running            0                59m
+    portworx   px-prometheus-operator-59b98b5897-9nwfv                 1/1     Running            0                60m
     ```
 
 2. Verify that the Prometheus `px-prometheus` and `prometheus operated` services exist by entering the following `oc get service` command:
 
     ```text 
-    oc -n kube-system get service | grep -i prometheus
+    oc -n portworx get service | grep -i prometheus
     ```
     ```output
     prometheus-operated         ClusterIP   None             <none>        9090/TCP                       63m
@@ -244,7 +218,7 @@ Prometheus Alertmanager handles alerts sent from the Prometheus server based on 
 1. Create a secret called `alertmanager-portworx` in the same namespace as your StorageCluster object:
 
     ```text
-    oc -n kube-system create secret generic alertmanager-portworx --from-file=alertmanager.yaml=alertmanager.yaml
+    oc -n portworx create secret generic alertmanager-portworx --from-file=alertmanager.yaml=alertmanager.yaml
     ```
 
 2. Edit your StorageCluster object to enable Alertmanager:
@@ -254,7 +228,7 @@ Prometheus Alertmanager handles alerts sent from the Prometheus server based on 
     kind: StorageCluster
     metadata:
       name: portworx
-      namespace: kube-system
+      namespace: portworx
     monitoring:
         prometheus:
           enabled: true
@@ -266,7 +240,7 @@ Prometheus Alertmanager handles alerts sent from the Prometheus server based on 
 3. Access Alertmanager by setting up port forwarding and browsing to the specified port. In this example, port forwarding is provided for ease of access to the Alertmanager service from the node IP using the port 9093:
 
     ```text 
-    oc -n kube-system port-forward service/alertmanager-portworx 9093:9093
+    oc -n portworx port-forward service/alertmanager-portworx 9093:9093
     ```
 
     The following is a sample for Alertmanager, the settings used in your environment may be different:
@@ -324,10 +298,10 @@ You can connect to Prometheus using Grafana to visualize your data.
 2. Create a configmap for the dashboard and data source.
     
     ```text 
-    oc -n kube-system create configmap grafana-dashboard-config --from-file=grafana-dashboard-config.yaml
+    oc -n portworx create configmap grafana-dashboard-config --from-file=grafana-dashboard-config.yaml
     ```
     ```text
-    oc -n kube-system create configmap grafana-source-config --from-file=grafana-datasource.yaml
+    oc -n portworx create configmap grafana-source-config --from-file=grafana-datasource.yaml
     ```
 
 3. Download and install Grafana templates using the followin `curl` and `oc` commands:
@@ -341,7 +315,7 @@ You can connect to Prometheus using Grafana to visualize your data.
     ```
 
     ```text
-    oc -n kube-system create configmap grafana-dashboards \
+    oc -n portworx create configmap grafana-dashboards \
     --from-file=portworx-cluster-dashboard.json \
     --from-file=portworx-performance-dashboard.json \
     --from-file=portworx-node-dashboard.json \
@@ -364,7 +338,7 @@ You can connect to Prometheus using Grafana to visualize your data.
     * Run the following command to edit services.
 
         ```text
-        oc -n kube-system edit service px-prometheus
+        oc -n portworx edit service px-prometheus
         ```
 
         ```output
@@ -391,7 +365,7 @@ You can connect to Prometheus using Grafana to visualize your data.
 6. List where the Grafana service is running.
 
     ```text 
-    oc get service -n kube-system grafana
+    oc get service -n portworx grafana
     ```
 
     ```output
@@ -402,12 +376,12 @@ You can connect to Prometheus using Grafana to visualize your data.
 7. Change “type” under spec to `NodePort`
 
     ``` text
-    oc edit service grafana -n kube-system
+    oc edit service grafana -n portworx
     service/grafana edited
     ```
 
     ```text
-    oc get service -n kube-system grafana
+    oc get service -n portworx grafana
     ```
 
     ```output
