@@ -28,29 +28,23 @@ Once you've successfully installed and verified your Portworx installation, you'
 
 Before you can install Portworx on your OpenShift cluster, you must first install the Portworx Operator. Perform the following steps to prepare your OpenShift cluster by installing the Operator.
 
-1. Navigate to the **OperatorHub** tab of your OpenShift cluster admin page:
+1. From your OpenShift UI, select **OperatorHub** in the left pane.
 
-      ![Portworx catalog](/img/OpenshiftOperatorHub.png)
+2. On the **OperatorHub** page, search for Portworx and select either the **{{< pxEnterprise >}}** or **{{< pxEssentials >}}** Operator:
+   
+    ![search catalog](/img/openshift-vsphere/image5.png)
 
-2. Select the **kube-system** project from the project dropdown. This defines the namespace in which the Operator will be deployed:
+3. Click **Install** to install Portworx Operator:
 
-      ![Portworx project callout](/img/OpenshiftSelectKube.png)
+    ![select catalog](/img/openshift-vsphere/image17-2.png)
 
-3. Search for and select either the **{{< pxEnterprise >}}** or **{{< pxEssentials >}}** Operator:
+4. The Portworx Operator begins to install and takes you to the **Install Operator** page. On this page, select **A specific namespace on the cluster** option for **Installation mode**. Choose the **Create Project** option from the **Installed Namespace** dropdown:
 
-      ![select {{< pxEnterprise >}}](/img/openshift-vsphere/image5.png)
+    ![Portworx namespace](/img/openshift-vsphere/portworx-namespace.png)
 
-4. Select **Install** to install the Certified Portworx Operator:
+5. On the **Create Project** window, enter the name `portworx` and click **Create** to create a namespace called **portworx**.
 
-    ![Portworx Operator](/img/openshift-vsphere/image17-2.png)
-
-    <!-- should we provide any directions for the selections here? Update channel, installation mode, update approval? -->
-
-    ![Portworx Operator](/img/openshift-vsphere/image4-2.png)
-
-    The Portworx Operator begins to install and takes you to the **Installed Operators** page. From there, you can deploy Portworx onto your cluster:
-
-    ![Portworx Operator](/img/openshift-vsphere/image1-2.png)
+5. Click **Install** to deploy Portworx Operator in the `portworx` namespace.
 
 ## Deploy Portworx using the Operator
 
@@ -71,7 +65,7 @@ Grant permissions Portworx requires by creating a secret with user credentials:
     kind: Secret
     metadata:
         name: px-vsphere-secret
-        namespace: kube-system
+        namespace: portworx
     type: Opaque
     data:
         VSPHERE_USER: <your-vcenter-server-user>
@@ -110,7 +104,7 @@ Grant permissions Portworx requires by creating a secret with user credentials:
     <!-- It looks like they may need to enter their own entitlement ID value, is that true? -->
 
     ```text
-    oc -n kube-system create secret generic px-essential \
+    oc -n portworx create secret generic px-essential \
         --from-literal=px-essen-user-id=YOUR_ESSENTIAL_ENTITLEMENT_ID \
         --from-literal=px-osb-endpoint='https://pxessentials.portworx.com/osb/billing/v1/register'
     ```
@@ -131,11 +125,8 @@ To install Portworx with OpenShift, you must generate a `StorageCluster` spec th
 
     ![Portworx Operator](/img/install-shared/product-line.png)
 
-4. On the **Basic** tab, Select **Use the Portworx Operator** and select the **Portworx version** you want. Choose **Built-in ETCD** if you have no external ETCD cluster:
+4. On the **Basic** tab, ensure that the **Use the Portworx Operator** option is selected and choose the latest **Portworx version**. Choose **Built-in ETCD** if you have no external ETCD cluster, and click **Next**.
 
-    ![Portworx Operator](/img/install-shared/basic.png)
-
-    Select the **Next** button to continue.
 
 5. On the **Storage** tab:
 
@@ -144,13 +135,12 @@ To install Portworx with OpenShift, you must generate a `StorageCluster` spec th
     <!-- No advice for type of disk? -->
     * At the bottom pane, enter your **vCenter endpoint**, **vCenter datastore prefix**, and the **Kubernetes Secret Name** you created in step 1 of the [Grant the required cloud permissions](#grant-the-required-cloud-permissions) section:
 
-    ![Portworx Operator](/img/openshift-vsphere/image6.png)
+    ![Portworx Operator](/img/openshift-vsphere/px-central-storage.png)
 
     Select the **Next** button to continue.
 
-6.  On the **Network** tab, keep the default values and select the **Next** button to continue:
+6.  On the **Network** tab, keep the default values and select the **Next** button to continue.
 
-    ![Portworx Operator](/img/install-shared/network-default.png)
 
 7. On the **Customize** tab, select the **Openshift 4+** radio buttom from the **Are you running either of these?** dialog box. 
 
@@ -164,9 +154,7 @@ To install Portworx with OpenShift, you must generate a `StorageCluster` spec th
 
     Select the **Finish** button to continue.
 
-9.  Save and download the spec for future reference:
-
-    ![Portworx Operator](/img/openshift-vsphere/image16.png)
+9.  Save and download the spec for future reference.
 
 
 <!-- creating this section in response to some of the comments on the google doc that haven't been answered 
@@ -188,15 +176,11 @@ You can apply the StorageCluster spec in one of two ways:
 
 #### Apply the spec using the OpenShift UI
 
-1. Within the **Portworx Operator** page, select the operator **{{< pxEnterprise >}}**
+1. Once the Operator is installed successfully, create a StorageCluster object by clicking the **Create StorageCluster** button on the same page:
 
-    ![Portworx Operator](/img/openshift-vsphere/image1.png)
+    ![Portworx Operator](/img/openshift-vsphere/px-storagecluster.png)
 
-2. Select **Create StorageCluster** to create a StorageCluster object.
-
-    ![Portworx Operator](/img/openshift-vsphere/image2.png)
-
-3. The spec displayed here represents a very basic default spec. Copy the spec you created with the spec generator and paste it over the default spec in the YAML view and select the **Create** button:
+3. The spec displayed here represents a very basic default spec. Copy the spec you created with the spec generator and paste it over the default spec in the YAML view, and click **Create**:
 
     ![Portworx Operator](/img/openshift-vsphere/image21.png)
 
@@ -206,7 +190,7 @@ You can apply the StorageCluster spec in one of two ways:
 
     Once Portworx has fully deployed, the status will show as **Online**:
 
-    ![Portworx Operator](/img/openshift-vsphere/image7.png)
+    ![Portworx Operator](/img/openshift-vsphere/portworx-installed.png)
 
 #### Apply the spec using the CLI
 
@@ -221,15 +205,15 @@ If you're not using the OpenShift console, you can create the StorageCluster obj
 2. Using the oc get pods command, monitor the Portworx deployment process. Wait until all Portworx pods show as ready:
 
     ```text
-    oc get pods -o wide -n kube-system -l name=portworx
+    oc get pods -o wide -n portworx -l name=portworx
     ```
 
 3. Verify that Portworx is deployed by checking its status with the following commands:
  
     ```text
-    PX_POD=$(oc get pods -l name=portworx -n kube-system -o jsonpath='{.items[0].metadata.name}')
+    PX_POD=$(oc get pods -l name=portworx -n portworx -o jsonpath='{.items[0].metadata.name}')
  
-    oc exec $PX_POD -n kube-system -- /opt/pwx/bin/pxctl status
+    oc exec $PX_POD -n portworx -- /opt/pwx/bin/pxctl status
     ```
 
 {{< content "shared/post-installation-ocp.md" >}}
