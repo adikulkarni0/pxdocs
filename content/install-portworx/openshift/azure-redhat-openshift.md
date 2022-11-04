@@ -1,10 +1,9 @@
 ---
 title: Install Portworx on Azure Red Hat OpenShift
-linkTitle: Azure Red Hat OpensShift
+linkTitle: Azure Red Hat OpenShift
 weight: 200
 keywords: Install, on-premises, OpenShift, kubernetes, k8s, ARO, Azure, OpenShift
 description: Install Portworx on Azure Red Hat OpenShift
-linkTitle: Install on Azure Red Hat OpenShift
 ---
 
 ## Prerequisites
@@ -12,15 +11,16 @@ linkTitle: Install on Azure Red Hat OpenShift
 * [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 * Logged in to your Azure account through the [CLI](https://docs.microsoft.com/en-us/cli/azure/get-started-with-azure-cli)
 
+
 ## Procedure
 
-* Follow the [cluster creation tutorial](https://docs.microsoft.com/en-us/azure/openshift/tutorial-create-cluster ) on the Microsoft Azure documentation, including the *Get a Red Hat pull secret (optional)* section.
-* Follow the [cluster connection tutorial](https://docs.microsoft.com/en-us/azure/openshift/tutorial-connect-cluster) on the Microsoft Azure documentation.
+* Follow the [cluster creation tutorial](https://docs.microsoft.com/en-us/azure/openshift/tutorial-create-cluster ) in the Microsoft Azure documentation, including the *Get a Red Hat pull secret (optional)* section.
+* Follow the [cluster connection tutorial](https://docs.microsoft.com/en-us/azure/openshift/tutorial-connect-cluster) in the Microsoft Azure documentation.
 
 
 ### Find the ARO Service Principal
 
-When deploying Portworx on Azure Redhat Openshift (ARO), the virtual machines are created in a resource group with a `Deny Assignment` role that prevents any service principal from accessing virtual machines except the service principal created for the resource group. In this task, you identify the service principal for the resource group that has access, and configure it to pass on the credentials (Azure Client ID, Azure Client Secret, and Tenant ID) via the Portworx cluster spec. Portworx will fetch the `px-azure` secret object file to authenticate. Perform the following steps from your Azure Web UI:
+When deploying Portworx on Azure Red Hat Openshift (ARO), the virtual machines are created in a resource group with a `Deny Assignment` role that prevents any service principal from accessing virtual machines except the service principal created for the resource group. In this task, you identify the service principal for the resource group that has access, and configure it to pass on the credentials (Azure Client ID, Azure Client Secret, and Tenant ID) via the Portworx cluster spec. Portworx will fetch the `px-azure` secret object file to authenticate. Perform the following steps from your Azure Web UI:
 
 1. Select **Virtual Machines** from the top navigation menu.
 2. From the *Virtual machines* page, select the **Resource Group** associated with your cluster.
@@ -37,7 +37,7 @@ When deploying Portworx on Azure Redhat Openshift (ARO), the virtual machines ar
 7. From the home page, open the **Azure Active Directory** page (select **All services** to see the option). Select **App registrations** on the left pane, followed by *All applications*. In the search bar in the center of the page, paste the application name you saved in the previous step and press the enter key. Select the application link that shows in the results to open the next page.
 8. From your application's page, select **Certificates & secrets** under **Manage** from the left pane.
 9. From the **Certificates & secrets** page, select **+ New client secret** to create a new secret. On the **Add a client secret** page, provide the description and expiry date of your secret and click **Add**. 
-10. You can see the newly crated secret listed on the **Client secret** subpage. Copy and save the following values of your newly created secret:
+10. You can see the newly created secret listed on the **Client secret** subpage. Copy and save the following values of your newly created secret:
   * Value 
   * Secret ID
 
@@ -46,7 +46,7 @@ When deploying Portworx on Azure Redhat Openshift (ARO), the virtual machines ar
 Create a secret called `px-azure` to give Portworx access to Azure APIs by updating the following fields with the associated fields from the service principal you created in the previous section.
 
   ```text
-   ./oc create secret generic -n kube-system px-azure\
+   ./oc create secret generic -n portworx px-azure\
    --from-literal=AZURE_TENANT_ID=<tenant> \
    --from-literal=AZURE_CLIENT_ID=<appId> \
   --from-literal=AZURE_CLIENT_SECRET=<value>
@@ -57,48 +57,30 @@ Create a secret called `px-azure` to give Portworx access to Azure APIs by upd
    * `AZURE_TENANT_ID`: Run the `az login` command to get this value 
    * `AZURE_CLIENT_ID`: Provide the Application ID associated with your cluster's resource group, which you saved in step 6 of the previous section
    * `AZURE_CLIENT_SECRET`: Provide the Value of your secret, which you saved in the step 10 of the previous section
+
 ### Generate Portworx spec
 
-1. Navigate to [PX-Central](https://central.portworx.com/) to generate an installation spec: 
+1. Navigate to [PX-Central](https://central.portworx.com/) to generate an installation spec.
 
-2. Click **Continue** with thePortworx Enterprise option:
-  ![PX option screen](/img/aro/image1.png)
+2. Click **Continue** with the Portworx Enterprise option:
+    ![PX option screen](/img/pxcentral-install.png)
 
 3. Choose an appropriate license for your requirement and click **Continue**:
-  ![PX license screen](/img/aro/image2.png)
+    ![PX license screen](/img/pxcentral-license.png)
 
-4. On the **Basic** tab, select **Use the Portworx Operator** and select the Portworx version you want. Choose **Built-in** ETCD if you have no external ETCD cluster.
-
-5. On **Storage** tab, select **Cloud** as your environment, **AZURE** as cloud platform, and click **Next**:
-  ![Your Environment](/img/aro/image4.png)
-
-6. On the **Network** tab, choose your network and click **Next**.
-7. On the **Customize** page, select **Azure Kubernetes Service (AKS)** option, and click **Finish**:
-  ![Other environment](/img/aro/image6.png)
-
-8. Download the Portworx spec as a YAML file, and append the `osft=true` and `portworx.io/is-openshift: "true"` values to the `annotations` field. 
+4. On the **Basic** tab, ensure that the **Use the Portworx Operator** option is selected. Choose at least version 2.12 from the **Portworx Versions** dropdown, keep the default namespace name in the **Namespace** field, choose **Built-in** ETCD if you have no external ETCD cluster, and click **Next**:
+  ![basic screen](/img/aro/image5.png)
   
-    Following is a sample spec for your reference:
 
-    ```   
-    # SOURCE: https://install.portworx.com/?operator=true&mc=false&kbver=&b=true&kd=type%3DPremium_LRS%2Csize%3D150&s=%22type%3DPremium_LRS%2Csize%3D150%22&c=px-cluster-068edac2-6b76-4a58-9227-bbeccb6c0928&aks=true&stork=true&csi=true&mon=true&tel=false&st=k8s&promop=true
-    kind: StorageCluster
-    apiVersion: core.libopenstorage.org/v1
-    metadata:
-      name: px-cluster-068edac2-6b76-4a58-9227-bbeccb6c0928
-      namespace: kube-system
-      annotations:
-        portworx.io/install-source: "https://install.portworx.com/?operator=true&mc=false&kbver=&b=true&kd=type%3DPremium_LRS%2Csize%3D150&s=%22type%3DPremium_LRS%2Csize%3D150%22&c=px-cluster-068edac2-6b76-4a58-9227-bbeccb6c0928&aks=true&osft=true&stork=true&csi=true&mon=true&tel=false&st=k8s&promop=true"
-        portworx.io/is-aks: "true"
-        portworx.io/is-openshift: "true"
-    spec:
-    ...
-    ```
+5. On the **Storage** tab, select **Cloud** as your environment, select **AZURE** as cloud platform from the dropdown, then click **Next**.
+
+6. From the **Network** tab, choose your network and click **Next**.
+7. On the **Customize** page, select **ARO Microsoft Azure Red Hat OpenShift** option, then click **Finish** to generate the Portworx spec. Download and save the spec for future reference.
+
 ### Install Portworx Operator using OpenShift UI
 
 1. From your OpenShift UI, select **OperatorHub** in the left pane.
-
-2. On the **OperatorHub** page, search for Portworx and select **Portworx Enterprise** or **Portworx Essentials** card: 
+2. On the **OperatorHub** page, search for Portworx and select the **Portworx Enterprise** or **Portworx Essentials** card:
 
     ![search catalog](/img/aro/oc-px-search-catalog.png)
 
@@ -106,30 +88,28 @@ Create a secret called `px-azure` to give Portworx access to Azure APIs by upd
 
     ![select catalog](/img/openshift-vsphere/image17-2.png)
 
-4. Portworx Operator begins to install and takes you to the **Install Operator** page. On this page, select **A specific namespace on the cluster** option for **Installation mode**, and select **kube-system** from the **Installed Namespace** dropdown: 
-   
+4. Portworx Operator begins to install and takes you to the **Install Operator** page. On this page, select the **A specific namespace on the cluster** option for **Installation mode**. Choose the **Create Project** option from the **Installed Namespace** dropdown:
+
     ![Installed operator page](/img/aro/oc-namesapce-operator.png)
 
-5. Click **Install** to install Portworx Operator in the `kube-system` namespace.
+5. In the **Create Project** window, provide the name `portworx` and click **Create** to create a namespace called **portworx**.
+
+5. Click **Install** to deploy Portworx Operator in the `portworx` namespace.
 
 ### Deploy Portworx using OpenShift UI
  
-1. Navigate to the **Installed Operator** page. Choose kube-system from the **Project** dropdown and select **Portworx Enterprise**:
+1. Once the Operator is successfully installed, a **Create StorageCluster** button appears. Click the button to create a StorageCluster object:
 
-    ![Portworx Operator](/img/aro/aro-kube-system.png)
+    ![Portworx Operator](/img/aro/aro-px-storagecluster.png)
 
-2. Select **Create StorageCluster** to create a StorageCluster object:
+2. On the **Create StorageCluster** page, choose **YAML view** to configure the StorageCluster object.
 
-    ![Portworx Operator](/img/aro/aro-storagecluster.png)
-
-3. On the **Create StorageCluster** page, choose **YAML view** to configure the StorageCluster object.
-
-4. Copy and paste the edited Portworx spec that you generated in the *Generate Portworx spec* section into the text-editor, and click **Create** to deploy Portworx: 
+3. Copy and paste the Portworx spec that you generated in the *Generate Portworx spec* section into the text editor, then click **Create** to deploy Portworx: 
 
     ![YAML view](/img/aro/oc-config-yaml.png)
    
-5. Verify that Portworx has deployed successfully by navigating to the **Storage Cluster** tab of the Installed Operators page. Once Portworx has fully deployed, the status will show as Online:
+4. Verify that Portworx has deployed successfully by navigating to the **Storage Cluster** tab of the Installed Operators page. Once Portworx has fully deployed, the status will show as Online:
 
       ![Portworx status](/img/aro/portworx-installed.png)
 
-{{< content "shared/portworx-install-with-kubernetes-post-install.md" >}}
+{{< content "shared/post-installation-ocp.md" >}}
