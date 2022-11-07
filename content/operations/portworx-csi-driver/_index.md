@@ -18,21 +18,29 @@ For scheduler-specific information, refer to the following pages:
 * [CSI Driver on Kubernetes](/operations/operate-kubernetes/storage-operations/csi/)
 * [CSI Driver on Nomad](/install-portworx/install-with-other/nomad//)
 
+## CSI-based Installation Options
+
+| **Install Workflow**                | **Kubernetes**                                                              | **Nomad** |
+|-------------------------------------|--------------------------------------------------|--------------------------------------|
+| Operator                     | Yes                                                     | No  |
+| Portworx Daemonset Installer | Yes                                                     | No  |
+| Nomad Job                    | No                                                      | [Yes](/install-portworx/install-with-other/nomad/installation/install-as-a-nomad-job/) | 
+
 ## Core Features support
 | **Feature**  | **Kubernetes** | **Nomad** |
 |----------|------------|-------|
-| Volume Lifecycle               | Yes                                    | Yes                                                                                                                                                         |
-| Sharedv4 Volumes               | Yes                                    | Yes                                                                                                                                                         |
-| Volume Cloning                 | Yes                                    | Yes                                                                                                                                                         |
-| CSI Snapshotting               | Yes                                    | Yes                                                                                                                                                         |
-| CSI Spec 1.6                   | Yes                                    | Yes                                                                                                                                                         |
-| PX Security - Volume Lifecycle | Yes                                    | Yes                                                                                                                                                         |
+| Volume Lifecycle               | Yes                                    | Yes |
+| Sharedv4 Volumes               | Yes                                    | Yes |
+| Volume Cloning                 | Yes                                    | Yes |
+| CSI Snapshotting               | Yes                                    | Yes |
+| CSI Spec 1.6                   | Yes                                    | Yes |
+| PX Security - Volume Lifecycle | Yes                                    | Yes |
 | PX Security - Snapshotting     | Yes                                    | Yes |
-| PX Topology                    | Yes                                    | No                                                                                                                                       |
-| CSI Raw Block                  | Yes                                    | No                                                                                                                                           |
-| Volume Resizing                | Yes                                    | Not currently supported in Nomad: [#10324](https://github.com/hashicorp/nomad/issues/10324)                                                                |
-| Encryption - Vault             | Yes                                    | Not currently supported in Nomad: [#7978](https://github.com/hashicorp/nomad/issues/7978)                                                                  |
-| CSI Topology                   | No, PX topology is recommended instead | No                                                                                                                                                          |
+| PX Topology                    | Yes                                    | No  |
+| CSI Raw Block                  | Yes                                    | No  |
+| Volume Resizing                | Yes                                    | Not supported by Nomad: see [#10324](https://github.com/hashicorp/nomad/issues/10324) |
+| Encryption - Vault             | Yes                                    | Not supported by Nomad: see [#7978](https://github.com/hashicorp/nomad/issues/7978)   |
+| CSI Topology                   | No; [Portworx topology](/concepts/update-geography-info/) is recommended instead | No  |
 
 ## Kubernetes specific features
 
@@ -42,8 +50,8 @@ For scheduler-specific information, refer to the following pages:
 | Auth Token Secrets                      | Yes                                                                    |
 | Autopilot                               | Yes                                                                    |
 | Generic Ephemeral Volumes               | Yes                                                                    |
-| Encryption with K8s secrets             | Yes                                                                    |
-| CSI Migration (Portworx in-tree -> CSI) | No - coming soon                                                       |
+| Encryption with Kubernetes secrets      | Yes                                                                    |
+| CSI Migration (Portworx in-tree -> CSI) | In development                                                         |
 
 ## Nomad specific features
 
@@ -51,19 +59,12 @@ For scheduler-specific information, refer to the following pages:
 |-------------------------------------|----------------------------------------------------------------------------|
 | Pre-provisioned volume registration | Yes                                                                        |
 
-## PX-Backup & Stork
+## Portworx Backup & Stork
 
 | **Feature**                         | **Kubernetes**                                                              | **Nomad** |
 |-------------------------------------|--------------------------------------------------|--------------------------------------|
-| Stork Snapshotting   | Yes                                                     | No |
-| Stork Migration      | Yes                                                     | No |
-| Stork Backup         | Yes                                                     | No |
-| PX-Backup support    | Yes                                                     | No |
-| DR/Disaster Recovery | Yes                                                     | No |
-
-## Installation
-
-| **Feature**                         | **Kubernetes**                                                              | **Nomad** |
-|-------------------------------------|--------------------------------------------------|--------------------------------------|
-| Operator                     | Yes                                                     | No     |
-| Portworx Daemonset Installer | Yes                                                     | No           |
+| Portworx Backup support | Yes                                                     | No |
+| DR/Disaster Recovery    | Yes                                                     | No |
+| Stork Snapshotting      | Yes                                                     | No |
+| Stork Migration         | Yes                                                     | No |
+| Stork Backup            | Yes                                                     | No |
