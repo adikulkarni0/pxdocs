@@ -7,11 +7,33 @@ weight: 100
 hidesections: true
 ---
 
-This topic explains how to create and manage volumes using the `pxctl` CLI tool. To view a list of the `pxctl` commands, run:
+This topic explains how to create and manage volumes using the `pxctl` CLI tool. To view a list of the `pxctl` commands, run one of the following from a worker node:
 
+```text
+export PATH=$PATH:/opt/pwx/bin
+pxctl volume --help
+```
 
 ```text
 /opt/pwx/bin/pxctl volume --help
+```
+
+Alternatively, you can run the following commands anywhere you can access your Kubernetes cluster. First, set an environment variable containing the name of one of your Portworx worker nodes:
+
+```text
+PX_POD=$(kubectl get pods -l name=portworx -n kube-system -o jsonpath='{.items[0].metadata.name}')
+```
+
+Then you can run `pxctl` commands through `kubectl exec` as follows:
+
+```text
+kubectl exec $PX_POD -n kube-system -- /opt/pwx/bin/pxctl volume --help
+```
+
+Running the command procudes the following output:
+
+```text
+pxctl volume --help
 ```
 
 ```output
@@ -29,6 +51,7 @@ pxctl volume create -s 100 myVolName
 
 Available Commands:
   access               Manage volume access by users or groups
+  autofstrim           Periodically frees unused blocks in the volume to the portworx pool
   check                Perform Background filesystem consistency check operation on the volume
   clone                Create a clone volume
   create               Create a volume
@@ -65,17 +88,6 @@ Global Flags:
 Use "pxctl volume [command] --help" for more information about a command.
 ```
 
-<!--
-We added the following commands:
-- check                Perform Background filesystem consistency check operation on the volume
-- trim                 Frees unused blocks in the volume to the portworx pool
-
-Dow we want to document them?
--->
-
-{{<info>}}
-**NOTE:** Specify the `--volume` flag as part of your [`docker` command](https://docs.docker.com/storage/volumes/#choose-the--v-or---mount-flag) to use your new Portworx volumes in Docker.
-{{</info>}}
 
 The following sections explain the individual `pxctl` commands.
 
@@ -90,8 +102,6 @@ Consider the following capabilities of Portworx when creating a new volume using
 * Portworx uses an elastic architecture. This allows you to add capacity and throughput at every layer, at any time.
 * Volumes are thinly provisioned. They only use as much storage as needed by the container.
 * You can expand and contract the maximum size of a volume, even after you write data to the volume.
-
-You can create a volume before being used by its container. Also, the container can create the volume at runtime. When you create a volume, the `pxctl` CLI tool returns the volume ID. You can see the same volume ID when you run a Docker command. For example, `docker volume ls`.
 
 
 To create a volume, run the `pxctl volume create` command and provide the volume name. The following example creates the `myVol` volume:
@@ -146,12 +156,15 @@ Flags:
       --direct_io                           Enable Direct IO on volume
       --early_ack                           Reply to async write requests after it is copied to shared memory
       --enforce_cg                          enforce group during provision
+      --fastpath                            Enable fastpath IO support for this volume
   -g, --group string                        group
   -h, --help                                help for create
       --io_priority string                  IO Priority (Valid Values: [high medium low]) (default "low")
-      --io_profile string                   IO Profile (Valid Values: [sequential cms sync_shared db db_remote auto]) (default "auto")
+      --io_profile string                   IO Profile (Valid Values: [sequential cms sync_shared db db_remote auto none]) (default "auto")
       --journal                             Journal data for this volume
   -l, --label pairs                         list of comma-separated name=value pairs
+      --max_bandwidth string                maximum io bandwidth (MB/s) this volume is restricted to. syntax --max_bandwidth <ReadBW>,<WriteBW>. provide off for no throttling. e.g. --max_bandwidth 200,off
+      --max_iops string                     maximum iops this volume is restricted to. syntax --max_iops <ReadIOPS>,<WriteIOPS>. provide off for no throttling. e.g. --max_iops off,1000
   -m, --monthly day@hh:mm,k                 monthly snapshot at specified day@hh:mm,k (keeps 12 by default)
       --mount_options string                comma separated list of mount options provided as key=value pairs
       --nodes string                        comma-separated Node Ids or Pool Ids
@@ -161,17 +174,18 @@ Flags:
       --proxy_endpoint string               proxy endpoint provided in the following format '<protocol>://<endpoint>' Ex 'nfs://<nfs-server-ip>'
       --proxy_nfs_exportpath string         export path for nfs proxy volume
       --proxy_nfs_subpath string            sub path from the nfs share to which this proxy volume has access to
-      --proxy_write                         Enable proxy write replication for this volume
   -q, --queue_depth uint                    block device queue depth (Valid Range: [1 256]) (default 128)
       --racks string                        comma-separated Rack names
   -r, --repl uint                           replication factor (Valid Range: [1 3]) (default 1)
       --scale uint                          auto scale to max number (Valid Range: [1 1024]) (default 1)
-      --scan_policy string                  Specify filesystem scan policy (Valid Values: [none scan_on_mount repair_on_mount scan_on_next_mount repair_on_next_mount]) (default "none")
       --secret_key string                   secret_key to use to fetch secret_data for the PBKDF2 function
       --secret_options string               Secret options is used to pass specific secret parameters. Usage: --secret_options=k1=v1,k2=v2
       --secure                              encrypt this volume using AES-256
-      --sharedv4                            export this volume via Sharedv4 at /var/lib/osd/exports
+      --shared                              make this a globally shared namespace volume
+      --sharedv4                            export this volume via Sharedv4
+      --sharedv4_failover_strategy string   specifies how aggressively to fail over to a new server for a sharedv4 or sharedv4 service volume (Valid Values: [aggressive normal ])
       --sharedv4_mount_options string       comma separated list of sharedv4 client mount options provided as key=value pairs
+      --sharedv4_service_type string        creates a sharedv4 service volume when used with the sharedv4 option (Valid Values: [ClusterIP NodePort LoadBalancer ])
   -s, --size uint                           volume size in GB (default 1)
       --sticky                              sticky volumes cannot be deleted until the flag is disabled
       --storagepolicy string                storage policy name
@@ -193,10 +207,10 @@ Global Flags:
 ```
 
 {{<info>}}
-You can also pass these options through the scheduler or using the inline volume spec. For more details, see the [inline volume spec] (#inline-volume-spec) section below.
+You can also pass these options through the scheduler.
 {{</info>}}
 
-### Place a replica on a specific volume
+### Place a replica on a specific node
 
 Use the `--nodes=LocalNode` flag to create a volume and place at least one replica of the volume on the node where the command is run. This is useful when you use a script to create a volume locally on a node.
 
@@ -246,49 +260,9 @@ Volume  :  756818650657204847
 ```
 
 {{<info>}}
-The replicas are visible in the `Replica sets on nodes` section.
+The replicas are visible in the `Replica sets on nodes` section of the command output.
 {{</info>}}
 
-### Create volumes with Docker
-
-All `docker volume` commands are reflected in Portworx. For example, a `docker volume create` command provisions a storage volume in a Portworx storage cluster.
-
-The following command creates the `testVol` volume:
-
-```text
-docker volume create -d pxd --name testVol
-```
-
-```output
-testVol
-```
-
-To ensure the command is reflected into Portworx, run:
-
-```text
-pxctl volume list --name testVol
-```
-
-```output
-ID			NAME		SIZE	HA	SHARED	ENCRYPTED	IO_PRIORITY	STATUS		SNAP-ENABLED
-426544812542612832	testVol	1 GiB	1	no	no		LOW		up - detached	no
-```
-
-### Add optional parameters with the --opt flag
-
-Using the `--opt` flag in the `docker volume` command, you can add optional parameters to control your volume. These parameters are usually the same, whether you handle Portworx storage through the Docker volume or `pxctl` command.
-
-The following command shows how to use the `--opt` flag to specify the filesystem of the container and the size of the volume:
-
-```text
-docker volume create -d pxd --name opt_example --opt fs=ext4 --opt size=1G
-```
-
-```output
-opt_example
-```
-
-To check the settings of your new volume, run the `pxctl volume list` command, passing the `--name` flag with the name of your volume:
 
 ```text
 pxctl volume list --name opt_example
@@ -298,31 +272,6 @@ pxctl volume list --name opt_example
 ID			NAME		SIZE	HA	SHARED	ENCRYPTED	IO_PRIORITY	STATUS		SNAP-ENABLED
 282820401509248281	opt_example	1 GiB	1	no	no		LOW		up - detached	no
 ```
-
-## Inline volume spec
-
-Portworx enables you to pass the volume spec inline along with the volume name. This is useful when you want to create a volume with your scheduler application template inline, instead creating it in advance.
-
-For example, the following command creates a volume, called `demovolume`, with the following parameters:
-
-- IO priority level = high
-- initial size = 10G
-- replication factor = 3
-- periodic and daily snapshots
-
-```text
-docker volume create -d pxd io_priority=high,size=10G,repl=3,snap_schedule="periodic=60#4;daily=12:00#3",name=demovolume
-```
-
-The parameters above allow Docker to start a specific container dynamically. The following command creates a volume dynamically, and starts the `busybox` container:
-
-```text
-docker run --volume-driver pxd -it -v io_priority=high,size=10G,repl=3,snap_schedule="periodic=60#4;daily=12:00#3",name=demovolume:/data busybox sh
-```
-
-{{<info>}}
-The spec keys must be comma separated.
-{{</info>}}
 
 The `pxctl` CLI utility supports the following key-value pairs:
 
@@ -337,19 +286,6 @@ Encryption       - passphrase=secret
 snap_schedule    - "periodic=mins#k;daily=hh:mm#k;weekly=weekday@hh:mm#k;monthly=day@hh:mm#k" where k is the number of snapshots to retain.
 ```
 
-You can pass the inline specs through the scheduler application template. The following snippet shows a section from a marathon configuration file:
-
-```text
-"parameters": [
-	{
-		"key": "volume-driver",
-		"value": "pxd"
-	},
-	{
-		"key": "volume",
-		"value": "size=100G,repl=3,io_priority=high,name=mysql_vol:/var/lib/mysql"
-	}],
-```
 
 ## The global namespace
 
@@ -561,19 +497,6 @@ Using `pxctl`, you can manage your volume access rules. See the [volume access](
 
 You can use the `pxctl volume ha-update` to increase or decrease the replication factor of a Portworx volume. Refer to the [update volumes](/reference/cli/updating-volumes#update-a-volume-s-replication-factor) page for more details.
 
-## Volume pending requests
-
-Run the following command to display all pending requests:
-
-```text
-pxctl volume requests
-```
-
-```output
-Only support getting requests for all volumes.
-Active requests for all volumes: count = 0
-```
-
 ## Update the settings of a volume
 
 Using the `pxctl volume update` command, you can update the settings of your Portworx volumes. Refer to the [updating volumes](/reference/cli/updating-volumes) page for additional details.
@@ -613,3 +536,4 @@ To disable copy-on-write features for a specific volume, use the `pxctl volume u
   ```output
   Update Volume: Volume update successful for volume 850767800314736346
   ```
+
