@@ -8,19 +8,23 @@ hidden: true
 
 Before installing Portworx, let's ensure the PKS environment is prepared correctly.
 
+### Portworx prerequisites
+
+Ensure that your PKS cluster meets the [minimum requirements](/install-portworx/prerequisites) for Portworx.
+
 ### Enable privileged containers and kubectl exec
 
-Ensure that following options are enabled on all plans on the PKS tile.
+Ensure that the following options are selected on all plans on the PKS tile:
 
   * Enable Privileged Containers
-  * Disable DenyEscalatingExec (This is useful to run kubectl exec to run pxctl commands)
+  * Disable DenyEscalatingExec (this is useful for using `kubectl exec` to run `pxctl` commands)
 
 ### Enable zero downtime upgrades for Portworx PKS clusters
 
 Use the following steps to add a runtime addon to the [Bosh Director](https://bosh.io/docs/bosh-components/#director) to stop the Portworx service.
 
 {{<info>}}
-**Why is this needed ?** When stopping and upgrading instances bosh attempts to unmount _/var/vcap/store_. Portworx has its root filesystem for its OCI container mounted on _/var/vcap/store/opt/pwx/oci_ and the runc container is running using it. So one needs to stop Portworx and unmount _/var/vcap/store/opt/pwx/oci_ in order to allow bosh to proceed with stopping the instances. The addon ensures this is done automatically and enables zero downtime upgrades.
+**Why is this needed?** When stopping and upgrading instances bosh attempts to unmount _/var/vcap/store_. Portworx has its root filesystem for its OCI container mounted on _/var/vcap/store/opt/pwx/oci_ and the runc container is running using it. So one needs to stop Portworx and unmount _/var/vcap/store/opt/pwx/oci_ in order to allow bosh to proceed with stopping the instances. The addon ensures this is done automatically and enables zero downtime upgrades.
 {{</info>}}
 
 Perform these steps on any machine where you have the bosh CLI.
@@ -39,7 +43,7 @@ Perform these steps on any machine where you have the bosh CLI.
 
 2. Add the addon to the Bosh Director.
 
-    First let's fetch your current Bosh Director runtime config.
+    First, let's fetch your current Bosh Director runtime config:
 
     ```text
     bosh -e director-environment runtime-config
@@ -50,13 +54,13 @@ Perform these steps on any machine where you have the bosh CLI.
     If you already have an existing runtime config, add the release and addon in [runtime-configs/director-runtime-config.yaml](https://raw.githubusercontent.com/portworx/portworx-stop-bosh-release/master/runtime-configs/director-runtime-config.yaml) to your existing runtime config.
 
 
-    Once we have the runtime config file prepared, let's update it in the Director.
+    Once we have the runtime config file prepared, let's update it in the Director:
 
     ```text
     bosh -e director-environment update-runtime-config runtime-configs/director-runtime-config.yaml
     ```
 
-3. Apply the changes
+3. Apply the changes.
 
     After the runtime config is updated, go to your Operations Manager Installation Dashboard and click "Apply Changes". This will ensure bosh will add the addon on all new vm instances.
 
