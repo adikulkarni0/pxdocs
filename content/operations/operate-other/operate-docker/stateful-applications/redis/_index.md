@@ -7,7 +7,7 @@ noicon: true
 aliases:
     - /install-with-other/docker/stateful-applications/redis/
 ---
-This page provides instructions for deploying Redis with Portworx on Kubernetes.
+This page provides instructions for deploying Redis with Portworx on Docker standalone.
 
 ### Create a storage volume for Redis
 
@@ -103,7 +103,7 @@ get foo
 
 ### Create snapshot of your volume
 
-You can create container-granular snapshots, by saving just this container’s state. Snapshots are then immedidately available as a volume.
+You can create container-granular snapshots, by saving just this container’s state. Snapshots are then immediately available as a volume.
 
 Create a snapshot of the `redis_vol` volume using `pxctl`.
 
