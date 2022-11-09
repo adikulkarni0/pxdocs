@@ -58,11 +58,11 @@ Before you install Portworx, ensure that your physical network is configured app
 ### Prerequisites
 
 * FlashBlade must be running Purity//FB version 2.2.0 or greater. Refer to the [Supported models and versions](/reference/pure-reference/supported-versions/) topic for more information. 
-* Your cluster must have local drives on each node. Portworx needs local drives on the node (block devices) for the journal and for at least one storage pool. 
+* Your cluster must have local or cloud drives accessible on each node. Portworx needs local or cloud drives on the node (block devices) for the journal and for at least one storage pool. 
 * The latest NFS software package installed on your operating system (nfs-utils or nfs-common)
 * FlashBade can be accessed as a shared resource from all the cluster nodes. Specifically, both `NFSEndPoint` and `MgmtEndPoint` IP addresses must be accessible from all nodes. 
 * You've set up the secret, management endpoint, and API token on your FlashBlade.
-* If you want to use Stork as the main scheduler, you must use Stork version 2.7.0 or greater.
+* If you want to use Stork as the main scheduler, you must use Stork version 2.12.0 or greater.
 
 ### Deploy Portworx
 
