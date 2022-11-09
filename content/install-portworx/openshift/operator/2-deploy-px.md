@@ -18,11 +18,8 @@ For more information about the `StorageCluster` object and how the Operator mana
 **NOTE:** If you're installing Portworx on OpenShift on-premises, you may skip this section and go straight to the [install](#install-portworx-using-the-openshift-console) section.
 {{</info>}}
 
-If you're installing Portworx on OpenShift on a cloud environment, Portworx requires different user and service permissions from OpenShift. Grant the appropriate permissions for your cloud environment:
+If you're installing Portworx on OpenShift on a cloud environment, Portworx requires different user and service permissions from OpenShift. Grant the appropriate permissions for your cloud environment.
 
-### OpenShift on AWS
-
-{{< content "shared/portworx-install-with-kubernetes-cloud-aws-1-prepare.md" >}}
 
 ### OpenShift on GCP
 
