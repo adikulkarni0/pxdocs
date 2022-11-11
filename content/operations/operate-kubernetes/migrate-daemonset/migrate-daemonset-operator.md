@@ -3,8 +3,9 @@ title: Migrate from DaemonSet to Operator
 linkTitle: Migrate from DaemonSet to Operator
 keywords: migrate, daemonset, operator, migration, installation
 description: Learn how to migrate your Portworx cluster from a DaemonSet installation to a Portworx Operator installation.
-series: k8s-op-maintain
-weight: 1300
+weight: 100
+aliases:
+  - /operations/operate-kubernetes/migrate-daemonset/
 ---
 
 This page describes how to migrate your Portworx cluster from a DaemonSet installation to a Portworx Operator installation.
@@ -37,9 +38,13 @@ kubectl apply -f operator.yaml
 
 Make sure the Helm chart supports the Portworx Operator, then run `helm upgrade`. Refer to the [Helm chart documentation](https://github.com/portworx/helm/tree/portworx-operator-v1/charts/portworx#upgrading-the-chart-from-an-old-chart-with-daemonset) for more details.
 
+{{<info>}}**NOTE:** To migrate your Portworx cluster on IBM Cloud from a DaemonSet installation to a Portworx Operator installation, refer to [this page](/operations/operate-kubernetes/migrate-daemonset/migrate-daemonset-ibm){{</info>}}
+
+
 ### Wait for the StorageCluster to be created
 
 If you have Portworx DaemonSet installed, the Operator will automatically detect that on startup. The Operator will then create an equivalent StorageCluster object.
+
 
 ### Add cloud provider annotation to StorageCluster
 
@@ -55,6 +60,7 @@ Otherwise, run the appropriate command for your cloud provider from the followin
    ```text
    kubectl -n kube-system annotate storagecluster --all portworx.io/is-iks="true"
    ```
+
 * Google Kubernetes Engine (GKE)
    ```text
    kubectl -n kube-system annotate storagecluster --all portworx.io/is-gke="true"
@@ -137,6 +143,7 @@ If the StorageCluster update strategy is `OnDelete` (which means that DaemonSet 
 {{</info>}}
 
 You can skip the next section and proceed to [this section](#check-migration-status) to verify the status of your migration.
+
 ### Approve the migration
 
 To approve the migration, run the following command:
