@@ -79,7 +79,7 @@ ETCDCTL_API=3 etcdctl --endpoints="<comma-separated-etcd-url>" snapshot save </p
 
 You can run the above command either on the etcd nodes or on a separate node where you would want to store these etcd snapshots.
 
-For a more detailed setup, maintenance and tuning information refer the following coreos etcd reference docs.
+For a more detailed setup, maintenance and tuning information refer the following etcd reference docs.
 
 * [Maintenance](https://etcd.io/docs/v3.3.12/op-guide/maintenance/)
 * [Tuning](https://etcd.io/docs/v3.3.12/tuning/)
