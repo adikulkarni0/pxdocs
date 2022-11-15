@@ -7,8 +7,9 @@ noicon: true
 series: operations-k8s
 aliases:
     - /portworx-install-with-kubernetes/operate-and-maintain-on-kubernetes/running-in-production/
+    - /operations/operate-kubernetes/going-production/
 ---
-### DAY 1 Operations
+### Day 1 Operations
 
 #### Initial Software Setup for Production
 
