@@ -187,7 +187,6 @@ To install Portworx with Kubernetes, you must first generate Kubernetes manifest
         cloudStorage:
             deviceSpecs:
             - type=Premium_LRS,size=50,diskEncryptionSetID=/subscriptions/<subscription>/resourceGroups/<resource-group>/providers/Microsoft.Compute/diskEncryptionSets/<disk-encryption-set-name>
-        secretsProvider: azure-kv
         ```
 
     {{<info>}}
