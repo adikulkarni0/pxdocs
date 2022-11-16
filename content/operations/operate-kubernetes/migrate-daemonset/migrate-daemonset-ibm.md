@@ -1,6 +1,6 @@
 ---
 title: Migrate from DaemonSet to Operator on IBM Cloud
-linkTitle: DaemonSet to Operator migration on IBM Cloud
+linkTitle: Migrate IBM Cloud
 keywords: migrate, daemonset, operator, migration, installation, IBM, Marketplace
 description: Learn how to migrate your Portworx cluster from a DaemonSet installation to a Portworx Operator installation on IBM Cloud
 weight: 200
@@ -38,6 +38,14 @@ Portworx installation on IBM Cloud is managed through a [Helm](https://github.co
    ```text
    helm get values portworx > /tmp/values.yaml
    ```
+4. Apply the following CRDs:
+   ```text
+   kubectl apply -f "https://raw.githubusercontent.com/portworx/ibm-helm/master/chart/portworx/crds/core_v1_storagecluster_crd.yaml"
+   ```
+   ```text
+   kubectl apply -f "https://raw.githubusercontent.com/portworx/ibm-helm/master/chart/portworx/crds/core_v1_storagenode_crd.yaml"
+   ```
+
 4. Upgrade Portworx deployment on your IBM cluster:
 
    ```text
