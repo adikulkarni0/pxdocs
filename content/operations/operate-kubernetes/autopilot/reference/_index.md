@@ -13,10 +13,10 @@ aliases:
 
 | Field                     	| Description                                                                                                                                                         	| Optional? 	| Default    	|
 |---------------------------	|---------------------------------------------------------------------------------------------------------------------------------------------------------------------	|-----------	|------------	|
-| **selector**              	| Selects the objects affected by this rule using a matchLabels label selector. [Syntax](#selector).                                                                  	| no        	| empty      	|
+| **selector**              	| Selects the objects affected by this rule using a matchLabels label selector. [Syntax](#selector).                                                                  	| yes        	| empty      	|
 | **namespaceSelector**     	| Selects the namespaces affected by this rule using a matchLabels label selector. [Syntax](#namespaceselector).                                                      	| yes       	| all        	|
-| [**conditions**](#conditions) | Defines the metrics that need to be for the rule's actions to trigger. All conditions are AND'ed. [Syntax](#conditions).                                            	| no        	| empty      	|
-| **actions**               	| Defines what action to take when the conditions are met. [Syntax](#actions). See [Supported Autopilot actions](#supported-autopilot-actions) for all actions that you can specify here. 	| no        	| empty      	|
+| [**conditions**](#conditions) | Defines the metrics that need to be for the rule's actions to trigger. All conditions are AND'ed. [Syntax](#conditions).                                            	| no        	|    	|
+| **actions**               	| Defines what action to take when the conditions are met. [Syntax](#actions). See [Supported Autopilot actions](#supported-autopilot-actions) for all actions that you can specify here. 	| no        	|     	|
 | **pollInterval**          	| Defines the interval in seconds at which the conditions for the rule are queried from the metrics provider.                                                         	| yes       	| 10 seconds 	|
 | **actionsCoolDownPeriod** 	| Defines the duration in seconds for which autopilot will not re-trigger any actions once they have been executed.                                                   	| yes       	| 5 minutes  	|
 
