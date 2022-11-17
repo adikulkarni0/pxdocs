@@ -5,6 +5,7 @@ description: Production operations guide for Portworx on Kubernetes
 weight: 400
 noicon: true
 series: operations-k8s
+hidden: true
 aliases:
     - /portworx-install-with-kubernetes/operate-and-maintain-on-kubernetes/running-in-production/
     - /operations/operate-kubernetes/going-production/
