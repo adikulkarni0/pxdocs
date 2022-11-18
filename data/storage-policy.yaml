@@ -1,0 +1,538 @@
+- name: storage-policy
+  short: Manage storage policies for creating volumes
+  long: ""
+  example: pxctl storage-policy create --replication 2,min --periodic 60,10 devpolicy
+  args-required: false
+  func: cli.ExecStoragePolicy
+  input-interface: false
+  imports: github.com/portworx/porx/px/cli
+  aliases: [stp]
+  hidden: false
+  flags: []
+  subcmd:
+  - name: create
+    short: Create a storage policy
+    long: ""
+    example: pxctl storage-policy create [flags] policy-name
+    args-required: true
+    func: cli.ExecStoragePolicyCreate
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [c]
+    hidden: false
+    flags:
+    - name: sticky
+      type: bool
+      single-letter-shorthand: ""
+      use: sticky volumes cannot be deleted until the flag is disabled
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: periodic
+      type: str
+      single-letter-shorthand: p
+      use: periodic snapshot interval in `mins,k` (keeps 5 by default), 0 disables
+        all schedule snapshots
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: daily
+      type: str-slice
+      single-letter-shorthand: d
+      use: daily snapshot at specified `hh:mm,k` (keeps 7 by default)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: weekly
+      type: str-slice
+      single-letter-shorthand: w
+      use: weekly snapshot at specified `weekday@hh:mm,k` (keeps 5 by default)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: monthly
+      type: str-slice
+      single-letter-shorthand: m
+      use: monthly snapshot at specified `day@hh:mm,k` (keeps 12 by default)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: replication
+      type: str
+      single-letter-shorthand: r
+      use: replication factor `repl,max/min` (replication is equal by default)
+      default: 
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: journal
+      type: bool
+      single-letter-shorthand: ""
+      use: Journal data for volume
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: aggregation_level
+      type: str
+      single-letter-shorthand: a
+      use: aggregation level
+      default: 1
+      valid-values: [1, 2, 3, auto]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: policy
+      type: str
+      single-letter-shorthand: ""
+      use: policy names separated by comma
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: secure
+      type: bool
+      single-letter-shorthand: ""
+      use: encrypt volumes using AES-256
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: shared
+      type: bool
+      single-letter-shorthand: ""
+      use: make a globally shared namespace volumes
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: io_profile
+      type: str
+      single-letter-shorthand: ""
+      use: IO Profile
+      default: sequential
+      valid-values: [sequential, cms, db]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: force
+      type: bool
+      single-letter-shorthand: ""
+      use: Force volume creation to fail if storage policy rules not followed by volume
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: update
+      type: bool
+      single-letter-shorthand: ""
+      use: Allow volume to update without storage policy restriction
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: delete
+    short: Delete a storage policy
+    long: ""
+    example: pxctl storage-policy delete policy-name
+    args-required: true
+    func: cli.ExecStoragePolicyDelete
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [d]
+    hidden: false
+    flags:
+    - name: force
+      type: bool
+      single-letter-shorthand: f
+      use: Specify --force to delete default storage policy
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    subcmd: []
+  - name: update
+    short: Update a storage policy
+    long: ""
+    example: pxctl storage-policy update [flags] policy-name
+    args-required: true
+    func: cli.ExecStoragePolicyUpdate
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [u]
+    hidden: false
+    flags:
+    - name: periodic
+      type: str
+      single-letter-shorthand: p
+      use: periodic snapshot interval in `mins,k` (keeps 5 by default), 0 disables
+        all schedule snapshots
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: daily
+      type: str-slice
+      single-letter-shorthand: d
+      use: daily snapshot at specified `hh:mm,k` (keeps 7 by default)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: weekly
+      type: str-slice
+      single-letter-shorthand: w
+      use: weekly snapshot at specified `weekday@hh:mm,k` (keeps 5 by default)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: monthly
+      type: str-slice
+      single-letter-shorthand: m
+      use: monthly snapshot at specified `day@hh:mm,k` (keeps 12 by default)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: replication
+      type: str
+      single-letter-shorthand: r
+      use: replication factor `repl,max/min` (replication is equal by default)
+      default: 
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: sticky
+      type: bool
+      single-letter-shorthand: ""
+      use: set sticky setting
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+    - name: journal
+      type: bool
+      single-letter-shorthand: ""
+      use: Journal data for volumes
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: aggregation_level
+      type: str
+      single-letter-shorthand: a
+      use: aggregation level
+      default: 1
+      valid-values: [1, 2, 3, auto]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: policy
+      type: str
+      single-letter-shorthand: ""
+      use: policy names separated by comma
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: secure
+      type: bool
+      single-letter-shorthand: ""
+      use: encrypt volumes using AES-256
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: shared
+      type: bool
+      single-letter-shorthand: ""
+      use: make a globally shared namespace volumes
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: io_profile
+      type: str
+      single-letter-shorthand: ""
+      use: IO Profile
+      default: sequential
+      valid-values: [sequential, cms, db]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: force
+      type: bool
+      single-letter-shorthand: ""
+      use: Force volume creation to fail if storage policy rules not followed by volume
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: update
+      type: bool
+      single-letter-shorthand: ""
+      use: Allow volume to update without storage policy restriction
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: list
+    short: List all storage policies
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecStoragePolicyList
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [l]
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: inspect
+    short: Inspect a storage policy.
+    long: ""
+    example: pxctl storage-policy inspect policyName
+    args-required: true
+    func: cli.ExecStoragePolicyInspect
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [i]
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: set-default
+    short: Set storage policy as default policy
+    long: ""
+    example: "pxctl storage-policy set-default policyName"
+    args-required: false
+    func: cli.ExecStoragePolicySetDefault
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [s]
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: unset-default
+    short: Remove default storage policy restriction
+    long: ""
+    example: pxctl storage-policy unset-default
+    args-required: false
+    func: cli.ExecStoragePolicyUnsetDefault
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: access
+    short: Manage storage policy access by users or groups
+    long: |
+      This command manages access permissions to a storage policy. There are two ways
+      to provide access, one is by adding a group and the other is by adding
+      a specific user as a collaborator. When adding a collaborator, you
+      must use the unique id of the user. Please consult with your admin
+      on how to obtain the unique id of the user.
+      ACCESS TYPES
+      When adding a group or collaborator, an access type must also be
+      given, which can be either Read, Write, or Admin.
+      A Read access type allows access to the storage policy without modifying
+      it. With a Read access type, one can list or inspect the storage policy.
+      A Write access type allows modification of the storage policy and its volume specs,
+      for example allowing to create, update stirage policy in adition to all Read access.
+      An Admin access type allows full access to the storage policy, like deleting
+      the storage in addition to all Write access.
+      Note only system admin can set/release default storage policy restriction on cluster
+      SETTING ACCESS TYPES
+      To set access types, add the following suffix to the group or collaborator
+      separated by a colon ':'
+        r - For Read access type
+        w - For Write access type
+        a - For Admin access type
+    example: |
+      Add group1 for read access
+        pxctl stp access add --group group1:r
+      Add group2 for write access
+        pxctl stp access add --group group2:w
+      Add user1 for admin access using the id of user1
+        pxctl stp access add --collaborator user1Id:a
+      Remove user1 access using the id of user1
+        pxctl stp access remove --collaborator user1Id
+      Set the access using one command. This clears any previous settings and updates it with
+      the following
+        pxctl stp access update --groups group1:r,group2:w --collaborators user1Id:a
+    args-required: false
+    func: cli.ExecStoragePolicyAccess
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [o]
+    hidden: false
+    flags: []
+    subcmd:
+    - name: show
+      short: List the owner and storage policy ACLS
+      long: ""
+      example: "pxctl storage-policy access show [flags] policyName"
+      args-required: false
+      func: cli.ExecStoragePolicyAccessShow
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [s]
+      hidden: false
+      flags: []
+      subcmd: []
+    - name: add
+      short: Adds a single group or collaborator
+      long: ""
+      example: "pxctl storage-policy access add [flags] policyName"
+      args-required: false
+      func: cli.ExecStoragePolicyAccessAdd
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [a]
+      hidden: false
+      flags:
+      - name: group
+        type: str
+        single-letter-shorthand: g
+        use: group to add with access type. See storage-policy access help for more information
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: collaborator
+        type: str
+        single-letter-shorthand: c
+        use: collaborator to add with access type. Must be the unique id of the user. See storage-policy access for more information
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+    - name: remove
+      short: Removes a single group or collaborator
+      long: ""
+      example: "pxctl storage-policy access remove [flags] policyName"
+      args-required: false
+      func: cli.ExecStoragePolicyAccessRemove
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [r]
+      hidden: false
+      flags:
+      - name: group
+        type: str
+        single-letter-shorthand: g
+        use: group to remove
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: collaborator
+        type: str
+        single-letter-shorthand: c
+        use: collaborator to remove
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+    - name: update
+      short: Update the owner and/or complete set of storage policy ACLS
+      long: ""
+      example: "pxctl storage policy access update [flags] policyName"
+      args-required: false
+      func: cli.ExecStoragePolicyAccessUpdate
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [u]
+      hidden: false
+      flags:
+      - name: owner
+        type: str
+        single-letter-shorthand: o
+        use: username of the desired owner. Only an administrator can change this value.
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: groups
+        type: str
+        single-letter-shorthand: g
+        use: list of comma-separated group names with access type. See storage-policy access for more information
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: collaborators
+        type: str
+        single-letter-shorthand: c
+        use: list of comma-separated collaborator names with access type. See storage policy access for more information
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      subcmd: []

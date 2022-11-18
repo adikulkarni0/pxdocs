@@ -1,0 +1,32 @@
+- name: status
+  short: Show status summary
+  long: ""
+  example: ""
+  args-required: false
+  func: cli.ExecStatus
+  input-interface: false
+  imports: github.com/portworx/porx/px/cli
+  aliases: []
+  hidden: false
+  flags:
+  - name: sev
+    type: str
+    single-letter-shorthand: s
+    use: Filter alerts based on severity
+    default: NOTIFY
+    valid-values: [WARN, NOTIFY, ALARM]
+    valid-range: []
+    hidden: true
+    persistent: false
+    required: false
+  - name: tail
+    type: uint
+    single-letter-shorthand: t
+    use: ""
+    default: 0
+    valid-values: []
+    valid-range: []
+    hidden: true
+    persistent: false
+    required: false
+  subcmd: []

@@ -1,0 +1,1870 @@
+- name: service
+  short: Service mode utilities
+  long: ""
+  example: ""
+  args-required: false
+  func: cli.ExecService
+  input-interface: false
+  imports: github.com/portworx/porx/px/cli
+  aliases: [sv]
+  hidden: false
+  flags: []
+  subcmd:
+  - name: exit
+    short: Stop the PX daemon
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecServiceExit
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [e]
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: audit
+    short: Audit the PX node
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecServiceAudit
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [a]
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: node-usage
+    short: Volume usage by PX node
+    example:  pxctl service node-usage <node-id> "Node-ID" is mandatory
+    args-required: true
+    func: cli.ExecServiceVolumeUsageByNode
+    imports: github.com/portworx/porx/px/cli
+    aliases: [u]
+    hidden: false
+  - name: info
+    short: Show PX module version information
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecServiceInfo
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [i]
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: call-home
+    short: Enable or disable the call home feature
+    long: ""
+    example: pxctl service call-home <enable|disable>    * Required argument is "enable" or "disable"
+    args-required: true
+    func: cli.ExecServiceCallHome
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: logs
+    short: Display PX logs
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecServiceLogs
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: true
+    flags: []
+    subcmd: []
+  - name: node-wipe
+    short: Wipes PX configuration data on this node
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecServiceNodeWipe
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [nw]
+    hidden: false
+    flags:
+    - name: all
+      type: bool
+      single-letter-shorthand: a
+      use: clears PX footprint from all storage devices
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    - name: pxv
+      type: bool
+      use: Force removal of journal devices when using PXV
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    - name: storage_devices
+      type: str
+      single-letter-shorthand: s
+      use: comma-separated list of storage devices to be wiped.
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: diags
+    short: creates a new tgz package with essential diagnostic information.
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecServiceDiags
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [d]
+    hidden: false
+    flags:
+    - name: output
+      type: str
+      single-letter-shorthand: o
+      use: output file name
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: dockerhost
+      type: str
+      single-letter-shorthand: ""
+      use: docker host daemon
+      default: unix:///var/run/docker.sock
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: container
+      type: str
+      single-letter-shorthand: ""
+      use: PX container ID
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: live
+      type: bool
+      single-letter-shorthand: l
+      use: gets diags from running px
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: upload
+      type: bool
+      single-letter-shorthand: u
+      use: upload diags to cloud
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: upload-file
+      type: str
+      single-letter-shorthand: ""
+      use: skips diags generation, upload given file directly to cloud
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    - name: profile
+      type: bool
+      single-letter-shorthand: p
+      use: only dump profile
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: all
+      type: bool
+      single-letter-shorthand: a
+      use: creates a new tgz package with all the available diagnostic information.
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: cluster
+      type: bool
+      single-letter-shorthand: c
+      use: generate diags for all the nodes in the cluster.
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: node
+      type: str
+      single-letter-shorthand: "n"
+      use: generate diags for a specific remote node with the provided NodeIp or NodeID.
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: force
+      type: bool
+      single-letter-shorthand: f
+      use: force overwrite existing diags.
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: extra
+      type: bool
+      use: Collect extra information (used primarily for test).
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    subcmd:
+      - name: collect
+        short: Submits a request to collect diagnostics logs and other information
+        long: ""
+        example: ""
+        func: cli.ExecServiceDiagsCollect
+        args-required: false
+        hidden: true
+        flags:
+          - name: cluster
+            type: bool
+            single-letter-shorthand: c
+            use: generate diags for all the nodes in the cluster.
+            default: false
+            valid-values: [ ]
+            valid-range: [ ]
+            hidden: false
+            persistent: false
+            required: false
+          - name: profileonly
+            type: bool
+            single-letter-shorthand: p
+            use: If true, only the profile of the PX processes will be collected
+            default: false
+            valid-values: [ ]
+            valid-range: [ ]
+            hidden: false
+            persistent: false
+            required: false
+          - name: live
+            type: bool
+            single-letter-shorthand: l
+            use: If true, collects live cores from PX processes
+            default: false
+            valid-values: [ ]
+            valid-range: [ ]
+            hidden: false
+            persistent: false
+            required: false
+          - name: nodes
+            type: str
+            single-letter-shorthand: n
+            use: Comma-separated list of node IDs or label selectors for which to collect the diags
+            example: "--nodes group=group1,group=group2 OR --nodes f518f65a-dd72-4d45-af5c-3712de4a339"
+            hidden: false
+            persistent: false
+            required: false
+          - name: volumes
+            type: str
+            single-letter-shorthand: v
+            use: Comma-separated list of volume IDs/names or label selectors for which to collect the diags
+            example: "--volumes app=postgres,app=mysql OR --volumes pvc-0fd471dc-550d-11eb-afc7-000c293a2c08"
+            hidden: false
+            persistent: false
+            required: false
+      - name: list
+        short: Lists recent diags collection requests
+        long: ""
+        example: ""
+        func: cli.ExecServiceDiagsList
+        args-required: false
+        hidden: true
+      - name: status
+        short: Status of a diags collection request
+        long: ""
+        example: ""
+        func: cli.ExecServiceDiagsStatus
+        args-required: false
+        hidden: true
+        flags:
+          - name: job-id
+            type: str
+            single-letter-shorthand: "i"
+            use: ""
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: true
+      - name: cancel
+        short: Cancels a diags collection request
+        long: ""
+        example: ""
+        func: cli.ExecServiceDiagsCancel
+        args-required: false
+        hidden: true
+        flags:
+          - name: job-id
+            type: str
+            single-letter-shorthand: "i"
+            use: ""
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: true
+  - name: dump
+    short: Print PX Configuration
+    long: ""
+    func: cli.ExecServiceDump
+    imports: github.com/portworx/porx/px/cli
+    hidden: true
+    flags:
+    - name: all
+      type: bool
+      use: Dumps all command information
+      default: "false"
+      hidden: false
+      required: false
+      persistent: false
+    - name: kvdb
+      type: bool
+      use: Dumps all entries in the kvdb
+      default: "false"
+      hidden: false
+      required: false
+      persistent: false
+    - name: cfg
+      type: bool
+      use: Dumps current configuration
+      default: "false"
+      hidden: false
+      required: false
+      persistent: false
+    - name: nodestats
+      type: bool
+      use: Dumps node stats
+      default: "false"
+      hidden: true
+      required: false
+      persistent: false
+    - name: out
+      type: str
+      use: Dump output into filename
+      default: "-"
+      hidden: false
+      required: false
+      persistent: false
+    subcmd: []
+  - name: maintenance
+    short: Maintenance mode operations
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecServiceMaintenance
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [m]
+    hidden: false
+    flags:
+    - name: exit
+      type: bool
+      single-letter-shorthand: x
+      use: exit maintenance mode
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: enter
+      type: bool
+      single-letter-shorthand: e
+      use: enter maintenance mode
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: cycle
+      type: bool
+      single-letter-shorthand: c
+      use: cycle maintenance mode
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: reset
+      type: bool
+      single-letter-shorthand: r
+      use: reset the system
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    - name: yes
+      type: bool
+      single-letter-shorthand: y
+      use: Assume 'yes' to confirmation prompt
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    subcmd: []
+  - name: email
+    short: Email setting commands
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecServiceEmail
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags: []
+    subcmd:
+    - name: set
+      short: Configure email settings for alerts.
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServiceEmailSet
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases:
+      - s
+      hidden: false
+      flags:
+      - name: server
+        type: str
+        single-letter-shorthand: s
+        use: IP or DNS name for smtp server
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: smtp-port
+        type: str
+        single-letter-shorthand: p
+        use: IP or DNS name for smtp server
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: username
+        type: str
+        single-letter-shorthand: u
+        use: Username to authenticate with smtp-server (if required)
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: password
+        type: str
+        single-letter-shorthand: ""
+        use: Password to authenticate with smtp-server (if required)
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: sender
+        type: str
+        single-letter-shorthand: ""
+        use: Sender of alert emails (defaults to noreply@portworx.com)
+        default: "noreply@portworx.com"
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: recipient
+        type: str
+        single-letter-shorthand: r
+        use: Recipient of alert emails.
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: severity
+        type: str
+        single-letter-shorthand: ""
+        use: Minimum severity for email trigger, (warning|critical)
+        default: critical
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: notify
+        type: bool
+        single-letter-shorthand: n
+        use: Notify portworx of critical alerts
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: true
+        persistent: false
+        required: false
+      subcmd: []
+    - name: get
+      short: Get email settings for alerts.
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServiceEmailGet
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [g]
+      hidden: false
+      flags: []
+      subcmd: []
+    - name: clear
+      short: Clear email settings for alerts.
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServiceEmailClear
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [c]
+      hidden: false
+      flags: []
+      subcmd: []
+  - name: slack
+    short: Slack setting commands
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecServiceSlack
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags: []
+    subcmd:
+    - name: set
+      short: Configure slack settings for alerts.
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServiceSlackSet
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [s]
+      hidden: false
+      flags:
+      - name: webhookurl
+        type: str
+        single-letter-shorthand: w
+        use: url of the slack webhook
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: true
+      - name: severity
+        type: str
+        single-letter-shorthand: "s"
+        use: Minimum severity for slack trigger, (warning|critical)
+        default: critical
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      subcmd: []
+    - name: get
+      short: Get slack settings for alerts.
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServiceSlackGet
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [g]
+      hidden: false
+      flags: []
+      subcmd: []
+    - name: delete
+      short: Delete slack settings for alerts.
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServiceSlackDelete
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [d]
+      hidden: false
+      flags: []
+      subcmd: []
+  - name: drive
+    short: Storage drive maintenance
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecServiceDrive
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags: []
+    subcmd:
+    - name: show
+      short: Show drives
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServiceDriveShow
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags:
+      - name: all
+        type: bool
+        single-letter-shorthand: "a"
+        use: Shows additional information on the drive usage
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: true
+        persistent: false
+        required: false
+      subcmd: []
+    - name: add
+      short: Add storage
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServiceDriveAdd
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags:
+      - name: drive
+        type: str
+        single-letter-shorthand: d
+        use: comma-separated source drives
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: spec
+        type: str
+        single-letter-shorthand: s
+        use: Cloud drive spec in type=<>,size=<> format
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: newpool
+        type: bool
+        single-letter-shorthand: ""
+        use: Create a new pool using this drive.
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: journal
+        type: bool
+        single-letter-shorthand: ""
+        use: Use this drive as a journal device.
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: metadata
+        type: bool
+        single-letter-shorthand: ""
+        use: Use this drive as a system metadata device.
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: cache
+        type: int
+        single-letter-shorthand: ""
+        use: Use this drive as a cache device for given pool.
+        default: -1
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: poolID
+        type: int
+        single-letter-shorthand: p
+        use: Add the drive to the specified existing pool ID.
+        default: -1
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: operation
+        type: str
+        single-letter-shorthand: o
+        use: start|status
+        default: start
+        valid-values: [start, status]
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: yes
+        type: bool
+        single-letter-shorthand: y
+        use: Assume 'yes' to confirmation prompt
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: true
+        persistent: false
+        required: false
+      - name: skip-deprecation
+        type: bool
+        single-letter-shorthand: ""
+        use: Allow running deprecated drive add commands
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: true
+        persistent: false
+        required: false
+      subcmd: []
+    - name: replace
+      short: Replace source drive with target drive
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServiceDriveReplace
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags:
+      - name: source
+        type: str
+        single-letter-shorthand: s
+        use: Source drive
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: target
+        type: str
+        single-letter-shorthand: t
+        use: Target drive
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: operation
+        type: str
+        single-letter-shorthand: o
+        use: start|cancel|status
+        default: start
+        valid-values: [start, cancel, status]
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      subcmd: []
+    - name: rebalance
+      short: Rebalance storage
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServiceDriveRebalance
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [rs]
+      hidden: false
+      flags:
+      - name: poolID
+        type: str
+        single-letter-shorthand: p
+        use: Storage pool
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: operation
+        type: str
+        single-letter-shorthand: o
+        use: start|cancel|status
+        default: status
+        valid-values: [start, cancel, status]
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: full
+        type: bool
+        single-letter-shorthand: ""
+        use: full rebalance (use with caution)
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: true
+        persistent: false
+        required: false
+      subcmd: []
+    - name: check
+      short: Check drives
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServiceDriveCheck
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [cd]
+      hidden: false
+      flags:
+      - name: full
+        type: bool
+        single-letter-shorthand: ""
+        use: Detailed report
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      subcmd: []
+  - name: node
+    short: Node maintenance operations
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecServiceNode
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags: []
+    subcmd:
+    - name: drain-attachments
+      short: Drain/Remove volume attachments from a node
+      func: cli.ExecServiceNodeDrainAttachments
+      long: ""
+      example: ""
+      args-required: false
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      subcmd:
+      - name: submit
+        short: Submit a new job to drain attachments.
+        long: ""
+        example: ""
+        func: cli.ExecServiceNodeDrainAttachmentsSubmit
+        args-required: false
+        flags:
+          - name: yes
+            type: bool
+            single-letter-shorthand: "y"
+            use: Skips user confirmation
+            valid-range: []
+            hidden: true
+            persistent: false
+            required: false
+          - name: node
+            type: str
+            single-letter-shorthand: "n"
+            use: NodeID of the node from which the volume attachments will be removed
+            valid-range: []
+            persistent: false
+            required: true
+          - name: issuer
+            type: str
+            single-letter-shorthand: "i"
+            use: Name of the issuer who is submitting this job
+            valid-range: []
+            persistent: false
+            required: false
+          - name: wait
+            type: bool
+            single-letter-shorthand: "w"
+            use: Wait until the drain job is complete. The command will be unblocked when the job completes or a it hits a 5 min timeout.
+            valid-range: []
+            persistent: false
+            required: false
+            default: false
+          - name: wait-timeout-sec
+            type: int
+            single-letter-shorthand: "t"
+            use: Wait timeout in seconds. Default is 5 mins.
+            valid-range: []
+            persistent: false
+            required: false
+            default: 300
+          - name: quiet
+            type: bool
+            single-letter-shorthand: "q"
+            use: Do not print summary when running the command in wait mode.
+            valid-range: []
+            persistent: false
+            required: false
+            default: false
+      - name: list
+        short: Lists drain attachment jobs in the system
+        long: ""
+        example: ""
+        func: cli.ExecServiceNodeDrainAttachmentsList
+        args-required: false
+      - name: status
+        short: Status of a drain attachments job
+        long: ""
+        example: ""
+        func: cli.ExecServiceNodeDrainAttachmentsStatus
+        args-required: false
+        flags:
+          - name: job-id
+            type: str
+            single-letter-shorthand: "i"
+            use: ""
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: true
+      - name: cancel
+        short: Cancels a drain attachments job
+        long: ""
+        example: ""
+        func: cli.ExecServiceNodeDrainAttachmentsCancel
+        args-required: false
+        flags:
+          - name: job-id
+            type: str
+            single-letter-shorthand: "i"
+            use: ""
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: true
+    - name: cordon-attachments
+      short: Cordons/Disables any new volume attachments from a node. Existing volumes will stay attached
+      func: cli.ExecServiceNodeCordonAttachments
+      long: ""
+      example: ""
+      args-required: false
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags:
+      - name: node
+        type: str
+        single-letter-shorthand: ""
+        use: ID of the node for which any new volume attachments will be disabled
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: true
+    - name: uncordon-attachments
+      short: Re-enables volume attachments for a node.
+      func: cli.ExecServiceNodeUncordonAttachments
+      long: ""
+      example: ""
+      args-required: false
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags:
+      - name: node
+        type: str
+        single-letter-shorthand: ""
+        use: ID of the node for which volume attachments will be re-enabled
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: true
+  - name: pool
+    short: Storage pool maintenance
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecServicePool
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags: []
+    subcmd:
+    - name: show
+      short: Show pools
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServicePoolShow
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      subcmd: []
+      flags:
+      - name: all
+        type: bool
+        single-letter-shorthand: "a"
+        use: Shows additional information on the drive usage
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: true
+        persistent: false
+        required: false
+    - name: rebalance
+      short: Rebalance storage pools
+      func: cli.ExecServicePoolRebalance
+      long: ""
+      example: ""
+      args-required: false
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      subcmd:
+      - name: submit
+        short: Submit a new rebalance job
+        long: ""
+        example: ""
+        func: cli.ExecServicePoolRebalanceSubmit
+        args-required: false
+        flags:
+          - name: yes
+            type: bool
+            single-letter-shorthand: "y"
+            use: Skips user confirmation
+            valid-range: []
+            hidden: true
+            persistent: false
+            required: false
+          - name: dry-run
+            type: bool
+            single-letter-shorthand: "d"
+            use: Produces steps that would be taken without making any changes to the system
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: source-pool-selector
+            type: str
+            use: >-
+                Comma-separated label selector of the form label1=value1,label2=value2 etc., that allows
+                selecting pools to which over-load trigger thresholds will apply.
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: target-pool-selector
+            type: str
+            use: >-
+                Comma-separated label selector of the form label1=value1,label2=value2 etc., that allows
+                selecting pools to which under-load trigger thresholds will apply.
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: max-duration-minutes
+            type: uint
+            single-letter-shorthand: "m"
+            use: Defines how long operation should run when started. 0 values means no limit on duration
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: remove-repl-1-snapshots
+            type: str
+            use: delete snapshots which don't have parent on same pool after rebalance
+            valid-values: [on, off]
+            default: off
+            hidden: false
+            persistent: false
+            required: false
+      - name: list
+        short: Lists rebalance jobs in the system
+        long: ""
+        example: ""
+        func: cli.ExecServicePoolRebalanceList
+        args-required: false
+      - name: status
+        short: Status of a rebalance job
+        long: ""
+        example: ""
+        func: cli.ExecServicePoolRebalanceStatus
+        args-required: false
+        flags:
+          - name: job-id
+            type: str
+            single-letter-shorthand: "i"
+            use: ""
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: true
+      - name: cancel
+        short: Cancels a rebalance job
+        long: ""
+        example: ""
+        func: cli.ExecServicePoolRebalanceCancel
+        args-required: false
+        flags:
+          - name: job-id
+            type: str
+            single-letter-shorthand: "i"
+            use: ""
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: true
+      - name: resume
+        short: Resumes a rebalance job
+        long: ""
+        example: ""
+        func: cli.ExecServicePoolRebalanceResume
+        args-required: false
+        flags:
+          - name: job-id
+            type: str
+            single-letter-shorthand: "i"
+            use: ""
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: true
+      - name: pause
+        short: Pauses a rebalance job
+        long: ""
+        example: ""
+        func: cli.ExecServicePoolRebalancePause
+        args-required: false
+        flags:
+          - name: job-id
+            type: str
+            single-letter-shorthand: "i"
+            use: ""
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: true
+    - name: expand
+      short: Expand pool
+      func: cli.ExecServicePoolExpand
+      long: ""
+      example: ""
+      args-required: false
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags:
+      - name: size
+        type: int
+        single-letter-shorthand: "s"
+        use: Minimum new required size of the storage pool in GiB. The eventual size of the pool can be greater than this as PX needs to add/resize disks such that all disks in the pool are of the same size
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: true
+      - name: uid
+        type: str
+        single-letter-shorthand: "u"
+        use: Pool's UID
+        hidden: false
+        persistent: false
+        required: true
+      - name: operation
+        type: str
+        single-letter-shorthand: "o"
+        use: Operation to perform to expand the pool
+        valid-values: ["add-disk", "resize-disk", "auto"]
+        hidden: false
+        persistent: false
+        required: true
+        default: auto
+      - name: dont-wait-for-clean-volumes
+        type: bool
+        single-letter-shorthand: "f"
+        use: Don't wait for volumes on the pool to be clean before starting expansion
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+    - name: update
+      short: Update pool properties
+      long: ""
+      example: pxctl sv pool update [flags] <pool-id> *pool-id or --uid <pool-uid> flag is mandatory, if both are specified, pool-uid is ignored
+      args-required: false
+      func: cli.ExecServicePoolUpdate
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags:
+      - name: io_priority
+        type: str
+        single-letter-shorthand: ""
+        use: IO Priority
+        default: low
+        valid-values: [high, medium, low]
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: labels
+        type: str
+        single-letter-shorthand: ""
+        use: comma separated name=value pairs (empty value to remove label)
+        default: NoLabel
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: resize
+        type: bool
+        single-letter-shorthand: ""
+        use: extend pool to maximum available physical storage
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: uid
+        type: str
+        single-letter-shorthand: "u"
+        use: Pool's UID
+        hidden: false
+        persistent: false
+        required: false
+      - name: reset-last-op
+        type: bool
+        single-letter-shorthand: ""
+        use: Admin command to reset pool's last operation. Pool resources won't be cleaned up. Use with caution!
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: skip-deprecation
+        type: bool
+        single-letter-shorthand: ""
+        use: Allow running deprecated pool update commands
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: true
+        persistent: false
+        required: false
+      subcmd: []
+    - name: cache
+      short: Update cache properties on a given pool
+      long: ""
+      example: ""
+      args-required: false
+      input-interface: false
+      aliases: []
+      hidden: false
+      func: cli.ExecServicePoolCache
+      imports: github.com/portworx/porx/px/cli
+      flags: []
+      subcmd:
+      - name: configure
+        single-letter-shorthand: ""
+        short: configure cache parameters for a pool
+        example: pxctl sv pool cache configure [flags] <pool-id> *pool-id is mandatory
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+        args-required: true
+        func: cli.ExecServicePoolCacheConfigure
+        imports: github.com/portworx/porx/px/cli
+        flags:
+        - name: mode
+          type: str
+          single-letter-shorthand: ""
+          use: cache operating mode
+          valid-values: ["", writethrough, writeback]
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: blocksize
+          type: str
+          single-letter-shorthand: ""
+          use: cache blocksize hint, software can optimize this value
+          default: "auto"
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: policy
+          type: str
+          single-letter-shorthand: ""
+          use: cache policy
+          valid-values: ["", smq, mq]
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: tunables
+          type: str
+          single-letter-shorthand: ""
+          use: cache settings
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        subcmd: []
+      - name: status
+        single-letter-shorthand: ""
+        short: cache status on given pool
+        example: pxctl sv pool cache status <pool-id> *pool-id is mandatory
+        hidden: false
+        persistent: false
+        required: false
+        args-required: true
+        func: cli.ExecServicePoolCacheStatus
+        imports: github.com/portworx/porx/px/cli
+        flags: []
+        subcmd: []
+      - name: enable
+        single-letter-shorthand: ""
+        short: enable cache on a pool
+        example: pxctl sv pool cache enable <pool-id> *pool-id is mandatory
+        hidden: false
+        persistent: false
+        required: false
+        args-required: true
+        func: cli.ExecServicePoolCacheEnable
+        imports: github.com/portworx/porx/px/cli
+        flags:
+        subcmd: []
+      - name: disable
+        single-letter-shorthand: ""
+        short: disable cache on a pool
+        example: pxctl sv pool cache disable <pool-id> *pool-id is mandatory
+        hidden: false
+        persistent: false
+        required: false
+        args-required: true
+        func: cli.ExecServicePoolCacheDisable
+        imports: github.com/portworx/porx/px/cli
+        flags:
+        subcmd: []
+      - name: flush
+        single-letter-shorthand: ""
+        short: force cache flush on a pool
+        example: pxctl sv pool cache flush <pool-id> *pool-id is mandatory
+        hidden: false
+        persistent: false
+        required: false
+        args-required: true
+        func: cli.ExecServicePoolCacheFlush
+        imports: github.com/portworx/porx/px/cli
+        flags:
+        - name: operation
+          type: str
+          single-letter-shorthand: o
+          use: start|status
+          default: start
+          valid-values: [start, status]
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        subcmd: []
+    - name: delete
+      short: Delete pool
+      long: |
+          Delete pool
+
+          Note:
+            This operation is supported only on on-prem local disks and AWS cloud-drive
+      example: pxctl service pool delete [flags] poolID
+      args-required: false
+      func: cli.ExecServicePoolDelete
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: true
+      flags:
+      - name: yes
+        type: bool
+        single-letter-shorthand: y
+        use: Assume 'yes' to confirmation prompt
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: true
+        persistent: false
+        required: false
+    - name: maintenance
+      short: Pool maintenance
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServicePoolMaintenance
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [m]
+      hidden: false
+      flags:
+      - name: exit
+        type: bool
+        single-letter-shorthand: x
+        use: exit maintenance mode
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: enter
+        type: bool
+        single-letter-shorthand: e
+        use: enter maintenance mode
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: yes
+        type: bool
+        single-letter-shorthand: y
+        use: Assume 'yes' to confirmation prompt
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+  - name: scan
+    short: scan for bad blocks
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecServiceScan
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: true
+    flags: []
+    subcmd:
+    - name: start
+      short: start scan
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServiceScanStart
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags: []
+      subcmd: []
+    - name: resume
+      short: resume paused scan
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServiceScanResume
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags: []
+      subcmd: []
+    - name: pause
+      short: pause running scan
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServiceScanPause
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags: []
+      subcmd: []
+    - name: cancel
+      short: cancel running scan
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServiceScanCancel
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags: []
+      subcmd: []
+    - name: status
+      short: scan status
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServiceScanStatus
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags: []
+      subcmd: []
+    - name: schedule
+      short: examine or set schedule
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServiceScanSchedule
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags:
+      - name: cancel
+        type: bool
+        single-letter-shorthand: ""
+        use: cancel scheduled scans
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: show
+        type: bool
+        single-letter-shorthand: ""
+        use: show current scan
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: daily
+        type: str
+        single-letter-shorthand: d
+        use: set daily scan schedule at specified hh:mm
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: weekly
+        type: str
+        single-letter-shorthand: w
+        use: set weekly scan schedule at specified weekday@hh:mm
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: monthly
+        type: str
+        single-letter-shorthand: m
+        use: set monthly scan schedule at specified day@hh:mm
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      subcmd: []
+  - name: kvdb
+    short: PX Kvdb operations
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecServiceKvdb
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [k]
+    hidden: false
+    flags: []
+    subcmd:
+    - name: restore
+      short: Restore keys and values into kvdb from a kvdb.dump file
+      long: ""
+      example: "/opt/pwx/bin/pxctl service kvdb restore --kvdb_dump_file <file_path>"
+      args-required: false
+      func: cli.ExecServiceKvdbRestore
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [r]
+      hidden: false
+      flags:
+      - name: kvdb_dump_file
+        type: str
+        single-letter-shorthand: k
+        use: Kvdb dump file location
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: true
+      - name: force
+        type: bool
+        single-letter-shorthand: f
+        use: Force will delete any existing keys from kvdb and perform the restore
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+    - name: endpoints
+      short: List the kvdb client endpoints
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServiceKvdbEndpoints
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [e]
+      hidden: false
+      flags: []
+      subcmd: []
+    - name: members
+      short: List the kvdb cluster members
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServiceKvdbMembers
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [m]
+      hidden: false
+      flags: []
+      subcmd: []
+    - name: bootstrap_list
+      short: List the entries in bootstrap DB
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServiceKvdbBootstrapList
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [bl]
+      hidden: true
+      flags: []
+      subcmd: []
+    - name: defrag
+      short: Defrag the backend DB for an endpoint. This kvdb endpoint will be down for the period of defragmentation.
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecServiceKvdbDefrag
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [d]
+      hidden: true
+      flags:
+      - name: endpoint
+        type: str
+        single-letter-shorthand: e
+        use: Endpoint Client URL (http:<ip>:<client-port>) to run defrag on.
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: true
+      - name: timeout
+        type: int
+        single-letter-shorthand: t
+        use: Timeout in seconds for the defrag operation to complete. Defragmentation is usually a long running command.
+        # KvstoreMonitor.Defragment() sets timeout to 120 if it is equal to 0
+        default: 0
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: force
+        type: bool
+        single-letter-shorthand: f
+        use: Force defrag even if other members of the kvdb cluster are unhealthy
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      subcmd: []
+  - name: relaxedreclaim
+    short: Manage the RelaxedReclaim queue for the node
+    example:  ""
+    args-required: true
+    func: cli.ExecServiceRelaxedReclaim
+    imports: github.com/portworx/porx/px/cli
+    aliases: [rr]
+    hidden: false
+    subcmd:
+    - name: purge
+      short: Purge the RelaxedReclaim queue for the node
+      long: ""
+      example: "/opt/pwx/bin/pxctl service relaxedreclaim purge <node-id>"
+      args-required: false
+      func: cli.ExecServiceRelaxedReclaimPurge
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [p]
+      hidden: false
+    - name: list
+      short: List the RelaxedReclaim queue for the node
+      long: ""
+      example: "/opt/pwx/bin/pxctl service relaxedreclaim list"
+      args-required: false
+      func: cli.ExecServiceRelaxedReclaimList
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [l]
+      hidden: false
+    - name: delete
+      short: Delete a volume from the RelaxedReclaim queue for the node
+      long: ""
+      example: "/opt/pwx/bin/pxctl service relaxedreclaim delete <vol-id>"
+      args-required: false
+      func: cli.ExecServiceRelaxedReclaimDelete
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [d]
+      hidden: false
+  - name: preshutdown
+    short: Initiate pre-shutdown sequence in px
+    long: ""
+    example: pxctl service preshutdown
+    args-required: false
+    func: cli.ExecServicePreshutdown
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: true
+    flags: []
+    subcmd: []
+  - name: usage-report
+    short: creates & download tgz package for px consumption reports
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecServiceBilling
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags:
+    - name: download
+      type: bool
+      single-letter-shorthand: 
+      use: generate reports for px consumption
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false    
+    - name: year
+      type: int
+      single-letter-shorthand: 
+      use: generate reports of px consumption 
+      default: 2022
+      valid-values: []
+      valid-range: [2000,3000]
+      hidden: true
+      persistent: false
+      required: false    
+    - name: month
+      type: int
+      single-letter-shorthand: 
+      use: generate reports of px consumption  for month
+      default: 1
+      valid-values: []
+      valid-range: [1,12]
+      hidden: true
+      persistent: false
+      required: false

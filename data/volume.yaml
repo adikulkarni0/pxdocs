@@ -1,0 +1,1763 @@
+- name: volume
+  short: Manage volumes
+  long: ""
+  example: pxctl volume create -s 100 myVolName
+  args-required: false
+  func: cli.ExecVolume
+  input-interface: false
+  imports: github.com/portworx/porx/px/cli
+  aliases: [v]
+  hidden: false
+  flags: []
+  subcmd:
+  - name: create
+    short: Create a volume
+    long: ""
+    example: pxctl volume create [flags] volume-name
+    args-required: true
+    func: cli.ExecVolumeCreate
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [c]
+    hidden: false
+    flags:
+    - name: force_fs
+      type: bool
+      single-letter-shorthand: ""
+      use: force unsupported file system type if possible
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    - name: shared
+      type: bool
+      single-letter-shorthand: ""
+      use: make this a globally shared namespace volume
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: secure
+      type: bool
+      single-letter-shorthand: ""
+      use: encrypt this volume using AES-256
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: secret_key
+      type: str
+      single-letter-shorthand: ""
+      use: secret_key to use to fetch secret_data for the PBKDF2 function
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: secret_options
+      type: str
+      single-letter-shorthand: ""
+      use: "Secret options is used to pass specific secret parameters. Usage: --secret_options=k1=v1,k2=v2"
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: use_cluster_secret
+      type: bool
+      single-letter-shorthand: ""
+      use: Use cluster wide secret key to fetch secret_data
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: label
+      type: str
+      single-letter-shorthand: l
+      use: list of comma-separated name=value `pairs`
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: size
+      type: uint
+      single-letter-shorthand: s
+      use: volume size in GB
+      default: 1
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: fs
+      type: str
+      single-letter-shorthand: ""
+      use: filesystem to be laid out
+      default: ext4
+      valid-values: [none, xfs, ext4]
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    - name: block_size
+      type: uint
+      single-letter-shorthand: b
+      use: block size in Bytes
+      default: 4096
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: queue_depth
+      type: uint
+      single-letter-shorthand: q
+      use: block device queue depth
+      default: 128
+      valid-values: []
+      valid-range: [1, 256]
+      hidden: false
+      persistent: false
+      required: false
+    - name: repl
+      type: uint
+      single-letter-shorthand: r
+      use: replication factor
+      default: 1
+      valid-values: []
+      valid-range: [1, 3]
+      hidden: false
+      persistent: false
+      required: false
+    - name: scale
+      type: uint
+      single-letter-shorthand: ""
+      use: auto scale to max number
+      default: 1
+      valid-values: []
+      valid-range: [1, 1024]
+      hidden: false
+      persistent: false
+      required: false
+    - name: io_priority
+      type: str
+      single-letter-shorthand: ""
+      use: IO Priority
+      default: low
+      valid-values: [high, medium, low]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: journal
+      type: bool
+      single-letter-shorthand: ""
+      use: Journal data for this volume
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: early_ack
+      type: bool
+      single-letter-shorthand: ""
+      use: Reply to async write requests after it is copied to shared memory
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: async_io
+      type: bool
+      single-letter-shorthand: ""
+      use: Enable async IO to backing storage
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: nodiscard
+      type: bool
+      single-letter-shorthand: ""
+      use: Disable discard support for this volume
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: fastpath
+      type: bool
+      single-letter-shorthand: ""
+      use: Enable fastpath IO support for this volume
+      default: false
+      valid-values: []
+      valid-range: []
+      persistent: false
+      required: false
+    - name: io_profile
+      type: str
+      single-letter-shorthand: ""
+      use: IO Profile
+      default: auto
+      valid-values: [sequential, cms, sync_shared, db, db_remote, auto, none]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: sticky
+      type: bool
+      single-letter-shorthand: ""
+      use: sticky volumes cannot be deleted until the flag is disabled
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: compress
+      type: bool
+      single-letter-shorthand: ""
+      use: Enables inline compression.  This will force the filesystem type to use
+        btrfs
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    - name: sharedv4
+      type: bool
+      single-letter-shorthand: ""
+      use: export this volume via Sharedv4
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: sharedv4_service_type
+      type: str
+      single-letter-shorthand: ""
+      use: creates a sharedv4 service volume when used with the sharedv4 option
+      default: ""
+      valid-values: [ClusterIP, NodePort, LoadBalancer, ""]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: sharedv4_failover_strategy
+      type: str
+      single-letter-shorthand: ""
+      use: specifies how aggressively to fail over to a new server for a sharedv4 or sharedv4 service volume
+      default: ""
+      valid-values: [aggressive, normal, ""]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: aggregation_level
+      type: str
+      single-letter-shorthand: a
+      use: aggregation level
+      default: 1
+      valid-values: [1, 2, 3, auto]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: nodes
+      type: str
+      single-letter-shorthand: ""
+      use: comma-separated Node Ids or Pool Ids
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: zones
+      type: str
+      single-letter-shorthand: ""
+      use: comma-separated Zone names
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: racks
+      type: str
+      single-letter-shorthand: ""
+      use: comma-separated Rack names
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: group
+      type: str
+      single-letter-shorthand: g
+      use: group
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: enforce_cg
+      type: bool
+      single-letter-shorthand: ""
+      use: enforce group during provision
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: best_effort_location_provisioning
+      type: bool
+      single-letter-shorthand: ""
+      use: requested nodes, zones, racks are optional
+      default: false
+      hidden: false
+      required: false
+    - name: periodic
+      type: str
+      single-letter-shorthand: p
+      use: periodic snapshot interval in `mins,k` (keeps 5 by default), 0 disables
+        all schedule snapshots
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: daily
+      type: str-slice
+      single-letter-shorthand: d
+      use: daily snapshot at specified `hh:mm,k` (keeps 7 by default)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: weekly
+      type: str-slice
+      single-letter-shorthand: w
+      use: weekly snapshot at specified `weekday@hh:mm,k` (keeps 5 by default)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: monthly
+      type: str-slice
+      single-letter-shorthand: m
+      use: monthly snapshot at specified `day@hh:mm,k` (keeps 12 by default)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: policy
+      type: str
+      single-letter-shorthand: ""
+      use: policy names separated by comma
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: storagepolicy
+      type: str
+      single-letter-shorthand: ""
+      use: storage policy name
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: mount_options
+      type: str
+      single-letter-shorthand: ""
+      use: comma separated list of mount options provided as key=value pairs
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: sharedv4_mount_options
+      type: str
+      single-letter-shorthand: ""
+      use: comma separated list of sharedv4 client mount options provided as key=value pairs
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: proxy_endpoint
+      type: str
+      single-letter-shorthand: ""
+      use: proxy endpoint provided in the following format '<protocol>://<endpoint>' Ex 'nfs://<nfs-server-ip>'
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: proxy_nfs_exportpath
+      type: str
+      single-letter-shorthand: ""
+      use: export path for nfs proxy volume
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: proxy_nfs_subpath
+      type: str
+      single-letter-shorthand: ""
+      use: sub path from the nfs share to which this proxy volume has access to
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: cow_ondemand
+      type: bool
+      single-letter-shorthand: ""
+      use: Enable On-demand COW on volume
+      default: true
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: direct_io
+      type: bool
+      single-letter-shorthand: ""
+      use: Enable Direct IO on volume
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: proxy_write
+      type: bool
+      single-letter-shorthand: ""
+      use: Enable proxy write replication for this volume
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    - name: auto_fstrim
+      type: bool
+      single-letter-shorthand: ""
+      use: Enable automatic fstrim for this volume
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    - name: max_iops
+      type: str
+      single-letter-shorthand: ""
+      use: maximum iops this volume is restricted to. syntax --max_iops <ReadIOPS>,<WriteIOPS>. provide off for no throttling. e.g. --max_iops off,1000
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: max_bandwidth
+      type: str
+      single-letter-shorthand: ""
+      use: maximum io bandwidth (MB/s) this volume is restricted to. syntax --max_bandwidth <ReadBW>,<WriteBW>. provide off for no throttling. e.g. --max_bandwidth 200,off
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: list
+    short: List volumes in the cluster
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecVolumeList
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [l]
+    hidden: false
+    flags:
+    - name: all
+      type: bool
+      single-letter-shorthand: a
+      use: show all volumes, including snapshots
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: node
+      type: str
+      single-letter-shorthand: ""
+      use: show all volumes whose replica is present on the given node
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: pool-uid
+      type: str
+      single-letter-shorthand: ""
+      use: show all volumes whose replica is present on the given pool
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: name
+      type: str
+      single-letter-shorthand: ""
+      use: volume name used during creation if any
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: label
+      type: str
+      single-letter-shorthand: l
+      use: list of comma-separated name=value pairs
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: snapshot
+      type: bool
+      single-letter-shorthand: s
+      use: show all snapshots (read-only volumes)
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: snapshot-schedule
+      type: bool
+      single-letter-shorthand: ""
+      use: show all schedule created snapshots
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: sched-policy
+      type: str
+      single-letter-shorthand: ""
+      use: filter volumes by sched policy
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: parent
+      type: str
+      single-letter-shorthand: p
+      use: show all snapshots created for given volume
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: volumes
+      type: bool
+      single-letter-shorthand: v
+      use: show only volumes
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: group
+      type: str
+      single-letter-shorthand: g
+      use: show all volumes for given group
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: time
+      type: bool
+      single-letter-shorthand: t
+      use: show all volumes sorted by creation time
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: trashcan
+      type: bool
+      single-letter-shorthand: ""
+      use: list volume snapshots in the trashcan in the cluster
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: update
+    short: Update volume settings
+    long: ""
+    example: pxctl volume update [flags] volName
+    args-required: true
+    func: cli.ExecVolumeUpdate
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags:
+    - name: label
+      type: str
+      single-letter-shorthand: l
+      use: list of comma-separated name=value pairs to update (use empty label value
+        to remove label)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: shared
+      type: str
+      single-letter-shorthand: ""
+      use: set shared setting
+      default: off
+      valid-values: [on, off]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: export_options
+      type: str
+      single-letter-shorthand: ""
+      use: set export options
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: mount_options
+      type: str
+      single-letter-shorthand: ""
+      use: Set mount options for a volume. Provide the mount options as a comma-separated key=value pairs. (Use empty value to reset mount options)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: sharedv4_mount_options
+      type: str
+      single-letter-shorthand: ""
+      use: Set sharedv4 client mount options for a volume. Provide the mount options as a comma-separated key=value pairs. (Use empty value to reset mount options)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: sticky
+      type: str
+      single-letter-shorthand: ""
+      use: set sticky setting
+      default: off
+      valid-values: [on, off]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: queue_depth
+      type: uint
+      single-letter-shorthand: ""
+      use: block device queue depth
+      default: 128
+      valid-values: []
+      valid-range: [1, 256]
+      hidden: false
+      persistent: false
+      required: false
+    - name: scale
+      type: uint
+      single-letter-shorthand: ""
+      use: New scale factor
+      default: 1
+      valid-values: []
+      valid-range: [1, 1024]
+      hidden: false
+      persistent: false
+      required: false
+    - name: journal
+      type: str
+      single-letter-shorthand: ""
+      use: Journal data for this volume
+      default: off
+      valid-values: [on, off]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: early_ack
+      type: str
+      single-letter-shorthand: ""
+      use: Reply to async write requests after it is copied to shared memory
+      default: off
+      valid-values: [on, off]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: async_io
+      type: str
+      single-letter-shorthand: ""
+      use: Enable async IO to backing storage
+      default: off
+      valid-values: [on, off]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: nodiscard
+      type: str
+      single-letter-shorthand: ""
+      use: Disable discard support for this volume
+      default: off
+      valid-values: [on, off]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: io_profile
+      type: str
+      single-letter-shorthand: ""
+      use: IO Profile
+      default: auto
+      valid-values: [sequential, cms, db, db_remote, sync_shared, auto, none]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: io_priority
+      type: str
+      single-letter-shorthand: ""
+      use: IO Priority
+      default: low
+      valid-values: [high, medium, low]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: group
+      type: str
+      single-letter-shorthand: "g"
+      use: Set/Reset the Group field on a Volume
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: size
+      type: uint
+      single-letter-shorthand: s
+      use: New size for the volume (GiB)
+      default: 1
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: sharedv4
+      type: str
+      single-letter-shorthand: ""
+      use: set sharedv4 setting
+      default: off
+      valid-values: [on, off]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: sharedv4_service_type
+      type: str
+      single-letter-shorthand: ""
+      use: set sharedv4 service type. (Use empty value to clear this setting)
+      default: ""
+      valid-values: [ClusterIP, NodePort, LoadBalancer, ""]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: sharedv4_failover_strategy
+      type: str
+      single-letter-shorthand: ""
+      use: set sharedv4 failover strategy. (Use empty value to clear this setting)
+      default: ""
+      valid-values: [aggressive, normal, ""]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: fastpath
+      type: bool
+      single-letter-shorthand: ""
+      use: Enable fastpath IO support for this volume
+      default: false
+      valid-values: []
+      valid-range: []
+      persistent: false
+      required: false
+    - name: cow_ondemand
+      type: str
+      single-letter-shorthand: ""
+      use: Enable On-demand COW on volume
+      default: on
+      valid-values: [on, off]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: direct_io
+      type: str
+      single-letter-shorthand: ""
+      use: Enable Direct IO on volume
+      default: off
+      valid-values: [on, off]
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    - name: proxy_write
+      type: str
+      single-letter-shorthand: ""
+      use: Enable proxy write replication for this volume
+      default: off
+      valid-values: [on, off]
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    - name: auto_fstrim
+      type: str
+      single-letter-shorthand: ""
+      use: Enable automatic fstrim for this volume
+      default: off
+      valid-values: [on, off]
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    - name: max_iops
+      type: str
+      single-letter-shorthand: ""
+      use: maximum iops this volume is restricted to. syntax --max_iops <ReadIOPS>,<WriteIOPS>. provide off for no throttling. e.g. --max_iops off,1000
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: max_bandwidth
+      type: str
+      single-letter-shorthand: ""
+      use: maximum io bandwidth (MB/s) this volume is restricted to. syntax --max_bandwidth <ReadBW>,<WriteBW>. provide off for no throttling. e.g. --max_bandwidth 200,off
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: ha-update
+    short: Update volume HA level
+    long: ""
+    example: pxctl volume ha-update --repl 3 myVol
+    args-required: true
+    func: cli.ExecVolumeHaUpdate
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [u]
+    hidden: false
+    flags:
+    - name: repl
+      type: uint
+      single-letter-shorthand: r
+      use: New replication factor
+      default: 1
+      valid-values: []
+      valid-range: [1, 3]
+      hidden: false
+      persistent: false
+      required: false
+    - name: node
+      type: str
+      single-letter-shorthand: n
+      use: comma-separated Node ID(s) or Pool UUID(s)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: zones
+      type: str
+      single-letter-shorthand: ""
+      use: comma-separated Zone names (only for ha-increase)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: racks
+      type: str
+      single-letter-shorthand: ""
+      use: comma-separated Rack names (only for ha-increase)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: cancel
+      type: bool
+      single-letter-shorthand: c
+      use: Cancel ha-increase operation
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: best_effort_location_provisioning
+      type: bool
+      single-letter-shorthand: ""
+      use: requested nodes, zones, racks are optional
+      default: false
+      hidden: false
+      required: false
+    - name: sources
+      type: str
+      use: comma-separated Node Id(s) to be used as source for ha-increase operation
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: snap-interval-update
+    short: Update volume configuration
+    long: ""
+    example: "pxctl volume snap-interval-update [flags] volName"
+    args-required: true
+    func: cli.ExecVolumeSnapIntervalUpdate
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [snap]
+    hidden: false
+    flags:
+    - name: periodic
+      type: str
+      single-letter-shorthand: p
+      use: periodic snapshot interval in mins,k (keeps 5 by default), 0 disables all
+        schedule snapshots
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: daily
+      type: str-slice
+      single-letter-shorthand: d
+      use: daily snapshot at specified hh:mm,k (keeps 7 by default)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: weekly
+      type: str-slice
+      single-letter-shorthand: w
+      use: weekly snapshot at specified weekday@hh:mm,k (keeps 5 by default)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: monthly
+      type: str-slice
+      single-letter-shorthand: m
+      use: monthly snapshot at specified day@hh:mm,k (keeps 12 by default)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: policy
+      type: str
+      single-letter-shorthand: ""
+      use: policy names separated by comma
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: inspect
+    short: Inspect a volume
+    long: ""
+    example: pxctl volume inspect [flags] volName
+    args-required: true
+    func: cli.ExecVolumeInspect
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [i]
+    hidden: false
+    flags:
+    - name: extended
+      type: bool
+      single-letter-shorthand: e
+      use: extended report on volume state
+      default: false
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: requests
+    short: Show all pending requests
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecVolumeRequests
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: usage
+    short: Show volume usage information
+    long: ""
+    example: /opt/pwx/bin/pxctl volume usage myVol
+    args-required: true
+    func: cli.ExecVolumeUsage
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: delete
+    short: Delete a volume
+    long: ""
+    example: pxctl volume delete [flags] myVol
+    args-required: true
+    func: cli.ExecVolumeDelete
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [d]
+    hidden: false
+    flags:
+    - name: force
+      type: bool
+      single-letter-shorthand: f
+      use: Specify --force to skip confirmation request.
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    subcmd: []
+  - name: stats
+    short: Volume Statistics
+    long: ""
+    example: pxctl volume stats [flags] volName
+    args-required: true
+    func: cli.ExecVolumeStats
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [st]
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: import
+    short: Import data into a volume
+    long: ""
+    example: pxctl volume import [flags] volName
+    args-required: true
+    func: cli.ExecVolumeImport
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags:
+    - name: src
+      type: str
+      single-letter-shorthand: ""
+      use: Local source `path` for the data
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: secret_options
+      type: str
+      single-letter-shorthand: ""
+      use: "Secret options is used to pass specific secret parameters. Usage: --secret_options=k1=v1,k2=v2"
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: secret_key
+      type: str
+      single-letter-shorthand: ""
+      use: the encryption passphrase for this volume can be fetched from the secret provider
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: clone
+    short: Create a clone volume
+    long: ""
+    example: pxctl volume clone [flags] volName
+    args-required: true
+    func: cli.ExecVolumeClone
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [cl]
+    hidden: false
+    flags:
+    - name: name
+      type: str
+      single-letter-shorthand: ""
+      use: clone name
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: label
+      type: str
+      single-letter-shorthand: l
+      use: list of comma-separated name=value pairs
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: restore
+    short: Restore volume from snapshot
+    long: ""
+    example: pxctl volume restore [flags] volName
+    args-required: true
+    func: cli.ExecVolumeRestore
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [r]
+    hidden: false
+    flags:
+    - name: snapshot
+      type: str
+      single-letter-shorthand: s
+      use: snapshot-name-or-ID
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: trashcan
+      type: str
+      single-letter-shorthand: t
+      use: volume name or id in trashcan
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: setrepl
+    short: Set volume's replication set
+    long: ""
+    example: pxctl volume setrepl [flags] volName
+    args-required: true
+    func: cli.ExecVolumeSetrepl
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: true
+    flags:
+    - name: createset
+      type: str
+      single-letter-shorthand: ""
+      use: comma-separated nodes in create set
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: currentset
+      type: str
+      single-letter-shorthand: ""
+      use: comma-separated nodes in current set
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: rset
+      type: int
+      single-letter-shorthand: ""
+      use: repl-set index
+      default: 0
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: reset-curr
+      type: bool
+      single-letter-shorthand: ""
+      use: reset current sets if required
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: snapshot
+    short: Manage volume snapshots
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecVolumeSnapshot
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [s]
+    hidden: false
+    flags: []
+    subcmd:
+    - name: create
+      short: Create a volume snapshot
+      long: ""
+      example: pxctl volume snapshot create [flags] volName
+      args-required: true
+      func: cli.ExecVolumeSnapshotCreate
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [c]
+      hidden: false
+      flags:
+      - name: name
+        type: str
+        single-letter-shorthand: ""
+        use: snapshot name
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: label
+        type: str
+        single-letter-shorthand: l
+        use: list of comma-separated name=value pairs
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      subcmd: []
+    - name: group
+      short: Create group snapshots for given group id or labels
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecVolumeSnapshotGroup
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [g]
+      hidden: false
+      flags:
+      - name: group
+        type: str
+        single-letter-shorthand: g
+        use: group id
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: label
+        type: str
+        single-letter-shorthand: l
+        use: list of comma-separated name=value pairs
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: volume_ids
+        type: str
+        single-letter-shorthand: v
+        use: list of comma-separated volume IDs
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: delete-on-failure
+        type: bool
+        single-letter-shorthand: d
+        use: delete created snaps if not all volumes succeeded in the group
+        default: false
+        hidden: false
+        persistent: false
+        required: false
+  - name: access
+    short: Manage volume access by users or groups
+    long: |
+      This command manages access permissions to a volume. There are two ways
+      to provide access, one is by adding a group and the other is by adding
+      a specific user as a collaborator. When adding a collaborator, you
+      must use the unique id of the user. Please consult with your admin
+      on how to obtain the unique id of the user.
+
+      ACCESS TYPES
+      When adding a group or collaborator, an access type must also be
+      given, which can be either Read, Write, or Admin.
+
+      A Read access type allows access to the volume without modifying
+      it. With a Read access type, one can clone or inspect the volume.
+      A Write access type allows modification of the volume and its metadata,
+      for example allowing to mount, unmount, and restoring the volume from
+      snapshot in addition to all Read access.
+      An Admin access type allows full access to the volume, like deleting
+      the volume in addition to all Write access.
+
+      SETTING ACCESS TYPES
+      To set access types, add the following suffix to the group or collaborator
+      separated by a colon ':'
+        r - For Read access type
+        w - For Write access type
+        a - For Admin access type
+
+      SETTING PUBLIC ACCESS
+      To set public access, add either w, write, r, or read with the public flag.
+    example: |
+      Add read access for group1
+        pxctl v access add <volume> --group group1:r
+
+      Add write access for group2
+        pxctl v access add <volume> --group group2:w
+
+      Add admin access for user1
+        pxctl v access add <volume> --collaborator user1Id:a
+
+      Add public access for user2
+        pxctl v access add <volume> --public w
+
+      Remove user1's access
+        pxctl v access remove <volume> --collaborator user1Id
+
+      Remove user2's public access
+        pxctl v access remove <volume> --public
+
+      Set the entire volume access spec with one command. This clears any previous settings.
+        pxctl v access update <volume> --groups group1:r,group2:w --collaborators user1Id:a
+
+      Show the volume access spec for a given volume
+        pxctl v access show <volume>
+    args-required: false
+    func: cli.ExecVolumeAccess
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [o]
+    hidden: false
+    flags: []
+    subcmd:
+    - name: show
+      short: List the owner and volume ACLS
+      long: ""
+      example: "pxctl volume access show [flags] volName"
+      args-required: false
+      func: cli.ExecVolumeAccessShow
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [s]
+      hidden: false
+      flags: []
+      subcmd: []
+    - name: add
+      short: Adds a single group or collaborator
+      long: ""
+      example: "pxctl volume access add [flags] volName"
+      args-required: false
+      func: cli.ExecVolumeAccessAdd
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [a]
+      hidden: false
+      flags:
+      - name: group
+        type: str
+        single-letter-shorthand: g
+        use: group to add with access type. See volume access help for more information
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: collaborator
+        type: str
+        single-letter-shorthand: c
+        use: collaborator to add with access type. Must be the unique id of the user. See volume access for more information
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: public
+        type: str
+        single-letter-shorthand: p
+        use: update the ownership as public
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+    - name: remove
+      short: Removes a single group or collaborator
+      long: ""
+      example: "pxctl volume access remove [flags] volName"
+      args-required: false
+      func: cli.ExecVolumeAccessRemove
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [r]
+      hidden: false
+      flags:
+      - name: group
+        type: str
+        single-letter-shorthand: g
+        use: group to remove
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: collaborator
+        type: str
+        single-letter-shorthand: c
+        use: collaborator to remove
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: public
+        type: bool
+        single-letter-shorthand: p
+        use: update the ownership as public
+        default: false
+        hidden: false
+        persistent: false
+        required: false
+    - name: update
+      short: Update the owner and/or complete set of volume ACLS
+      long: ""
+      example: "pxctl volume access update [flags] volName"
+      args-required: false
+      func: cli.ExecVolumeAccessUpdate
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [u]
+      hidden: false
+      flags:
+      - name: owner
+        type: str
+        single-letter-shorthand: o
+        use: username of the desired owner. Only an administrator can change this value.
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: groups
+        type: str
+        single-letter-shorthand: g
+        use: list of comma-separated group names with access type. See volume access for more information
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: collaborators
+        type: str
+        single-letter-shorthand: c
+        use: list of comma-separated collaborator names with access type. See volume access for more information
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      subcmd: []
+  - name: locate
+    short: Locate volume
+    long: ""
+    example: "pxctl volume locate volume_id"
+    args-required: false
+    func: cli.ExecVolumeLocate
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [f]
+    hidden: false
+  - name: check
+    short: Perform Background filesystem consistency check operation on the volume
+    long: ""
+    example: pxctl volume check <sub_cmd> [flags] volume-name
+    args-required: false
+    func: cli.ExecVolumeCheck
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [fc]
+    hidden: false
+    subcmd:
+    - name: start
+      short: Start filesystem consistency check on the volume
+      long: ""
+      example: pxctl volume check start --mode fix_safe volume-name
+      args-required: true
+      func: cli.ExecVolumeCheckStart
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags:
+      - name: mode
+        type: str
+        single-letter-shorthand: ""
+        use: select what mode to run filesystem consistency check
+        default: false
+        valid-values: [fix_safe, check_health, fix_all]
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: true
+    - name: stop
+      short: Stop filesystem consistency check on the volume, if any
+      long: ""
+      example: pxctl volume check stop volume-name
+      args-required: true
+      func: cli.ExecVolumeCheckStop
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags: []
+    - name: status
+      short:  Get the Status of filesystem consistency check on the volume
+      long: ""
+      example: pxctl volume check status volume-name
+      args-required: true
+      func: cli.ExecVolumeCheckStatus
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags: []
+  - name: autofstrim
+    short: Periodically frees unused blocks in the volume to the portworx pool
+    long: ""
+    example: pxctl volume autofstrim
+    args-required: false
+    func: cli.ExecAutoFsTrim
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [af]
+    hidden: false
+    subcmd:
+    - name: status
+      short: Status of auto filesystem trim
+      long: ""
+      example: pxctl volume autofstrim status volume-name
+      args-required: false
+      func: cli.ExecAutoFsTrimStatus
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags: []
+    - name: usage
+      short: Report volume usage and trimmable space in locally attached volumes
+      long: ""
+      example: pxctl volume autofstrim usage
+      args-required: false
+      func: cli.ExecVolumeAutofstrimUsage
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags: []
+  - name: trim
+    short: Frees unused blocks in the volume to the portworx pool
+    long: ""
+    example: pxctl volume trim <sub_cmd> [flags] volume-name
+    args-required: false
+    func: cli.ExecVolumeTrim
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [ft]
+    hidden: false
+    subcmd:
+    - name: start
+      short: Start filesystem trim on the volume
+      long: ""
+      example: pxctl volume trim start --path /path/to/mnt/point volume-name
+      args-required: true
+      func: cli.ExecVolumeTrimStart
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags:
+      - name: path
+        type: str
+        single-letter-shorthand: ""
+        use: specify the mount point where the volume is mounted
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: true
+    - name: status
+      short: Status of filesystem trim on the volume
+      long: ""
+      example: pxctl volume trim status --path /path/to/mnt/point volume-name
+      args-required: true
+      func: cli.ExecVolumeTrimStatus
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags:
+      - name: path
+        type: str
+        single-letter-shorthand: ""
+        use: specify the mount point where the volume is mounted
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: true
+    - name: stop
+      short: Stop filesystem trim on the volume
+      long: ""
+      example: pxctl volume trim stop --path /path/to/mnt/point volume-name
+      args-required: true
+      func: cli.ExecVolumeTrimStop
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags:
+      - name: path
+        type: str
+        single-letter-shorthand: ""
+        use: specify the mount point where the volume is mounted
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: true

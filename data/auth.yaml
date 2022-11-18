@@ -1,0 +1,107 @@
+- name: auth
+  short: pxctl auth
+  long: "Portworx pxctl token based authentication and authorization commands"
+  example: ""
+  args-required: false
+  func: cli.ExecAuth
+  input-interface: false
+  imports: github.com/portworx/porx/px/cli
+  aliases: []
+  hidden: false
+  flags: []
+  subcmd:
+  - name: token
+    short: token commands
+    long: "Manage tokens for use by pxctl"
+    example: "pxctl auth token <command> <command flags>"
+    args-required: false
+    func: cli.ExecAuthToken
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags: []
+    subcmd:
+    - name: generate
+      short: generate a token
+      long: |
+        Generate a self signed token based on a specified configuration yaml. The configuration defines your identity, roles, and groups to be used when generating a token.
+        e.g.
+             name: Jim Stevens
+             sub: jstevens@portworx.com/jstevens
+             email: jstevens@portworx.com
+             roles: ["system.user"]
+             groups: ["px-engineering", "kubernetes-csi"]
+      
+      example: pxctl auth token generate --auth-config=<authconfig.yaml> --issuer <issuer> --ecdsa-private-keyfile <ecdsa key file> OR --rsa-private-keyfile <rsa key file> OR --shared-secret <secret>
+      args-required: false
+      func: cli.ExecAuthTokenGenerate
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags:
+      - name: auth-config
+        type: str
+        use: Auth account information file providing email, name, etc.
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: true
+      - name: ecdsa-private-keyfile
+        type: str
+        use: ECDSA Private file to sign token
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: issuer
+        type: str
+        use: Issuer name of token. Do not use https:// in the issuer since it could indicate that this is an OpenID Connect issuer.
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: true
+      - name: output
+        type: str
+        use: Output token to file instead of standard out
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: rsa-private-keyfile
+        type: str
+        use: RSA Private file to sign token
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: shared-secret
+        type: str
+        use: Shared secret to sign token
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: token-duration
+        type: str
+        use: Duration of time where the token will be valid. Postfix the duration by using s for seconds, m for minutes, h for hours, d for days, and y for years.
+        default: "1d"
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      subcmd: []

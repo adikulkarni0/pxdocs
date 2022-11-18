@@ -1,0 +1,231 @@
+- name: clouddrive
+  short: Manage cloud drives
+  long: ""
+  example: ""
+  args-required: false
+  func: cli.ExecClouddrive
+  input-interface: false
+  imports: github.com/portworx/porx/px/cli
+  aliases: [cd]
+  hidden: false
+  flags: []
+  subcmd:
+  - name: list
+    short: List all the cloud drives currently being used
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecClouddriveList
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [l]
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: list-drives
+    short: List all the cloud drives currently being used
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecClouddriveListDrives
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [ld]
+    hidden: false
+    flags:
+    - name: selector
+      type: str
+      single-letter-shorthand: "l"
+      use: Selector (label query) to filter on. Supports '='.(e.g. -l key1=value1)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: inspect
+    short: Inspect and view all the drives of a DriveSet
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecClouddriveInspect
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [i]
+    hidden: false
+    flags:
+    - name: node
+      type: str
+      single-letter-shorthand: ""
+      use: Node ID of the DriveSet to inspect.
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: true
+    subcmd: []
+  - name: add-drive
+    short: Adds a drive to the DriveSet currently used by this node
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecClouddriveAddDrive
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [a]
+    hidden: true
+    flags:
+    - name: spec
+      type: str
+      single-letter-shorthand: ""
+      use: 'a template volume or spec in the format: type=<drive-type>,size=<numGi>,iops=<num>'
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: delete
+    short: Delete the cloud drive
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecClouddriveDelete
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [d]
+    hidden: true
+    flags:
+    - name: node
+      type: str
+      single-letter-shorthand: ""
+      use: Node ID of the DriveSet to delete.
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: true
+    - name: force
+      type: bool
+      single-letter-shorthand: ""
+      use: Force delete the drive set from kvdb irrespective of the drives getting deleted or not
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: update-labels
+    short: Updates the labels on the drive set for the provided node.
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecClouddriveUpdateLabels
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [ul]
+    hidden: false
+    flags:
+    - name: node
+      type: str
+      single-letter-shorthand: "n"
+      use: 'ID of the node who owns the drive set.'
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: true
+    - name: labels
+      type: str
+      single-letter-shorthand: "l"
+      use: 'Comma separated list of key value pairs in the <key1>=<value1>,<key2>=<value2> format. If not provided sets empty labels.'
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+  - name: transfer
+    short: Transfers the cloud drive set from given source node to a destination node
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecClouddriveTransfer
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [ t ]
+    hidden: false
+    subcmd:
+      - name: submit
+        short: Submit a new job to transfer a cloud drive set
+        long: ""
+        example: ""
+        func: cli.ExecClouddriveTransferSubmit
+        args-required: false
+        flags:
+          - name: src
+            type: str
+            single-letter-shorthand: "s"
+            use: ID of the PX node who currently owns the drive set. This is the 'NodeID' displayed in the output of the
+             'pxctl clouddrive list' command.
+            default: ""
+            valid-values: [ ]
+            valid-range: [ ]
+            hidden: false
+            persistent: false
+            required: true
+          - name: dest
+            type: str
+            single-letter-shorthand: "d"
+            use: ID of the instance who should own the drive set. This is the 'InstanceID' displayed in the output of the
+              'pxctl clouddrive list' command. The destination instance needs to be a storage less node (with no Drive IDs)
+              and in the same zone (if your cluster has zones). This is optional and if not provided, an online storageless node will be used.
+            default: ""
+            valid-values: [ ]
+            valid-range: [ ]
+            hidden: false
+            persistent: false
+            required: false
+      - name: list
+        short: Lists cloud drive transfer jobs in the system
+        long: ""
+        example: ""
+        func: cli.ExecClouddriveTransferList
+        args-required: false
+      - name: status
+        short: Status of a cloud drive transfer job
+        long: ""
+        example: ""
+        func: cli.ExecClouddriveTransferStatus
+        args-required: false
+        flags:
+          - name: job-id
+            type: str
+            single-letter-shorthand: "i"
+            use: ""
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: true
+      - name: cancel
+        short: Cancels a cloud drive transfer job
+        long: ""
+        example: ""
+        func: cli.ExecClouddriveTransferCancel
+        args-required: false
+        hidden: true
+        flags:
+          - name: job-id
+            type: str
+            single-letter-shorthand: "i"
+            use: ""
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: true

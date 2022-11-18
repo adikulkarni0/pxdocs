@@ -1,0 +1,128 @@
+- name: cloudmigrate
+  short: Migrate volumes across clusters
+  long: ""
+  example: ""
+  args-required: false
+  func: cli.ExecCloudMigrate
+  input-interface: false
+  imports: ""
+  aliases: [cm]
+  hidden: false
+  flags: []
+  subcmd:
+  - name: start
+    short: Migrate volume(s) to a paired Portworx cluster
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecCloudMigrateStart
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags:
+    - name: volume_id
+      type: str
+      single-letter-shorthand: v
+      use: ID of the volume to be migrated
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: true
+    - name: cluster_id
+      type: str
+      single-letter-shorthand: c
+      use: ID of the cluster where the volume should be migrated
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: sync_interval
+      type: uint
+      single-letter-shorthand: i
+      use: Time to wait between syncs (in minutes)
+      default: 0
+      valid-values: []
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    subcmd: []
+  - name: cancel
+    short: Cancel migrate tasks
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecCloudMigrateCancel
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags:
+    - name: task_id
+      type: str
+      single-letter-shorthand: t
+      use: ID of the task to be canceled
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: true
+  - name: status
+    short: Status of volume migrations
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecCloudMigrateStatus
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags: []
+    subcmd: []
+    flags:
+    - name: task_id
+      type: str
+      single-letter-shorthand: t
+      use: ID of the task to be queried
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: cluster_id
+      type: str
+      single-letter-shorthand: c
+      use: ID of the cluster for which to get status
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: active
+      type: bool
+      single-letter-shorthand: a
+      use: Show only active migrations
+      default: true
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: volume
+      type: str
+      single-letter-shorthand: v
+      use: Volume Id or name for which to show status
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false

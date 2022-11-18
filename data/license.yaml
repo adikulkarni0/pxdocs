@@ -1,0 +1,253 @@
+- name: license
+  short: Manage licenses
+  long: ""
+  example: ""
+  args-required: false
+  func: cli.ExecLicense
+  input-interface: false
+  imports: github.com/portworx/porx/px/cli
+  aliases: []
+  hidden: false
+  flags: []
+  subcmd:
+  - name: list
+    short: List available licenses
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecLicenseList
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [ls,l]
+    hidden: false
+    flags:
+    - name: all
+      type: bool
+      single-letter-shorthand: a
+      use: show all
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: add
+    short: Add a license from a file
+    long: ""
+    example: "  pxctl license add [flags] license-file.bin"
+    args-required: true
+    func: cli.ExecLicenseAdd
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: activate
+    short: Activate license from a license server
+    long: ""
+    example: "  pxctl license activate [flags] 9035-1a42-9af0-ccd9-dab6"
+    args-required: true
+    func: cli.ExecLicenseActivate
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [act]
+    hidden: false
+    flags:
+    - name: force
+      type: bool
+      single-letter-shorthand: ""
+      use: attempt forcing the license activation
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    - name: count
+      type: int
+      single-letter-shorthand: "n"
+      use: define number of activations to consume
+      default: 1
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: tmout
+      type: int
+      single-letter-shorthand: ""
+      use: define timeout for activation
+      default: 0
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: ep
+      type: str
+      single-letter-shorthand: ""
+      use: custom endpoint for activation
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    - name: key
+      type: str
+      single-letter-shorthand: ""
+      use: saas key for activating usage based license
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false   
+    subcmd: []
+  - name: setls
+    short: Set license server
+    long: ""
+    example: "  pxctl license setls http://hostname:7070/fne/bin/capability"
+    args-required: true
+    func: cli.ExecLicenseSetLicenseServer
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags:
+    - name: interval
+      type: str
+      single-letter-shorthand: "i"
+      use: license borrow interval (`.M.w.d.h.m.s` [e.g. 1w15m] or number)
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: refresh
+      type: str
+      single-letter-shorthand: ""
+      use: license REFRESH interval (`.M.w.d.h.m.s` or number)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    - name: add
+      type: str
+      single-letter-shorthand: ""
+      use: add license features (`feat1[,feat2,...]` format)
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: type
+      type: str
+      single-letter-shorthand: ""
+      use: define license type
+      valid-values: []
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    - name: ca-path
+      type: str
+      single-letter-shorthand: ""
+      use: extra root CA `files` (/usr/share/ca-certificates/extra/root-corp.crt[,/path2/lvl2-corp.crt] format)
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: import-unknown-ca
+      type: bool
+      default: false
+      single-letter-shorthand: ""
+      use: auto-import self-signed root CA certificate
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: trial
+    short: Activate 30 day trial license
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecLicenseTrial
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: true
+    flags: []
+    subcmd: []
+  - name: reset
+    short: Reset px expired license to ready state
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecLicenseReset
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: true
+    flags:
+    - name: duration
+      type: str
+      use: license reset duration
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: transfer
+    short: Transfer license to remote PX cluster
+    long: Command swaps licenses between the two Portworx clusters.
+      Note that both Portworx clusters need to be operational at the time this
+      command is ran.   The source cluster must have a valid PX-Enterprise
+      license, while the destination cluster can have either a valid or expired
+      Trial license, or expired PX-Enterprise license.
+    example: "  pxctl license transfer f91531d9-bf65-46f5-9619-eb99128e3270 10.0.15.201"
+    args-required: true
+    func: cli.ExecLicenseTransfer
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: error
+    short: License error
+    long: ""
+    example: ""
+    args-required: true
+    func: cli.ExecLicenseError
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: true
+    flags:
+      - name: clear
+        type: bool
+        default: false
+        use: clear cluster license error
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: set
+        type: str
+        use: set cluster license error
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+    subcmd: []

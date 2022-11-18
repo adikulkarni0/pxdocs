@@ -1,0 +1,1885 @@
+- name: cluster
+  short: Manage the cluster
+  long: ""
+  example: ""
+  args-required: false
+  func: cli.ExecCluster
+  input-interface: false
+  imports: github.com/portworx/porx/px/cli
+  aliases: [c]
+  hidden: false
+  flags: []
+  subcmd:
+  - name: list
+    short: List nodes in the cluster
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecClusterList
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [l]
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: inspect
+    short: Inspect a node
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecClusterInspect
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [i]
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: delete
+    short: Delete a node
+    long: ""
+    example: /opt/pwx/bin/pxctl cluster delete [flags] nodeID
+    args-required: true
+    func: cli.ExecClusterDelete
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [d]
+    hidden: false
+    flags:
+    - name: force
+      type: bool
+      single-letter-shorthand: f
+      use: Forcibly remove node, which may cause volumes to be irrevocably deleted
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: domains
+    short: A set of commands to manage Portworx Cluster Domains
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecClusterDomains
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [dm]
+    hidden: false
+    subcmd:
+    - name: show
+      short: Lists all cluster domains
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecClusterDomainsShow
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [l]
+      hidden: false
+      flags: []
+      subcmd: []
+    - name: activate
+      short: Activates the provided cluster domain
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecClusterDomainsActivate
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [a]
+      hidden: false
+      flags:
+      - name: name
+        type: str
+        single-letter-shorthand: n
+        use: name of the domain to activate
+        default: ""
+        valid-values: []
+        hidden: false
+        persistent: false
+        required: true
+      subcmd: []
+    - name: deactivate
+      short: Deactivates the provided cluster domain
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecClusterDomainsDeactivate
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [d]
+      hidden: false
+      flags:
+      - name: name
+        type: str
+        single-letter-shorthand: n
+        use: name of the domain to activate
+        default: ""
+        valid-values: []
+        hidden: false
+        persistent: false
+        required: true
+      subcmd: []
+  - name: provision-status
+    short: Show cluster provision status
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecClusterProvisionStatus
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [s]
+    hidden: false
+    flags:
+    - name: io_priority
+      type: str
+      single-letter-shorthand: ""
+      use: IO Priority
+      default: low
+      valid-values: [high, medium, low]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: show-labels
+      type: bool
+      single-letter-shorthand: ""
+      use: Show all labels
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+    subcmd: []
+  - name: config
+    short: Configure cluster
+    long: Configure cluster and nodes
+    example: ""
+    args-required: false
+    func: cli.ExecClusterConfig
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: true
+    flags:
+    - name: description
+      type: str
+      single-letter-shorthand: ""
+      use: (Str)\tCluster description
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: mode
+      type: str
+      single-letter-shorthand: ""
+      use: (Str)\tMode for cluster
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: version
+      type: str
+      single-letter-shorthand: ""
+      use: (Str)\tVersion info for cluster
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: cluster_id
+      type: str
+      single-letter-shorthand: ""
+      use: (Str)\tCluster ID info
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: domain
+      type: str
+      single-letter-shorthand: ""
+      use: (Str)\tusage to be added
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd:
+    - name: show
+      short: Show values
+      long: Show values
+      example: ""
+      args-required: false
+      func: cli.ExecClusterConfigShow
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags:
+      - name: all
+        type: bool
+        single-letter-shorthand: a
+        use: (Bool)\tShow all data
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: description
+        type: bool
+        single-letter-shorthand: ""
+        use: (Bool)\tCluster description
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: mode
+        type: bool
+        single-letter-shorthand: ""
+        use: (Bool)\tMode for cluster
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: version
+        type: bool
+        single-letter-shorthand: ""
+        use: (Bool)\tVersion info for cluster
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: created
+        type: bool
+        single-letter-shorthand: ""
+        use: (Bool)\tCreation info for cluster
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: cluster_id
+        type: bool
+        single-letter-shorthand: ""
+        use: (Bool)\tCluster ID info
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: domain
+        type: bool
+        single-letter-shorthand: ""
+        use: (Bool)\tusage to be added
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      subcmd: []
+    - name: node
+      short: node usage
+      long: node description
+      example: ""
+      args-required: false
+      func: cli.ExecClusterConfigNode
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags:
+      - name: all
+        type: bool
+        single-letter-shorthand: a
+        use: (Bool)\tFor all nodes on cluster
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: true
+        required: false
+      - name: node
+        type: str
+        single-letter-shorthand: ""
+        use: (Str)\tID for the node
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: true
+        required: false
+      - name: csi_endpoint
+        type: str
+        single-letter-shorthand: ""
+        use: (Str)\tCSI endpoint
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      subcmd:
+      - name: show
+        short: Show values
+        long: Show values
+        example: ""
+        args-required: false
+
+        func: cli.ExecClusterConfigNodeShow
+        input-interface: false
+        imports: github.com/portworx/porx/px/cli
+        aliases: []
+        hidden: false
+        flags:
+        - name: all
+          type: bool
+          single-letter-shorthand: a
+          use: (Bool)\tShow all data
+          default: false
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: node
+          type: bool
+          single-letter-shorthand: ""
+          use: (Bool)\tID for the node
+          default: false
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: csi_endpoint
+          type: bool
+          single-letter-shorthand: ""
+          use: (Bool)\tCSI endpoint
+          default: false
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        subcmd: []
+      - name: network
+        short: Network configuration
+        long: Configure network values for a node
+        example: ""
+        args-required: false
+
+        func: cli.ExecClusterConfigNodeNetwork
+        input-interface: false
+        imports: github.com/portworx/porx/px/cli
+        aliases: []
+        hidden: false
+        flags:
+        - name: mgt_interface
+          type: str
+          single-letter-shorthand: ""
+          use: (Str)\tManagement interface
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: data_interface
+          type: str
+          single-letter-shorthand: ""
+          use: (Str)\tData interface
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        subcmd:
+        - name: show
+          short: Show values
+          long: Show values
+          example: ""
+          args-required: false
+
+          func: cli.ExecClusterConfigNodeNetworkShow
+          input-interface: false
+          imports: github.com/portworx/porx/px/cli
+          aliases: []
+          hidden: false
+          flags:
+          - name: all
+            type: bool
+            single-letter-shorthand: a
+            use: (Bool)\tShow all data
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: mgt_interface
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tManagement interface
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: data_interface
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tData interface
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          subcmd: []
+      - name: storage
+        short: Storage configuration
+        long: Configure storage values for a node
+        example: ""
+        args-required: false
+
+        func: cli.ExecClusterConfigNodeStorage
+        input-interface: false
+        imports: github.com/portworx/porx/px/cli
+        aliases: []
+        hidden: false
+        flags:
+        - name: devices_md
+          type: str-slice
+          single-letter-shorthand: ""
+          use: (Str...)\tDevices MD
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: devices
+          type: str-slice
+          single-letter-shorthand: ""
+          use: (Str...)\tDevices list
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: max_count
+          type: uint
+          single-letter-shorthand: ""
+          use: (Uint)\tMaximum count
+          default: 0
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: max_drive_set_count
+          type: uint
+          single-letter-shorthand: ""
+          use: (Uint)\tMax drive set count
+          default: 0
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: raid_level
+          type: str
+          single-letter-shorthand: ""
+          use: (Str)\tRAID level info
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: raid_level_md
+          type: str
+          single-letter-shorthand: ""
+          use: (Str)\tRAID level MD
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        subcmd:
+        - name: show
+          short: Show values
+          long: Show values
+          example: ""
+          args-required: false
+
+          func: cli.ExecClusterConfigNodeStorageShow
+          input-interface: false
+          imports: github.com/portworx/porx/px/cli
+          aliases: []
+          hidden: false
+          flags:
+          - name: all
+            type: bool
+            single-letter-shorthand: a
+            use: (Bool)\tShow all data
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: devices_md
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tDevices MD
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: devices
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tDevices list
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: max_count
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tMaximum count
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: max_drive_set_count
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tMax drive set count
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: raid_level
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tRAID level info
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: raid_level_md
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tRAID level MD
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          subcmd: []
+      - name: geo
+        short: Geographic configuration
+        long: Stores geo info for node
+        example: ""
+        args-required: false
+
+        func: cli.ExecClusterConfigNodeGeo
+        input-interface: false
+        imports: github.com/portworx/porx/px/cli
+        aliases: []
+        hidden: false
+        flags:
+        - name: rack
+          type: str
+          single-letter-shorthand: ""
+          use: (Str)\tRack info
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: zone
+          type: str
+          single-letter-shorthand: ""
+          use: (Str)\tZone info
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: region
+          type: str
+          single-letter-shorthand: ""
+          use: (Str)\tRegion info
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        subcmd:
+        - name: show
+          short: Show values
+          long: Show values
+          example: ""
+          args-required: false
+
+          func: cli.ExecClusterConfigNodeGeoShow
+          input-interface: false
+          imports: github.com/portworx/porx/px/cli
+          aliases: []
+          hidden: false
+          flags:
+          - name: all
+            type: bool
+            single-letter-shorthand: a
+            use: (Bool)\tShow all data
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: rack
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tRack info
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: zone
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tZone info
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: region
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tRegion info
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          subcmd: []
+    - name: secrets
+      short: usage to be added
+      long: description to be added
+      example: ""
+      args-required: false
+      func: cli.ExecClusterConfigSecrets
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags:
+      - name: secret_type
+        type: str
+        single-letter-shorthand: ""
+        use: (Str)\tSecret type
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: cluster_secret_key
+        type: str
+        single-letter-shorthand: ""
+        use: (Str)\tSecret key
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      subcmd:
+      - name: show
+        short: Show values
+        long: Show values
+        example: ""
+        args-required: false
+
+        func: cli.ExecClusterConfigSecretsShow
+        input-interface: false
+        imports: github.com/portworx/porx/px/cli
+        aliases: []
+        hidden: false
+        flags:
+        - name: all
+          type: bool
+          single-letter-shorthand: a
+          use: (Bool)\tShow all data
+          default: false
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: secret_type
+          type: bool
+          single-letter-shorthand: ""
+          use: (Bool)\tSecret type
+          default: false
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: cluster_secret_key
+          type: bool
+          single-letter-shorthand: ""
+          use: (Bool)\tSecret key
+          default: false
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        subcmd: []
+      - name: vault
+        short: Vault configuration
+        long: none yet
+        example: ""
+        args-required: false
+
+        func: cli.ExecClusterConfigSecretsVault
+        input-interface: false
+        imports: github.com/portworx/porx/px/cli
+        aliases: []
+        hidden: false
+        flags:
+        - name: token
+          type: str
+          single-letter-shorthand: ""
+          use: (Str)\tVault token
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: address
+          type: str
+          single-letter-shorthand: ""
+          use: (Str)\tVault address
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: ca_cert
+          type: str
+          single-letter-shorthand: ""
+          use: (Str)\tVault CA certificate
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: ca_path
+          type: str
+          single-letter-shorthand: ""
+          use: (Str)\tVault CA path
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: client_cert
+          type: str
+          single-letter-shorthand: ""
+          use: (Str)\tVault client certificate
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: client_key
+          type: str
+          single-letter-shorthand: ""
+          use: (Str)\tVault client key
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: skip_verify
+          type: str
+          single-letter-shorthand: ""
+          use: (Str)\tVault skip verification
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: tls_server_name
+          type: str
+          single-letter-shorthand: ""
+          use: (Str)\tVault TLS server name
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: base_path
+          type: str
+          single-letter-shorthand: ""
+          use: (Str)\tVault base path
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        subcmd:
+        - name: show
+          short: Show values
+          long: Show values
+          example: ""
+          args-required: false
+
+          func: cli.ExecClusterConfigSecretsVaultShow
+          input-interface: false
+          imports: github.com/portworx/porx/px/cli
+          aliases: []
+          hidden: false
+          flags:
+          - name: all
+            type: bool
+            single-letter-shorthand: a
+            use: (Bool)\tShow all data
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: token
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tVault token
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: address
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tVault address
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: ca_cert
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tVault CA certificate
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: ca_path
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tVault CA path
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: client_cert
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tVault client certificate
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: client_key
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tVault client key
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: skip_verify
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tVault skip verification
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: tls_server_name
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tVault TLS server name
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: base_path
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tVault base path
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          subcmd: []
+      - name: aws
+        short: AWS configuration
+        long: none yet
+        example: ""
+        args-required: false
+
+        func: cli.ExecClusterConfigSecretsAws
+        input-interface: false
+        imports: github.com/portworx/porx/px/cli
+        aliases: []
+        hidden: false
+        flags:
+        - name: aws_access_key_id
+          type: str
+          single-letter-shorthand: ""
+          use: (Str)\tAWS access key ID
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: aws_secret_access_key
+          type: str
+          single-letter-shorthand: ""
+          use: (Str)\tAWS secret access key
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: aws_secret_token_key
+          type: str
+          single-letter-shorthand: ""
+          use: (Str)\tAWS secret token key
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: aws_cmk
+          type: str
+          single-letter-shorthand: ""
+          use: (Str)\tAWS CMK
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        - name: aws_region
+          type: str
+          single-letter-shorthand: ""
+          use: (Str)\tAWS region
+          default: ""
+          valid-values: []
+          valid-range: []
+          hidden: false
+          persistent: false
+          required: false
+        subcmd:
+        - name: show
+          short: Show values
+          long: Show values
+          example: ""
+          args-required: false
+
+          func: cli.ExecClusterConfigSecretsAwsShow
+          input-interface: false
+          imports: github.com/portworx/porx/px/cli
+          aliases: []
+          hidden: false
+          flags:
+          - name: all
+            type: bool
+            single-letter-shorthand: a
+            use: (Bool)\tShow all data
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: aws_access_key_id
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tAWS access key ID
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: aws_secret_access_key
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tAWS secret access key
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: aws_secret_token_key
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tAWS secret token key
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: aws_cmk
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tAWS CMK
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          - name: aws_region
+            type: bool
+            single-letter-shorthand: ""
+            use: (Bool)\tAWS region
+            default: false
+            valid-values: []
+            valid-range: []
+            hidden: false
+            persistent: false
+            required: false
+          subcmd: []
+  - name: token
+    short: Manage cluster authentication token
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecClusterToken
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [t]
+    hidden: false
+    flags: []
+    subcmd:
+    - name: show
+      short: Display current authentication token
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecClusterTokenShow
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [s]
+      hidden: false
+      flags:
+      - name: reset
+        type: bool
+        single-letter-shorthand: r
+        use: Reset token if already present
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: true
+        persistent: false
+        required: false
+    - name: reset
+      short: Reset token if already present
+      type: bool
+      example: ""
+      args-required: false
+      func: cli.ExecClusterTokenReset
+      imports: github.com/portworx/porx/px/cli
+      aliases: [r]
+      hidden: false
+      flags: []
+  - name: pair
+    short: Manage Portworx cluster pairs
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecClusterPair
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [p]
+    hidden: false
+    flags: []
+    subcmd:
+    - name: create
+      short: Pair this cluster with another Portworx cluster
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecClusterPairCreate
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [c]
+      hidden: false
+      flags:
+      - name: ip
+        type: str
+        single-letter-shorthand: i
+        use: IP address of the remote cluster
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: true
+      - name: remote-port
+        type: uint
+        single-letter-shorthand: p
+        use: Port of the remote cluster
+        default: 9001
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: token
+        type: str
+        single-letter-shorthand: t
+        use: Authentication token from the remote cluster
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: true
+      - name: default
+        type: bool
+        single-letter-shorthand: d
+        use: Set as the default cluster pair
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: dr-mode
+        type: bool
+        single-letter-shorthand:
+        use: Enable DR mode for the cluster pair
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      subcmd: []
+    - name: delete
+      short: Delete a cluster pair
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecClusterPairDelete
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [d]
+      hidden: false
+      flags:
+      - name: id
+        type: str
+        single-letter-shorthand: i
+        use: ID of the remote cluster
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: true
+      subcmd: []
+    - name: list
+      short: List the cluster pairs
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecClusterPairList
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [l]
+      hidden: false
+      flags: []
+      subcmd: []
+    - name: validate
+      short: Validate a cluster pair
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecClusterPairValidate
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [v]
+      hidden: false
+      flags:
+      - name: id
+        type: str
+        single-letter-shorthand: i
+        use: ID of the remote cluster
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: true
+      subcmd: []
+  - name: options
+    short: List and update cluster wide options
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecClusterOptions
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags: []
+    subcmd:
+    - name: list
+      short: List cluster wide options
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecClusterOptionsList
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags: []
+    - name: update
+      short: Update cluster wide options
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecClusterOptionsUpdate
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: []
+      hidden: false
+      flags:
+      - name: auto-decommission-timeout
+        type: uint
+        single-letter-shorthand: ""
+        use: Timeout (in minutes) after which storage-less nodes will be automatically decommissioned. Timeout cannot be set to zero.
+        default: 20
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: license-expiry-check
+        type: uint
+        single-letter-shorthand: ""
+        use: Number of `days` to raise alert before license expires. Set to zero to disable alerts.
+        default: 7
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: license-expiry-check-interval
+        type: str
+        single-letter-shorthand: ""
+        use: Interval for license expiry checks.  Valid only if 'license-expiry-check' is defined.
+        default: "6h"
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: resync-repl-add
+        type: str
+        single-letter-shorthand: ""
+        use: Enable or disable repl-add based resync
+        default: off
+        valid-values: [on, off]
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: internal-snapshot-interval
+        type: uint
+        single-letter-shorthand: ""
+        use: Interval (in minutes) after which internal snapshots are rotated
+        default: 30
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: default-rpc-timeout
+        type: int
+        single-letter-shorthand: ""
+        use: Default RPC timeout (in minutes) for all client communications
+        default: 5
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: repl-move-timeout
+        type: uint
+        single-letter-shorthand: ""
+        use: Timeout (in minutes) after which offline replicas will be moved to available nodes. Set timeout to zero to disable replica move.
+        default: 1440
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: re-add-wait-timeout
+        type: uint
+        single-letter-shorthand: ""
+        use: Timeout (in minutes) after which re-add will abort and new replication node is added instead. Set timeout to zero to disable replica move.
+        default: 1440
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: repl-move-timestamp-records-threshold
+        type: uint
+        single-letter-shorthand: ""
+        use: Timestamp record threshold after which offline replicas will be moved to available nodes. Set threshold to zero to disable replica move.
+        default: 134217728
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: domain-policy
+        type: str
+        single-letter-shorthand: ""
+        use: Domain policy for domains
+        default: strict
+        valid-values: [strict, eventual]
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: optimized-restores
+        type: str
+        single-letter-shorthand: ""
+        use: Enable or disable optimized restores
+        default: off
+        valid-values: [on, off]
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: sm-abort-timeout-seconds
+        type: uint
+        single-letter-shorthand: ""
+        use: Timeout in seconds for sm abort. Use with caution.
+        default: 1200
+        valid-values: []
+        valid-range: []
+        hidden: true
+        persistent: false
+        required: false
+      - name: cloudsnap-abort-timeout-minutes
+        type: uint
+        single-letter-shorthand: ""
+        use: Timeout in minutes for stalled cloudsnap abort. Should be => 10 minutes
+        default: 10
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: cloudsnap-cleanup-failed-hours
+        type: uint
+        single-letter-shorthand: ""
+        use: Time in hours after which the failed cloudsnaps are deleted for a configured credential. 0 disables deleting failed cloudsnaps
+        default: 0
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: cloudsnap-max-threads
+        type: uint
+        single-letter-shorthand: ""
+        use: Number of cloudsnap threads doing concurrent uploads/downloads. Valid values  >= 2  and <= 16, others automatically rounded
+        default: 16
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: cloudsnap-catalog
+        type: str
+        single-letter-shorthand: ""
+        use: Enable or disable cloudsnap catalog collection
+        default: off
+        valid-values: [on, off]
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: cloudsnap-min-period-sched-interval
+        type: uint
+        single-letter-shorthand: ""
+        use: Allowed minimum for periodic interval (in minutes) for scheduled cloudsnaps. Should be => 5 minutes
+        default: 15
+        valid-values: []
+        valid-range: []
+        hidden: true
+        persistent: false
+        required: false
+      - name: cloudsnap-err-retry-limit
+        type: uint
+        single-letter-shorthand: ""
+        use: Retry limit on error for cloudsnap operations with objectstore.
+        default: 3
+        valid-values: []
+        valid-range: [1,15]
+        hidden: false
+        persistent: false
+        required: false
+      - name: uniqueblocks-size-sched-interval-minutes
+        type: uint
+        single-letter-shorthand: ""
+        use: Configure periodic interval (in minutes) to query unique blocks size for volumes.
+        default: 720
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: io-profile-derive-interval-minutes
+        type: uint
+        single-letter-shorthand: ""
+        use: Configure periodic interval (in minutes) to compute the IO profile for volume. Only applies to volumes with \"auto\" IO profile.
+        default: 0
+        valid-values: []
+        valid-range: []
+        hidden: true
+        persistent: false
+        required: false
+      - name: disable-provisioning-labels
+        type: str
+        single-letter-shorthand: ""
+        use: Semi-colon separate string of labels, example 'node=uuid1,uuid2;io_priority=high'. Use '' to reset to default.
+        hidden: false
+        persistent: false
+        required: false
+      - name: provisioning-commit-labels
+        type: str
+        single-letter-shorthand: ""
+        use: "Json, example of global rule followed by node specific and pool specific rule: '[{'OverCommitPercent': 200, 'SnapReservePercent': 30},{'OverCommitPercent': 50, 'SnapReservePercent':30, 'LabelSelector':{'node':'node-1,node-2', 'poolLabel':'poolValue'},]'. Use '[]' to reset to default."
+        hidden: false
+        persistent: false
+        required: false
+      - name: free-space-threshold-gb
+        type: uint
+        single-letter-shorthand: ""
+        use: Minimum pool free space for pool to be online
+        default: 100
+        hidden: true
+        persistent: false
+        required: false
+      - name: sharedv4-threads
+        type: uint
+        single-letter-shorthand: ""
+        use: Number of sharedv4 threads. This will affect sharedv4 volume performance as well as the amount of CPU and memory consumed for handling sharedv4 volumes.
+        default: 16
+        hidden: false
+        persistent: false
+        required: false
+      - name: sharedv4-mount-timeout-sec
+        type: uint
+        single-letter-shorthand: ""
+        use: Timeout in seconds for sharedv4 (NFS) mount commands.
+        default: 120
+        hidden: false
+        persistent: false
+        required: false
+      - name: px-http-proxy
+        type: str
+        single-letter-shorthand: ""
+        use: proxy to be used by cloudsnap  (setting not required if using PX_HTTP_PROXY/PX_HTTPS_PROXY env. variables)
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: cloudsnap-nw-interface
+        type: str
+        single-letter-shorthand: ""
+        use: network interface name used by cloudsnaps(data, mgmt, eth0, etc)
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: disabled-temporary-kvdb-loss-support
+        type: str
+        single-letter-shorthand: ""
+        use: Enable or disable temporary kvdb loss support
+        default: off
+        valid-values: [on, off]
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: runtime-options
+        type: str
+        single-letter-shorthand: ""
+        use: Comma seprated key value pairs for runtime options
+        hidden: false
+        persistent: false
+        required: false
+      - name: runtime-options-action
+        type: str
+        single-letter-shorthand: ""
+        default: update-global
+        valid-values: [update-global, delete-global, update-node-specific, delete-node-specific]
+        use: Specify type of action for runtime options
+        hidden: false
+        persistent: false
+        required: false
+      - name: runtime-options-selector
+        type: str
+        single-letter-shorthand: ""
+        use: Comma seprated key value labels for node specific runtime options.
+        hidden: false
+        persistent: false
+        required: false
+      - name: snapshot-schedule-option
+        type: str
+        single-letter-shorthand: ""
+        use: for detached volumes none will not generate schedule snapshots, optimized will generated one, always will generate them always
+        default: optimized
+        valid-values: [none, always, optimized]
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: concurrent-api-limit
+        type: uint
+        single-letter-shorthand: ""
+        use: Maximum number of concurrent api invocations allowed
+        default: 20
+        hidden: false
+        persistent: false
+        required: false
+      - name: cache-flush
+        type: str
+        single-letter-shorthand: ""
+        use: Enable periodic cache flush
+        default: disabled
+        valid-values: [enabled, disabled]
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: cache-flush-seconds
+        type: uint
+        single-letter-shorthand: ""
+        use: Interval at which cache flush would be performed.
+        default: 30
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: poolcache
+        type: str
+        single-letter-shorthand: ""
+        use: "Disable, or enable with a minimum and maximum dirty block percentage in cache. (Valid Range: [10 90]). e.g. on,33,67"
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: volume-expiration-minutes
+        type: uint
+        single-letter-shorthand: ""
+        use: Expiration (in minutes) is the time the volume stays in trashcan before being purged.
+        default: 0
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: cloudsnap-full-backup-frequency
+        type: uint
+        single-letter-shorthand: "b"
+        use: Sets the full backup frequency.
+        default: 7
+        valid-range: [1, 120]
+        hidden: false
+        persistent: false
+        required: false
+      - name: cloudsnap-using-metadata-enabled
+        type: str
+        default: on
+        valid-values: [on, off]
+        use: Enable cloudsnap using metadata optimization
+        hidden: false
+        persistent: false
+        required: false
+      - name: cloudsnap-metadata-upload-percent-limit
+        type: uint
+        default: 15
+        use: Do not use cloudsnap using metadata optimization if metadata size is over this limit in percent with respect to upload size. Value set to 0 disables this check.
+        hidden: false
+        persistent: false
+        required: false
+      - name: cloudsnap-metadata-upload-mb-bytes-limit
+        type: uint
+        default: 10240
+        use: Do not use cloudsnap using metadata optimization if metadata size is over this limit in size in mebibytes. Value set to 0 disables this check.
+        hidden: false
+        persistent: false
+        required: false
+      - name: lttng-cmd
+        type: str
+        single-letter-shorthand: ""
+        use: Lttng command to execute
+        default: ""
+        valid-values: ["", start, stop, pause, resume]
+        hidden: false
+        persistent: false
+        required: false
+      - name: lttng-disk-usage
+        type: uint
+        single-letter-shorthand: ""
+        use: Amount of disk space (GB) to be utilized by lttng trace files. Greater than 0 enables traces and 0 disables it
+        default: 0
+      - name: fstrim-max-io-rate
+        type: str
+        single-letter-shorthand: ""
+        use: Maximum throughput (KiB, MiB or GiB) at which fstrim would free blocks to backing store, in each interval.
+        default: 1GB
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: lttng-log-level
+        type: str
+        single-letter-shorthand: ""
+        use: Lttng loglevel setting
+        default: "unset"
+        valid-values: [err, emerg, alert, debug_unit, debug_line, unset, debug_function, debug_module, debug_process, debug_system, notice, debug_program, debug, warning, info, crit]
+      - name: fstrim-min-io-rate
+        type: str
+        single-letter-shorthand: ""
+        use: Minimum throughput (MiB or GiB) at which fstrim would free blocks to backing store, in each interval.
+        default: 1MiB
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: fstrim-watermark-low
+        type: int
+        single-letter-shorthand: ""
+        use: Low latency watermark for fstrim
+        default: 20
+        valid-values: []
+        valid-range: [1,98]
+        hidden: true
+        persistent: false
+        required: false
+      - name: fstrim-watermark-high
+        type: int
+        single-letter-shorthand: ""
+        use: High latency watermark for fstrim
+        default: 40
+        valid-values: []
+        valid-range: [2,99]
+        hidden: true
+      - name: max-replicas-per-node
+        type: uint
+        single-letter-shorthand: ""
+        use: Maximum number of replicas per node
+        default: 1024
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: skinnysnap
+        type: str
+        single-letter-shorthand: ""
+        use: Enable/Disable SkinnySnaps. Allows snapshots to be created with lower number of replicas than the parent volume.
+        default: off
+        valid-values: [on, off]
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: skinnysnap-num-repls
+        type: int
+        single-letter-shorthand: ""
+        use: Skinnysnap Replication factor. If this value is same or greater than the volume replication level, number of snapshot replicas will be equal to the number of parent volume replicas.
+        default: 1
+        valid-values: [1, 2, 3]
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: skinnysnap-algorithm
+        type: str
+        single-letter-shorthand: ""
+        use: SkinnySnap node selection algorithm.
+        default: "optimize_ha"
+        valid-values: [optimize_ha]
+        valid-range: []
+        hidden: true
+        persistent: false
+        required: false
+      - name: cloudsnap-network-limit-cluster
+        type: uint
+        use: Cluster-wide average network bandwith usage limit in mebibytes per second, use 0 to disable this limit
+        hidden: false
+        persistent: false
+        required: false
+      - name: cloudsnap-network-limit-node
+        type: uint
+        use: Per node average network bandwith usage limit in mebibytes per second, use 0 to not consider this limit
+        hidden: true
+        persistent: false
+        required: false
+      - name: relaxedreclaim-delete-seconds
+        type: uint
+        single-letter-shorthand: ""
+        use: The number of seconds to wait before deleting the volume/snapshot staged in RelaxedReclaim queue. Set to zero to disable RelaxedReclaim.
+        default: 0
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: relaxedreclaim-max-pending
+        type: uint
+        single-letter-shorthand: ""
+        use: Maximum number of volumes/snapshots that can be staged for RelaxedReclaim.
+        default: 256
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: auto-fstrim
+        type: str
+        single-letter-shorthand: ""
+        use: Enable/Disable automatic fstrim
+        default: off
+        valid-values: [on, off]
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: fstrim-io-rate
+        type: uint
+        single-letter-shorthand: ""
+        use: Maximum throughput (in MBytes) at which fstrim would free blocks to backing store, in each interval(fstrim-io-rate-interval). Minimum is 10MB
+        default: 100
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: fstrim-io-rate-interval
+        type: uint
+        single-letter-shorthand: ""
+        use: Internal(in seconds) associated with the fstrim-io-rate(MB) is freed to backing store. Minimum 1 second.
+        default: 1
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false

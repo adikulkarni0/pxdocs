@@ -1,0 +1,82 @@
+- name: upgrade
+  short: Upgrade PX
+  long: Container Name or ID to upgrade is only required for Non-OCI upgrades.
+  example: ""
+  args-required: false
+  func: cli.ExecUpgrade
+  input-interface: false
+  imports: github.com/portworx/porx/px/cli
+  aliases: []
+  hidden: false
+  flags:
+  - name: tag
+    type: str
+    single-letter-shorthand: l
+    use: Specify a PX Docker image tag
+    default: ""
+    valid-values: []
+    valid-range: []
+    hidden: false
+    persistent: false
+    required: false
+  - name: imageName
+    type: str
+    single-letter-shorthand: ""
+    use: Specify an upgrade image name.
+    default: ""
+    valid-values: []
+    valid-range: []
+    hidden: true
+    persistent: false
+    required: false
+  - name: registryUser
+    type: str
+    single-letter-shorthand: ""
+    use: Docker registry username.
+    default: ""
+    valid-values: []
+    valid-range: []
+    hidden: true
+    persistent: false
+    required: false
+  - name: registryPass
+    type: str
+    single-letter-shorthand: ""
+    use: Docker registry password.
+    default: ""
+    valid-values: []
+    valid-range: []
+    hidden: true
+    persistent: false
+    required: false
+  - name: anyImage
+    type: bool
+    single-letter-shorthand: ""
+    use: allow upgrade to any px image.
+    default: false
+    valid-values: []
+    valid-range: []
+    hidden: true
+    persistent: false
+    required: false
+  - name: localOnly
+    type: bool
+    single-letter-shorthand: ""
+    use: Check downloaded images only.
+    default: false
+    valid-values: []
+    valid-range: []
+    hidden: true
+    persistent: false
+    required: false
+  - name: no-versioncheck
+    type: bool
+    single-letter-shorthand: ""
+    use: Skip version check.
+    default: false
+    valid-values: []
+    valid-range: []
+    hidden: true
+    persistent: false
+    required: false
+  subcmd: []

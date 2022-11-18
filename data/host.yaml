@@ -1,0 +1,151 @@
+- name: host
+  short: Attach volumes to the host
+  long: ""
+  example: ""
+  args-required: false
+  func: cli.ExecHost
+  input-interface: false
+  imports: github.com/portworx/porx/px/cli
+  aliases: []
+  hidden: true
+  flags: []
+  subcmd:
+  - name: attach
+    short: Attach a volume to the host at a specified path
+    long: ""
+    example: /opt/pwx/bin/pxctl host attach volName
+    args-required: true
+    func: cli.ExecHostAttach
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags:
+    - name: secret_key
+      type: str
+      single-letter-shorthand: s
+      use: secret_key used to decrypt an encrypted volume
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: secret_options
+      type: str
+      single-letter-shorthand: ""
+      use: "Secret options is used to pass specific secret parameters. Usage: --secret_options=k1=v1,k2=v2"
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: fastpath
+      type: bool
+      single-letter-shorthand: ""
+      use: promote/demote fastpath on given volume, can be used while volume attached
+      default: false
+      valid-values: []
+      valid-range: []
+      persistent: false
+      required: false
+    subcmd: []
+  - name: detach
+    short: Detach a specified volume from the host
+    long: ""
+    example: /opt/pwx/bin/pxctl host detach volName
+    args-required: true
+    func: cli.ExecHostDetach
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags:
+    - name: all
+      type: bool
+      single-letter-shorthand: a
+      use: Force detach all volumes
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: redirect
+      type: bool
+      single-letter-shorthand: ""
+      use: Redirect detach to node where it is attached
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: kill
+      type: bool
+      single-letter-shorthand: ""
+      use: Kill all requests and detach
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    subcmd: []
+  - name: mount
+    short: Mount a volume on the host
+    long: ""
+    example: /opt/pwx/bin/pxctl host mount --path /mnt/myVol myVol
+    args-required: true
+    func: cli.ExecHostMount
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags:
+    - name: path
+      type: str
+      single-letter-shorthand: ""
+      use: destination path at which this volume is to be mounted
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: true
+    subcmd: []
+  - name: unmount
+    short: Unmount a volume from the host
+    long: ""
+    example: /opt/pwx/bin/pxctl host unmount --path /mnt/myVol myVol
+    args-required: true
+    func: cli.ExecHostUnmount
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags:
+    - name: path
+      type: str
+      single-letter-shorthand: ""
+      use: path at which this volume is to be unmounted
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: true
+    subcmd: []
+  - name: force-detach
+    short: Unmount a volume cluster wide and detach the volume
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecHostForceDetach
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags: []
+    subcmd: []

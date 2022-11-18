@@ -1,0 +1,82 @@
+- name: objectstore
+  short: Manage the object store
+  long: ""
+  example: ""
+  args-required: false
+  func: cli.ExecObjectstore
+  input-interface: false
+  imports: github.com/portworx/porx/px/cli
+  aliases: []
+  hidden: true
+  flags: []
+  subcmd:
+  - name: create
+    short: Create an object store
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecObjectstoreCreate
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [c]
+    hidden: false
+    flags:
+    - name: volume
+      type: str
+      single-letter-shorthand: v
+      use: Volume to use for objectstore
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: enable
+    short: Enable the object store
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecObjectstoreEnable
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: status
+    short: Show the status of the object store
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecObjectstoreStatus
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: disable
+    short: Disable the object store
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecObjectstoreDisable
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: delete
+    short: Delete the object store
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecObjectstoreDelete
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags: []
+    subcmd: []

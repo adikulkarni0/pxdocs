@@ -1,0 +1,141 @@
+- name: role
+  short: pxctl role
+  long: "Portworx pxctl authorization role commands.  Roles define permission rules for users capabilities."
+  example: ""
+  args-required: false
+  func: cli.ExecRole
+  input-interface: false
+  imports: github.com/portworx/porx/px/cli
+  aliases: []
+  hidden: false
+  flags: []
+  subcmd:
+  - name: list
+    short: Show all role names
+    long: "Display the role names available for use by a user."
+    example: "pxctl role list"
+    args-required: false
+    func: cli.ExecRoleList
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: create
+    short: Create a role
+    long: |
+      Create a role using a json file which specifies the role and its rules.  A role consist of a set of rules defining services
+      and api's which are allowable.
+      e.g. Rule file which allows inspection of any object and listings of only volumes:
+        {
+           "name": "test.view",
+           "rules": [
+             {
+               "services": [
+                 "volumes"
+               ],
+               "apis": [
+                 "*enumerate*"
+               ]
+             },
+             {
+               "services": [
+                 "*"
+               ],
+               "apis": [
+                 "inspect*"
+               ]
+             }
+           ]
+        }
+    example: "pxctl role create --role-config <path to json file>"
+    args-required: false
+    func: cli.ExecRoleCreate
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags:
+      - name: role-config
+        type: str
+        use: create role using role json file
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: true
+    subcmd: []
+  - name: delete
+    short: Delete a role
+    long: "Remove a role and its permission rules by name."
+    example: "pxctl role delete --name <role name>"
+    args-required: false
+    func: cli.ExecRoleDelete
+    hidden: false
+    flags:
+      - name: name
+        type: str
+        use: role to delete
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: true
+    subcmd: []
+  - name: update
+    short: Update a role
+    long: |
+      Update a role applies changes to an existing role.  Changes to the role and its rules are specified in a json file.
+      Json file format is the same as the "role create" json file.  Which defines the role and the rules.  The entire role
+      be updated.
+    example: "pxctl role update --role-config <path to json file>"
+    args-required: false
+    func: cli.ExecRoleUpdate
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags:
+      - name: role-config
+        type: str
+        use: update role using role json file
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: true
+    subcmd: []
+  - name: inspect
+    short: Show permission rules for role(s)
+    long: "Display permission rules for a specific role or for all the roles."
+    example: "pxctl role inspect --name <role name> | --all"
+    args-required: false
+    func: cli.ExecRoleInspect
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: false
+    flags:
+      - name: name
+        type: str
+        use: show permission rules of a specified role name
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: all
+        type: bool
+        use: list roles and permission rules of all the roles
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+    subcmd: []

@@ -1,0 +1,12 @@
+- name: eula
+  short: Show license agreement
+  long: ""
+  example: ""
+  args-required: false
+  func: cli.ExecEula
+  input-interface: false
+  imports: github.com/portworx/porx/px/cli
+  aliases: []
+  hidden: false
+  flags: []
+  subcmd: []

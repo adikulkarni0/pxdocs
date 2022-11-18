@@ -1,0 +1,274 @@
+- name: alerts
+  short: px alerts
+  long: ""
+  example: ""
+  args-required: false
+  func: cli.ExecAlerts
+  input-interface: false
+  imports: github.com/portworx/porx/px/cli
+  aliases: ["a"]
+  hidden: false
+  flags: []
+  subcmd:
+  - name: show
+    short: show alerts
+    long: "Start with example and categorically filter alerts using available flags"
+    example: "pxctl alerts show --type=all"
+    args-required: false
+    func: cli.ExecAlertsShow
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: ["s"]
+    hidden: false
+    flags:
+    - name: type
+      type: str
+      single-letter-shorthand: t
+      use: alert type (used default if not set)
+      default: "all"
+      valid-values: ["volume", "node", "cluster", "drive", "all"]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: id
+      type: str
+      single-letter-shorthand: i
+      use: alert id (set to activate)
+      default: 0
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: resource
+      type: str
+      single-letter-shorthand: r
+      use: resource name (set to activate)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: severity
+      type: str
+      single-letter-shorthand: s
+      use: min severity value (set to activate)
+      default: "notify"
+      valid-values: ["notify", "warn", "warning", "alarm"]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: start-time
+      type: str
+      single-letter-shorthand: ""
+      use: start time (format RFC3339) (set to activate)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: end-time
+      type: str
+      single-letter-shorthand: ""
+      use: end time (format RFC3339) (set to activate)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: min-count
+      type: int
+      single-letter-shorthand: ""
+      use: minimum count value (set to activate)
+      default: 0
+      valid-values: []
+      valid-range: [0, 2147483647]
+      hidden: true
+      persistent: false
+      required: false
+    - name: max-count
+      type: int
+      single-letter-shorthand: ""
+      use: maximum count value (set to activate)
+      default: 2147483647
+      valid-values: []
+      valid-range: [0, 2147483647]
+      hidden: true
+      persistent: false
+      required: false
+    - name: is-cleared
+      type: str
+      single-letter-shorthand: c
+      use: filter by alert clear flag (set to activate)
+      default: false
+      valid-values: [true, false]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: out
+      type: str
+      single-letter-shorthand: o
+      use: output alerts to a file in CSV format
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: purge
+    short: purge alerts
+    long: "Alerts from show command are the alerts that will get purged in purge command"
+    example: "pxctl alerts purge --type=all"
+    args-required: false
+    func: cli.ExecAlertsPurge
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: ["p"]
+    hidden: false
+    flags:
+    - name: confirm-yes
+      type: bool
+      single-letter-shorthand: y
+      use: set to confirm yes and skip y/n question
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: type
+      type: str
+      single-letter-shorthand: t
+      use: alert type (used default if not set)
+      default: "all"
+      valid-values: ["volume", "node", "cluster", "drive", "all"]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: id
+      type: str
+      single-letter-shorthand: i
+      use: alert id (set to activate)
+      default: 0
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: resource
+      type: str
+      single-letter-shorthand: r
+      use: resource name (set to activate)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: severity
+      type: str
+      single-letter-shorthand: s
+      use: min severity value (set to activate)
+      default: "notify"
+      valid-values: ["notify", "warn", "warning", "alarm"]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: start-time
+      type: str
+      single-letter-shorthand: ""
+      use: start time (format RFC3339) (set to activate)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: end-time
+      type: str
+      single-letter-shorthand: ""
+      use: end time (format RFC3339) (set to activate)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: min-count
+      type: int
+      single-letter-shorthand: ""
+      use: minimum count value (set to activate)
+      default: 0
+      valid-values: []
+      valid-range: [0, 2147483647]
+      hidden: true
+      persistent: false
+      required: false
+    - name: max-count
+      type: int
+      single-letter-shorthand: ""
+      use: maximum count value (set to activate)
+      default: 2147483647
+      valid-values: []
+      valid-range: [0, 2147483647]
+      hidden: true
+      persistent: false
+      required: false
+    - name: is-cleared
+      type: str
+      single-letter-shorthand: c
+      use: filter by alert clear flag (set to activate)
+      default: false
+      valid-values: [true, false]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: info
+    short: show info on alerts
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecAlertsInfo
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: ["i"]
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: dump
+    short: Dump alerts directly from kvdb
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecAlertsDump
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: []
+    hidden: true
+    flags:
+    - name: days
+      type: int
+      use: Dump alerts for this number of days
+      default: 5
+      hidden: false
+      required: false
+      persistent: false
+    - name: out
+      type: str
+      use: Dump output into filename
+      default: "-"
+      hidden: false
+      required: false
+      persistent: false
+    subcmd: []

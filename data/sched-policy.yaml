@@ -1,0 +1,142 @@
+- name: sched-policy
+  short: Manage schedule policies
+  long: ""
+  example: pxctl sched-policy create --periodic 15 myPolicyName
+  args-required: false
+  func: cli.ExecSchedPolicy
+  input-interface: false
+  imports: github.com/portworx/porx/px/cli
+  aliases: [sp]
+  hidden: false
+  flags: []
+  subcmd:
+  - name: create
+    short: Create a schedule policy
+    long: ""
+    example: pxctl sched-policy create [flags] policy-name
+    args-required: true
+    func: cli.ExecSchedPolicyCreate
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [c]
+    hidden: false
+    flags:
+    - name: periodic
+      type: str
+      single-letter-shorthand: p
+      use: periodic snapshot interval in mins,k (keeps 5 by default), 0 disables all
+        schedule snapshots
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: daily
+      type: str-slice
+      single-letter-shorthand: d
+      use: daily snapshot at specified hh:mm,k (keeps 7 by default)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: weekly
+      type: str-slice
+      single-letter-shorthand: w
+      use: weekly snapshot at specified weekday@hh:mm,k (keeps 5 by default)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: monthly
+      type: str-slice
+      single-letter-shorthand: m
+      use: monthly snapshot at specified day@hh:mm,k (keeps 12 by default)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: delete
+    short: Delete a schedule policy
+    long: ""
+    example: pxctl sched-policy delete [flags] policy-name
+    args-required: true
+    func: cli.ExecSchedPolicyDelete
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [d]
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: update
+    short: Update a schedule policy
+    long: ""
+    example: pxctl sched-policy update [flags] policy-name
+    args-required: true
+    func: cli.ExecSchedPolicyUpdate
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [u]
+    hidden: false
+    flags:
+    - name: periodic
+      type: str
+      single-letter-shorthand: p
+      use: periodic snapshot interval in mins,k (keeps 5 by default), 0 disables all
+        schedule snapshots
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: daily
+      type: str-slice
+      single-letter-shorthand: d
+      use: daily snapshot at specified hh:mm,k (keeps 7 by default)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: weekly
+      type: str-slice
+      single-letter-shorthand: w
+      use: weekly snapshot at specified weekday@hh:mm,k (keeps 5 by default)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: monthly
+      type: str-slice
+      single-letter-shorthand: m
+      use: monthly snapshot at specified day@hh:mm,k (keeps 12 by default)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: list
+    short: List all schedule policies
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecSchedPolicyList
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [l]
+    hidden: false
+    flags: []
+    subcmd: []

@@ -1,0 +1,1097 @@
+- name: cloudsnap
+  short: Backup and restore snapshots to/from cloud
+  long: ""
+  example: ""
+  args-required: false
+  func: cli.ExecCloudsnap
+  input-interface: false
+  imports: github.com/portworx/porx/px/cli
+  aliases: [cs]
+  hidden: false
+  flags: []
+  subcmd:
+  - name: backup
+    short: Backup a snapshot to cloud
+    long: ""
+    example: /opt/pwx/bin/pxctl cloudsnap backup [flags] volName
+    args-required: true
+    func: cli.ExecCloudsnapBackup
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [b]
+    hidden: false
+    flags:
+    - name: label
+      type: str
+      short: l
+      use: list of comma-separated name=value `pairs`
+      default: ""
+      hidden: false
+      required: false
+      persistent: false
+    - name: full
+      type: bool
+      single-letter-shorthand: f
+      use: Force a full backup
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: delete-local
+      type: bool
+      single-letter-shorthand: d
+      use: Deletes local snap created for backup after backup is done, also forces next backup to be full
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: cred-id
+      type: str
+      single-letter-shorthand: ""
+      use: Cloud credentials ID to be used for the backup
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: frequency
+      type: uint
+      single-letter-shorthand: i
+      use: Maximum number of incremental cloudsnaps after which full is forced, default 7
+      default: 0
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: backup-group
+    short: Backup a group of snapshot for a given list of volumes, group id, or labels to cloud
+    long: ""
+    func: cli.ExecCloudsnapBackupGroup
+    imports: github.com/portworx/porx/px/cli
+    aliases:
+    - bg
+    hidden: false
+    flags:
+    - name: group
+      type: str
+      short: g
+      use: group id
+      default: ""
+      hidden: false
+      required: false
+      persistent: false
+    - name: full
+      type: bool
+      short: f
+      use: Force a full backup
+      default: "false"
+      hidden: false
+      required: false
+      persistent: false
+    - name: delete-local
+      type: bool
+      single-letter-shorthand: d
+      use: Deletes local snap created for backup after backup is done, also forces next backup to be full
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: cred-id
+      type: str
+      short: ""
+      use: Cloud credentials ID to be used for the backup
+      default: ""
+      hidden: false
+      required: false
+      persistent: false
+    - name: label
+      type: str
+      short: l
+      use: list of comma-separated name=value `pairs`
+      default: ""
+      hidden: false
+      required: false
+      persistent: false
+    - name: volume_ids
+      type: str
+      single-letter-shorthand: v
+      use: list of comma-separated volume IDs
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: restore
+    short: Restore volume to a cloud snapshot
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecCloudsnapRestore
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [r]
+    hidden: false
+    flags:
+    - name: volume
+      type: str
+      single-letter-shorthand: v
+      use: Volume name to be created for restore
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: snap
+      type: str
+      single-letter-shorthand: s
+      use: Cloud-snap id to restore
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: cred-id
+      type: str
+      single-letter-shorthand: ""
+      use: Cloud credentials ID to be used for the restore
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: repl
+      type: uint
+      single-letter-shorthand: r
+      use: replication factor(If not specified, inherits cloudsnaps repl factor)
+      default: 1 
+      valid-values: []
+      valid-range: [1, 3]
+      hidden: false
+      persistent: false
+      required: false
+    - name: io_priority
+      type: str
+      single-letter-shorthand: ""
+      use: IO Priority(If not specified, inherits cloudsnap's IO Priority)
+      default: low
+      valid-values: [high, medium, low]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: label
+      type: str
+      single-letter-shorthand: l
+      use: list of comma-separated name=value `pairs`
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: queue_depth
+      type: uint
+      single-letter-shorthand: q
+      use: block device queue depth(If not specified, inherits cloudsnap's queuedepth)
+      default: 128 
+      valid-values: []
+      valid-range: [1, 256]
+      hidden: false
+      persistent: false
+      required: false
+    - name: aggregation_level
+      type: str
+      single-letter-shorthand: a
+      use: aggregation level(If not specified, inherits cloudsnap's aggregation level)
+      default: 1
+      valid-values: [1, 2, 3, auto]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: nodes
+      type: str
+      single-letter-shorthand: ""
+      use: comma-separated Node Ids or Pool Ids
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: zones
+      type: str
+      single-letter-shorthand: ""
+      use: comma-separated Zone names
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: racks
+      type: str
+      single-letter-shorthand: ""
+      use: comma-separated Rack names
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: match_src_vol_provisioning
+      type: bool
+      single-letter-shorthand: ""
+      use: provision the restore volume on same pools as the source volume(src volume must exist) 
+      default: false
+      hidden: false
+      required: false
+    - name: best_effort_location_provisioning
+      type: bool
+      single-letter-shorthand: ""
+      use: requested nodes, zones, racks are optional
+      default: false
+      hidden: false
+      required: false
+    - name: storagepolicy
+      type: str
+      single-letter-shorthand: ""
+      use: storage policy name(If not specified, inherits cloudsnap's storage policy)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: journal
+      type: bool 
+      single-letter-shorthand: ""
+      use: Journal data for this volume(If not specified, inherits cloudsnap's journal option)
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: nodiscard
+      type: bool
+      single-letter-shorthand: ""
+      use: Disable discard support for this volume(If not specified, inherits cloudsnap's discard option)
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: io_profile
+      type: str
+      single-letter-shorthand: ""
+      use: IO Profile((defaults to cloudsnap's IO Profile)
+      default: sequential 
+      valid-values: [sequential, cms, sync_shared, db, db_remote]
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: sticky
+      type: bool
+      single-letter-shorthand: ""
+      use: sticky volumes cannot be deleted until the flag is disabled(if not specified, inherits cloudsnap's sticky option)
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: group
+      type: str
+      single-letter-shorthand: g
+      use: group
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: enforce_cg
+      type: bool
+      single-letter-shorthand: ""
+      use: enforce group during provision
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: shared
+      type: bool
+      single-letter-shorthand: ""
+      use: make this a globally shared namespace volume(If not specified, inherits cloudsnap's shared option)
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: sharedv4
+      type: bool
+      single-letter-shorthand: ""
+      use: set sharedv4 setting(if not specified, inherits cloudsnap's sharedv4 option)
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: periodic
+      type: str
+      single-letter-shorthand: p
+      use: periodic snapshot interval in `mins,k` (keeps 5 by default), 0 disables
+        all schedule snapshots
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: daily
+      type: str-slice
+      single-letter-shorthand: d
+      use: daily snapshot at specified `hh:mm,k` (keeps 7 by default)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: weekly
+      type: str-slice
+      single-letter-shorthand: w
+      use: weekly snapshot at specified `weekday@hh:mm,k` (keeps 5 by default)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: monthly
+      type: str-slice
+      single-letter-shorthand: m
+      use: monthly snapshot at specified `day@hh:mm,k` (keeps 12 by default)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: fastpath
+      type: bool
+      single-letter-shorthand: ""
+      use: Enable fastpath IO support for this volume(If not specified, inherits cloudsnap's fastpath option)
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: secret_key
+      type: str
+      single-letter-shorthand: ""
+      use: secret_key used to decrypt an encrypted volume
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: secret_options
+      type: str
+      single-letter-shorthand: ""
+      use: "Secret options is used to pass specific secret parameters. Usage: --secret_options=k1=v1,k2=v2"
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: list
+    short: List snapshot in cloud
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecCloudsnapList
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [l]
+    hidden: false
+    flags:
+    - name: src
+      type: str
+      single-letter-shorthand: s
+      use: Optional source volume to list cloud backups
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: cred-id
+      type: str
+      single-letter-shorthand: ""
+      use: Cloud credentials ID to be used for the backup
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: deleted-source-vol
+      type: bool
+      single-letter-shorthand: d 
+      use: List cloudsnaps of volumes no longer in cluster(deleted source volumes)
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: cluster
+      type: str
+      single-letter-shorthand: c
+      use: Optional Cluster ID or Bucket name to list cloud backups. Current cluster-id is default
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: migration
+      type: bool
+      single-letter-shorthand: m
+      use: Optional, lists migration related cloudbackups
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: status
+      type: str
+      single-letter-shorthand: t
+      use: Optional backup status(failed. aborted, stopped) to list cloud backups; Defaults to Done
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: label
+      type: str
+      short: l
+      use: Optional list of comma-separated name=value `pairs` to match with cloudsnap metadata
+      default: ""
+      hidden: false
+      required: false
+      persistent: false
+    - name: max
+      type: uint
+      single-letter-shorthand: x
+      use: Optional number to limit display of backups in each page
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: all
+      type: bool
+      single-letter-shorthand: a
+      use: List cloud backups of all clusters in cloud
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: paginate
+      type: bool
+      single-letter-shorthand: p
+      use: Paginate list with user input to continue
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: cloudsnap-id
+      type: str
+      single-letter-shorthand: i
+      use: Optional cloudsnap id to list(lists a single entry)
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: status
+    short: Report status of active backups/restores
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecCloudsnapStatus
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [s]
+    hidden: false
+    flags:
+    - name: name
+      type: str
+      single-letter-shorthand: n
+      use: Optional task name to list status
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: src
+      type: str
+      single-letter-shorthand: s
+      use: Optional source volume to list backup/restore task status
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: local
+      type: bool
+      single-letter-shorthand: l
+      use: Node's local cloud-snaps(not cluster-wide) status
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: history
+    short: Show history of cloudsnap operations
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecCloudsnapHistory
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [h]
+    hidden: false
+    flags:
+    - name: src
+      type: str
+      single-letter-shorthand: s
+      use: Optional source volume to list history
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: stop
+    short: stop an active backup/restore
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecCloudsnapStop
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [st]
+    hidden: false
+    flags:
+    - name: name
+      type: str
+      single-letter-shorthand: n
+      use: Name of active backup/restore
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: true
+    subcmd: []
+  - name: schedules
+    short: Manage schedules for cloud-snaps
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecCloudsnapSchedules
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [sched]
+    hidden: false
+    flags: []
+    subcmd:
+    - name: create
+      short: Create a cloud-snap schedule for a volume
+      long: ""
+      example: /opt/pwx/bin/pxctl cloudsnap schedules create [flags] volName
+      args-required: false
+      func: cli.ExecCloudsnapSchedulesCreate
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [c]
+      hidden: false
+      flags:
+      - name: max
+        type: uint
+        single-letter-shorthand: x
+        use: Maximum number of cloud snaps to maintain, default 7
+        default: 7
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: retention
+        type: uint
+        single-letter-shorthand: r
+        use: Retention period for cloud snaps in number of days
+        default: 0
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: full
+        type: bool
+        single-letter-shorthand: f
+        use: Force scheduled backups to be full always
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: periodic
+        type: str
+        single-letter-shorthand: p
+        use: Cloudsnap interval in minutes
+        default: 0
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: daily
+        type: str-slice
+        single-letter-shorthand: d
+        use: Daily snapshot at specified hh:mm (UTC)
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: weekly
+        type: str-slice
+        single-letter-shorthand: w
+        use: Weekly snapshot at specified weekday@hh:mm (UTC)
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: monthly
+        type: str-slice
+        single-letter-shorthand: m
+        use: Monthly snapshot at specified day@hh:mm (UTC)
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: cred-id
+        type: str
+        single-letter-shorthand: ""
+        use: Cloud credentials ID to be used for the backup
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      subcmd: []
+    - name: create-group
+      short: Create a cloud-snap schedule for a group id or labels
+      long: ""
+      func: cli.ExecCloudsnapSchedulesCreateGroup
+      imports: github.com/portworx/porx/px/cli
+      aliases:
+      - cg
+      hidden: true
+      flags:
+      - name: group
+        type: str
+        short: g
+        use: Group id
+        default: ""
+        hidden: false
+        required: false
+        persistent: false
+      - name: label
+        type: str
+        short: l
+        use: list of comma-separated name=value `pairs`
+        default: ""
+        hidden: false
+        required: false
+        persistent: false
+      - name: max
+        type: uint
+        short: x
+        use: Maximum number of cloud snaps to maintain, default 7
+        default: "7"
+        hidden: false
+        required: false
+        persistent: false
+      - name: periodic
+        type: str
+        short: p
+        use: Cloudsnap interval in minutes
+        default: "0"
+        hidden: false
+        required: false
+        persistent: false
+      - name: daily
+        type: str-slice
+        short: d
+        use: Daily snapshot at specified hh:mm (UTC)
+        default: ""
+        hidden: false
+        required: false
+        persistent: false
+      - name: weekly
+        type: str-slice
+        short: w
+        use: Weekly snapshot at specified weekday@hh:mm (UTC)
+        default: ""
+        hidden: false
+        required: false
+        persistent: false
+      - name: monthly
+        type: str-slice
+        short: m
+        use: Monthly snapshot at specified day@hh:mm (UTC)
+        default: ""
+        hidden: false
+        required: false
+        persistent: false
+      - name: cred-id
+        type: str
+        short: ""
+        use: Cloud credentials ID to be used for the backup
+        default: ""
+        hidden: false
+        required: false
+        persistent: false
+      subcmd: []
+    - name: delete
+      short: Delete a cloud-snap schedule
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecCloudsnapSchedulesDelete
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [d]
+      hidden: false
+      flags:
+      - name: uuid
+        type: str
+        single-letter-shorthand: ""
+        use: UUID of schedule to be deleted
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      subcmd: []
+    - name: list
+      short: List the configured cloud-snap schedules
+      long: ""
+      example: ""
+      args-required: false
+      func: cli.ExecCloudsnapSchedulesList
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [l]
+      hidden: false
+      flags: []
+      subcmd: []
+    - name: update
+      short: update cloud-snap schedule for a volume
+      long: ""
+      example: /opt/pwx/bin/pxctl cloudsnap schedules update -i <uuid> [flags]
+      args-required: false
+      func: cli.ExecCloudsnapSchedulesUpdate
+      input-interface: false
+      imports: github.com/portworx/porx/px/cli
+      aliases: [u]
+      hidden: false
+      flags:
+      - name: uuid
+        type: str
+        single-letter-shorthand: i
+        use: uuid of the schedule being updated
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: true
+      - name: max
+        type: uint
+        single-letter-shorthand: x
+        use: Maximum number of cloud snaps to maintain, default 7
+        default: 7
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: retention
+        type: uint
+        single-letter-shorthand: r
+        use: Retention period for cloud snaps in number of days
+        default: 0
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: full
+        type: bool
+        single-letter-shorthand: f
+        use: Force scheduled backups to be full always
+        default: false
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: periodic
+        type: str
+        single-letter-shorthand: p
+        use: Cloudsnap interval in minutes
+        default: 0
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: daily
+        type: str-slice
+        single-letter-shorthand: d
+        use: Daily snapshot at specified hh:mm (UTC)
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: weekly
+        type: str-slice
+        single-letter-shorthand: w
+        use: Weekly snapshot at specified weekday@hh:mm (UTC)
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: monthly
+        type: str-slice
+        single-letter-shorthand: m
+        use: Monthly snapshot at specified day@hh:mm (UTC)
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+      - name: cred-id
+        type: str
+        single-letter-shorthand: ""
+        use: Cloud credentials ID to be used for the backup
+        default: ""
+        valid-values: []
+        valid-range: []
+        hidden: false
+        persistent: false
+        required: false
+  - name: catalog
+    short: Display catalog for the backup in cloud
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecCloudsnapCatalog
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [t]
+    hidden: false
+    flags:
+    - name: snap
+      type: str
+      single-letter-shorthand: s
+      use: Cloud Backup ID to display the catalog
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: cred-id
+      type: str
+      single-letter-shorthand: ""
+      use: Cloud credentials ID to be used for the operation
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []
+  - name: delete
+    short: Delete a cloudsnap from the objectstore. This is not reversible.
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecCloudsnapDelete
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [d]
+    hidden: false
+    flags:
+    - name: snap
+      type: str
+      single-letter-shorthand: s
+      use: ID of cloudsnap
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: cred-id
+      type: str
+      single-letter-shorthand: ""
+      use: Cloud credentials ID to be used for the operation
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: force
+      type: bool
+      single-letter-shorthand: f
+      use: Force delete cloudsnap even if there are dependencies
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    subcmd: []
+  - name: deleteAll
+    short: Delete cloudsnaps from the objectstore for a volume. This will delete ALL
+      cloudsnaps for a volume and is not reversible.
+    long: ""
+    example: ""
+    args-required: false
+    func: cli.ExecCloudsnapDeleteAll
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [da]
+    hidden: true
+    flags:
+    - name: source
+      type: str
+      single-letter-shorthand: s
+      use: VolumeID of the source volume
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: deleted-src-vol
+      type: bool
+      single-letter-shorthand: d
+      use: Delete all cloudsnaps of volumes no longer in cluster(deleted source volumes)
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: force
+      type: bool
+      single-letter-shorthand: f
+      use: Force cloudsnap deletions
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: all
+      type: bool
+      single-letter-shorthand: a
+      use: Delete all the cloudsnaps for the cluster
+      default: false
+      valid-values: []
+      valid-range: []
+      hidden: true
+      persistent: false
+      required: false
+    - name: cluster
+      type: str
+      single-letter-shorthand: c
+      use: Optional Cluster ID or Bucket name to delete cloud snaps. Default is the current cluster. Applicable only when source volume ID is specified with --source (-s) option.
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    - name: cred-id
+      type: str
+      single-letter-shorthand: ""
+      use: Cloud credentials ID to be used for the operation
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      required: false
+    subcmd: []

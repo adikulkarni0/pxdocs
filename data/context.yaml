@@ -1,0 +1,100 @@
+- name: context
+  short: pxctl context
+  long: "Portworx pxctl context commands for setting authentication and connection info"
+  example: ""
+  args-required: false
+  func: cli.ExecContext
+  input-interface: false
+  imports: github.com/portworx/porx/px/cli
+  aliases: [ctx]
+  hidden: false
+  flags: []
+  subcmd:
+  - name: list
+    short: list all contexts
+    long: "Display yaml representation of all registered contexts"
+    example: "pxctl context list"
+    args-required: false
+    func: cli.ExecContextList
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [l]
+    hidden: false
+    flags: []
+    subcmd: []
+  - name: create
+    short: create a context 
+    long: "Create a context with authentication and connection info"
+    example: "pxctl context create <context> [--endpoint <endpoint>] [--token <token>]"
+    args-required: true
+    func: cli.ExecContextCreate
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [c]
+    hidden: false
+    flags:
+    - name: token
+      type: str
+      use: Token to use for this context
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      single-letter-shorthand: t 
+      required: false
+    - name: endpoint
+      type: str
+      use: Endpoint to use for this context
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      single-letter-shorthand: e 
+      required: false
+  - name: delete
+    short: delete a context
+    long: "Remove a context from the list by context name or token"
+    example: "pxctl context delete <context> [--token <token>]"
+    args-required: false
+    func: cli.ExecContextDelete
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [d]
+    hidden: false
+    flags: 
+    - name: token
+      type: str
+      use: Token associated with context you would like to delete
+      default: ""
+      valid-values: []
+      valid-range: []
+      hidden: false
+      persistent: false
+      single-letter-shorthand: t
+      required: false
+  - name: set
+    short: set the current context
+    long: ""
+    example: "pxctl context set <context>"
+    args-required: true
+    func: cli.ExecContextSet
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [s]
+    hidden: false
+    subcmd: []
+    flags: []
+  - name: unset
+    short: unset the current context
+    long: ""
+    example: "pxctl context context unset"
+    args-required: false
+    func: cli.ExecContextUnset
+    input-interface: false
+    imports: github.com/portworx/porx/px/cli
+    aliases: [u]
+    hidden: false
+    subcmd: []
+    flags: []
