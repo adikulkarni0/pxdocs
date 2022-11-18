@@ -164,7 +164,7 @@ Perform the following steps to create a PVC:
 
     `oc` will return details about your storageClass if it was created correctly. Verify the configuration details appear as you intended. 
 
-2. Enter the `oc get pvc` command, if this is the only StroageClass and PVC you've created, you should see only one entry in the output:
+2. Enter the `oc get pvc` command, if this is the only StorageClass and PVC you've created, you should see only one entry in the output:
 
     ```text
     oc get pvc <your-pvc-name>

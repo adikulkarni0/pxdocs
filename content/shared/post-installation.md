@@ -188,7 +188,7 @@ Perform the following steps to create a PVC:
 
     `kubectl` returns details about the StorageClasses available to you. Verify that `px-csi-db` appears in the list. 
 
-2. Enter the `kubectl get pvc` command. If this is the only StroageClass and PVC that you've created, you should see only one entry in the output:
+2. Enter the `kubectl get pvc` command. If this is the only StorageClass and PVC that you've created, you should see only one entry in the output:
 
     ```text
     kubectl get pvc <your-pvc-name>
