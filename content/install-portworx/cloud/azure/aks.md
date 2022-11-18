@@ -62,7 +62,7 @@ For more information on AKS, see [this article](https://docs.microsoft.com/en-us
 2. Set the subscription:
 
     ```text
-    az account set --subscription <Your-Azure-Subscription-UUID>
+    az account set --subscription {{<highlight>}}<Your-Azure-Subscription-UUID>{{</highlight>}}
     ```
 
 
@@ -84,7 +84,7 @@ For more information on AKS, see [this article](https://docs.microsoft.com/en-us
 3. Create an Azure Resource Group by specifying its name and the location in which you will be deploying your AKS cluster:
 
     ```text
-    az group create --name <resource-group-name> --location <location>
+    az group create --name {{<highlight>}}<resource-group-name>{{</highlight>}} --location {{<highlight>}}<location>{{</highlight>}}
     ```
 
 4. [Create the AKS cluster](https://docs.microsoft.com/en-us/azure/aks/) in the above Resource Group using either the Azure CLI or the Azure Portal. If you have already deployed an AKS cluster, then create the Service Principal for the Resource Group in which your AKS cluster is present.
@@ -95,10 +95,10 @@ For more information on AKS, see [this article](https://docs.microsoft.com/en-us
 
     ```text
     az role definition create --role-definition '{
-    "Name": "<your-role-name>",
+    "Name": "{{<highlight>}}<your-role-name>{{</highlight>}}",
     "Description": "",
     "AssignableScopes": [
-        "/subscriptions/<your-subscription-id>"
+        "/subscriptions/{{<highlight>}}<your-subscription-id>{{</highlight>}}"
     ],
     "Actions": [
         "Microsoft.ContainerService/managedClusters/agentPools/read",
@@ -121,17 +121,17 @@ For more information on AKS, see [this article](https://docs.microsoft.com/en-us
 1. Find the AKS cluster Infrastructure Resource Group, the following command shows the Infrastructure Resource Group for a given cluster name and AKS resource group:
 
     ```text
-    az aks show -n <aks-cluster-name> -g <aks-resource-group> | jq -r '.nodeResourceGroup'
+    az aks show -n {{<highlight>}}<aks-cluster-name>{{</highlight>}} -g {{<highlight>}}<aks-resource-group>{{</highlight>}} | jq -r '.nodeResourceGroup'
     ```
 
 2. Create a service principal for Portworx custom role and replace the following with your cluster's values:
 
     * Your AKS cluster name 
     * Your subscription ID 
-    * The name of the custom role you created in step 5 above
+    * The name of the custom role that you created in the previous section
 
     ```text
-    az ad sp create-for-rbac --role=<your-role-name> --scopes="/subscriptions/<your-subscription-id>/resourceGroups/<aks-infrastructure-resource-group>"
+    az ad sp create-for-rbac --role={{<highlight>}}<your-role-name>{{</highlight>}} --scopes="/subscriptions/{{<highlight>}}<your-subscription-id>{{</highlight>}}/resourceGroups/{{<highlight>}}<aks-infrastructure-resource-group>{{</highlight>}}"
     ```
     ```output
     {
@@ -150,9 +150,9 @@ For more information on AKS, see [this article](https://docs.microsoft.com/en-us
     * Set `AZURE_CLIENT_SECRET` to the value for `password`
 
     ```text
-    kubectl create secret generic -n kube-system px-azure --from-literal=AZURE_TENANT_ID=<tenant> \
-                                                          --from-literal=AZURE_CLIENT_ID=<appId> \
-                                                          --from-literal=AZURE_CLIENT_SECRET=<password>
+    kubectl create secret generic -n kube-system px-azure --from-literal=AZURE_TENANT_ID={{<highlight>}}<tenant>{{</highlight>}} \
+                                                          --from-literal=AZURE_CLIENT_ID={{<highlight>}}<appId>{{</highlight>}} \
+                                                          --from-literal=AZURE_CLIENT_SECRET={{<highlight>}}<password>{{</highlight>}}
     ```
     ```output
     secret/px-azure created
@@ -177,17 +177,7 @@ To install Portworx with Kubernetes, you must first generate Kubernetes manifest
 * If you’re using a cloud provider, do not add volumes of different types (Standard and Premium) when configuring storage devices during spec generation. This can cause performance issues and errors.
     {{</info>}}
 5. In the Networking section click **Next**.
-6. *(Optional)* Enable Azure cloud drive encryption using your own key:
-
-    1. Create a Disk Encryption Set ID by using the instructions on [this page](https://docs.microsoft.com/en-us/azure/virtual-machines/disks-enable-customer-managed-keys-portal) in the Microsoft documentation.
-
-    2. Append the `diskEncryptionSetID` value from step 1 to the spec and deploy Portworx using the updated spec:
-
-        ```text
-        cloudStorage:
-            deviceSpecs:
-            - type=Premium_LRS,size=50,diskEncryptionSetID=/subscriptions/<subscription>/resourceGroups/<resource-group>/providers/Microsoft.Compute/diskEncryptionSets/<disk-encryption-set-name>
-        ```
+6. In the Customize section select **Azure Kubernetes Service (AKS)** and click **Finish**.
 
     {{<info>}}
 **NOTE:** To deploy Portworx to an Azure Sovereign cloud, you must go to the **Customize** page and set the value of the `AZURE_ENVIRONMENT` variable. The following example screenshot shows how you can deploy Portworx to the Azure US Government cloud:
@@ -195,34 +185,60 @@ To install Portworx with Kubernetes, you must first generate Kubernetes manifest
 ![Screenshot showing the AZURE_ENVIRONMENT variable](/img/azure-sovereign-example.png)
     {{</info>}}
 
-7. In the Customize section select **Azure Kubernetes Service (AKS)** and click **Finish**.
+### Deploy the Operator
 
-### Apply specs
+To deploy the Operator, run the command that PX-Central provided, which looks similar to the following:
 
-Apply the Operator and StorageCluster specs you generated in the section above using the `kubectl apply` command:
+```text
+kubectl apply -f 'https://install.portworx.com/{{<highlight>}}<version-number>{{</highlight>}}?comp=pxoperator'
+```
+```output
+serviceaccount/portworx-operator created
+podsecuritypolicy.policy/px-operator created
+clusterrole.rbac.authorization.k8s.io/portworx-operator created
+clusterrolebinding.rbac.authorization.k8s.io/portworx-operator created
+deployment.apps/portworx-operator created
+```
 
-1. Deploy the Operator:
+### Deploy the StorageCluster
+
+To deploy the StorageCluster, use one of the following methods.
+
+* If you are not enabling cloud drive encryption using your own key, run the command that PX-Central provided, which looks similar to the following:
 
     ```text
-    kubectl apply -f 'https://install.portworx.com/<version-number>?comp=pxoperator'
-    ```
-    ```output
-    serviceaccount/portworx-operator created
-    podsecuritypolicy.policy/px-operator created
-    clusterrole.rbac.authorization.k8s.io/portworx-operator created
-    clusterrolebinding.rbac.authorization.k8s.io/portworx-operator created
-    deployment.apps/portworx-operator created
-    ```
-
-2. Deploy the StorageCluster:
-
-    ```text
-    kubectl apply -f 'https://install.portworx.com/<version-number>?operator=true&mc=false&kbver=&b=true&kd=type%3DPremium_LRS%2Csize%3D150&s=%22type%3DPremium_LRS%2Csize%3D150%22&c=px-cluster-4db155bb-69c7-4db6-957b-3aefe978ab64&aks=true&stork=true&csi=true&mon=true&tel=false&st=k8s&promop=true'
+    kubectl apply -f 'https://install.portworx.com/{{<highlight>}}<version-number>{{</highlight>}}?operator=true&mc=false&kbver=&b=true&kd=type%3DPremium_LRS%2Csize%3D150&s=%22type%3DPremium_LRS%2Csize%3D150%22&c=px-cluster-4db155bb-69c7-4db6-957b-3aefe978ab64&aks=true&stork=true&csi=true&mon=true&tel=false&st=k8s&promop=true'
     ```
     ```output
     storagecluster.core.libopenstorage.org/px-cluster-0d8dad46-f9fd-4945-b4ac-8dfd338e915b created
     ```
 
+* If you want to enable Azure cloud drive encryption using your own key, perform the following steps:<br><br>
+
+    1. Download the spec that you generated in PX-Central.
+
+    2. Create a Disk Encryption Set ID by using the instructions on [this page](https://docs.microsoft.com/en-us/azure/virtual-machines/disks-enable-customer-managed-keys-portal) in the Microsoft documentation.
+
+    3. Append the `diskEncryptionSetID` value from the previous step to the StorageCluster spec you downloaded as follows:
+
+        ```text
+        cloudStorage:
+            deviceSpecs:
+            - type=Premium_LRS,size=50,diskEncryptionSetID={{<highlight>}}<disk-encryption-set-id>{{</highlight>}}
+        ```
+
+        Where `<disk-encryption-set-id>` is in the following format:
+
+        ```text
+        /subscriptions/{{<highlight>}}<subscription>{{</highlight>}}/resourceGroups/{{<highlight>}}<resource-group>{{</highlight>}}/providers/Microsoft.Compute/diskEncryptionSets/{{<highlight>}}<disk-encryption-set-name>{{</highlight>}}
+        ```
+    4. Apply the modified spec:
+
+        ```text
+        kubectl apply -f {{<highlight>}}<spec-file.yaml>{{</highlight>}}
+        ```
+        ```output
+        storagecluster.core.libopenstorage.org/px-cluster-0d8dad46-f9fd-4945-b4ac-8dfd338e915b created
+        ```
+
 {{< content "shared/post-installation.md" >}}
-
-
