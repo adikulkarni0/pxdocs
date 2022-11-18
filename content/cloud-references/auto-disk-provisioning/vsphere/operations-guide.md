@@ -13,7 +13,7 @@ During installation, user provides following parameters which are used to create
 2. Specification of type and size of disks to create.
 3. Access details for vCenter server
 
-The [Portworx VMware installation](/cloud-references/auto-disk-provisioning/vsphere/#installation) covers this in detail.
+The [Portworx VMware installation](/cloud-references/auto-disk-provisioning/vsphere/#install-portworx) covers this in detail.
 
 ## Monitoring
 
@@ -105,7 +105,7 @@ As storage usage increases, you must expand the Portworx storage pools:
     ```text
     pxctl cluster provision-status
     ```
-4. When invoked on the Portworx node where the storage pool resides, the following command  provides detailed information about the status of the pool expand process.
+4. When invoked on the Portworx node where the storage pool resides, the following command provides detailed information about the status of the pool expand process.
     ```text
     pxctl service pool show
     ```
@@ -128,7 +128,7 @@ If you provided the prefix of a datastore cluster names to Portworx during insta
 
 ### Which datastore does Portworx select when creating VMDKs?
 
-The [Portworx VMware installation](/cloud-references/auto-disk-provisioning/vsphere/#installation) takes in a prefix for the datastores or datastore clusters you want to use for Portworx using the environment variable `VSPHERE_DATASTORE_PREFIX`.
+The [Portworx VMware installation](/cloud-references/auto-disk-provisioning/vsphere/#install-portworx) takes in a prefix for the datastores or datastore clusters you want to use for Portworx using the environment variable `VSPHERE_DATASTORE_PREFIX`.
 
 * When the provided prefix is for datastores, Portworx will pick the datastore with the most free available space to create its VMDK.
 * When the provided prefix is for datastore clusters, Portworx will use vSphere storage resource manager APIs to get recommendation on the datastore to use within the datastore cluster. From the provided recommendations, Portworx uses the first datastore in the list.

@@ -33,6 +33,10 @@ The minimum supported size for a Portworx cluster is three nodes. Each node must
 |Key-value store | Portworx needs a key-value store to perform its operations. As such, install a clustered key-value database \(`etcd`\) with a three node cluster.<br><br>With Portworx 2.0 or greater, you can use Internal KVDB during installation. In this mode, Portworx will create and manage an internal key-value store (kvdb) cluster.<br><br>If you plan of using your own etcd, refer to [Etcd for Portworx](/operations/etcd) for details on recommendations for installing and tuning etcd.|
 |Disable swap|Please disable swap on all nodes that will run the Portworx software.  Ensure that the swap device is not automatically mounted on server reboot.|
 
+|**Hypervisor** ||
+|--- | ---|
+|VMware vSphere | Version 7.0 or greater.|
+
 ## Supported Kubernetes versions
 
 Before you install Portworx on Kubernetes, ensure that you're using a supported Kubernetes version:

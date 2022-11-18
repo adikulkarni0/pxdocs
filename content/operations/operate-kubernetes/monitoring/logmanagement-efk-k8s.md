@@ -81,7 +81,7 @@ data:
     <source>
       @type systemd
       path /run/log/journal
-      filters [{ "_SYSTEMD_UNIT": "portworx-output.service" }]
+      filters [{ "_SYSTEMD_UNIT": "portworx.service" }]
       pos_file /mnt/portworx-service.pos
       tag journal.portworx
       read_from_head true
