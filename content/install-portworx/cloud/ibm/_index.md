@@ -14,11 +14,7 @@ This document provides instructions for installing Portworx using the Portworx O
 
 * The cluster is located in a single availability zone
 * Portworx is installed using an internal KVDB
-* Kubernetes has access to the public network and gateway <!-- * While Kubernetes can run on a private network, the instructions in this document use the public network and the gateway. -->
-
-<!-- "intra-cluster" what is this? 
- and focuses on an intra-cluster with a single availability zone. 
- -->
+* Kubernetes has access to the public network and gateway
 
 ## Prerequisites
 
@@ -31,14 +27,9 @@ Before you start installing Portworx, ensure that you meet the following minimum
   * Disk: 100 GB
 * You must have ability to provision cloud storage for each worker node. <!-- what does this actually mean? are these IAM permissions? how do they get the ability to provision nodes within IKS? -->
 
-<!--
-* The Key-value Database (KVDB) device given above needs to be present only on 3 of your nodes and it should have a unique device name across all the KVDB nodes.  
-
-Can we remove this? we're telling people to use internal KVDB. -->
 ## Install Portworx
 
 1. Navigate to [IBM Cloud](https://cloud.ibm.com/login). From the **Catalog** page, search for and select **Portworx Enterprise**. 
-  <!-- I assume this presents them with a page of selections. I need a screenshot of that page so I know what to call the fields. -->
 
 2. From the configuration page, make the following selections: 
 

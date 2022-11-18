@@ -11,19 +11,13 @@ hidden: true
 ---
 
 
-## OpenShift (OCP) on IBM Cloud
-
 OpenShift can be run on IBM Cloud with a Portworx storage cluster. 
 
 This document provides instructions for installing Portworx using the IBM catalog with OpenShift (OCP) on IBM Cloud. This document provides a default installation configuration which is designed to get you up and running with a typical cluster configuration with the following properties:
 
 * The cluster is located in a single availability zone
 * Portworx is installed using an internal KVDB
-* Kubernetes has access to the public network and gateway <!-- * While Kubernetes can run on a private network, the instructions in this document use the public network and the gateway. -->
-
-<!-- "intra-cluster" what is this? 
- and focuses on an intra-cluster with a single availability zone. 
- -->
+* Kubernetes has access to the public network and gateway
 
 ## Prerequisites
 
@@ -34,16 +28,11 @@ Before you start installing Portworx, ensure you meet the following minimum prer
   * CPU: 16 
   * Memory: 32 GB 
   * Disk: 100 GB
-* You must have ability to provision cloud storage for each worker node. <!-- what does this actually mean? are these IAM permissions? how do they get the ability to provision nodes within IKS? -->
+* You must have ability to provision cloud storage for each worker node. <!-- what does this actually mean? are these IAM permissions? how do they get the ability to provision nodes within IKS?  -->
 
-<!--
-* The Key-value Database (KVDB) device given above needs to be present only on 3 of your nodes and it should have a unique device name across all the KVDB nodes.  
-
-Can we remove this? we're telling people to use internal KVDB. -->
 ## Install Portworx
 
-1. Navigate to [IBM Cloud](https://cloud.ibm.com/login). From the **Catalog** page, search for and select **Portworx Enterprise**. 
-  <!-- I assume this presents them with a page of selections. I need a screenshot of that page so I know what to call the fields. -->
+1. Navigate to [IBM Cloud](https://cloud.ibm.com/login). From the **Catalog** page, search for and select **Portworx Enterprise**.
 
 2. From the configuration page, make the following selections: 
 

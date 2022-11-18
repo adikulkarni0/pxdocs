@@ -61,4 +61,4 @@ To recover from this state, perform a node replace operation from the IBM Cloud 
 
 ## Related topics
 
-* [Install and configure OpenShift (OCP) on IBM Cloud](/install-portworx/cloud/ibm/ocp-on-ibm-cloud/)
+* [Install Portworx on IBM Cloud](/install-portworx/cloud/ibm/)

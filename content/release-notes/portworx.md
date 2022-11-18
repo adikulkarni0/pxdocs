@@ -175,7 +175,7 @@ Portworx by Pure Storage is proud to introduce the following new features:
 
 * On-premises users who want to use Pure Storage FlashArray with Portworx on Kubernetes can [provision and attach FlashArray LUNs as a Direct Access volume](/operations/operate-kubernetes/storage-operations/create-pvcs/pure-flasharray/).
 * The [CSI topology feature](/operations/operate-kubernetes/cluster-topology/csi-topology/) allows users of FlashArray Direct Access volumes and FlashBlade Direct Access filesystems to direct their applications to provision storage on a FlashArray Direct Access volume or FlashBlade Direct Access filesystem that is in the same set of Kubernetes nodes where the application pod is located.
-* You can now [use Portworx with IBM cloud drives](/install-portworx/cloud/ibm/ocp-on-ibm-cloud/) on VPC Gen2 infrastructure. Portworx will use the IBM CSI provider to automatically provision and manage its own storage disks. 
+* You can now [use Portworx with IBM cloud drives](/install-portworx/cloud/ibm/) on VPC Gen2 infrastructure. Portworx will use the IBM CSI provider to automatically provision and manage its own storage disks. 
 * You can enable [pay-as-you-go billing](/operations/licensing/portworx-enterprise/pay-as-you-go-air-gapped) for an air-gapped cluster with no outbound connectivity by acquiring a pay-as-you-go account key from Portworx. This key can be used on any cluster to activate the license, provided you can report usage collected by the metering module.
 * You can now deploy Portworx in [IPv6](/operations/operate-kubernetes/ipv6/) networking enabled environments.
 
