@@ -35,20 +35,22 @@ Aliases:
   service, sv
 
 Available Commands:
-  audit       Audit the PX node
-  call-home   Enable or disable the call home feature
-  diags       creates a new tgz package with minimal essential diagnostic information.
-  drive       Storage drive maintenance
-  email       Email setting commands
-  exit        Stop the PX daemon
-  info        Show PX module version information
-  kvdb        PX Kvdb operations
-  maintenance Maintenance mode operations
-  node        Node maintenance operations
-  node-usage  Volume usage by PX node
-  node-wipe   Wipes PX configuration data on this node
-  pool        Storage pool maintenance
-  slack       Slack setting commands
+  audit          Audit the PX node
+  call-home      Enable or disable the call home feature
+  diags          creates a new tgz package with essential diagnostic information.
+  drive          Storage drive maintenance
+  email          Email setting commands
+  exit           Stop the PX daemon
+  info           Show PX module version information
+  kvdb           PX Kvdb operations
+  maintenance    Maintenance mode operations
+  node           Node maintenance operations
+  node-usage     Volume usage by PX node
+  node-wipe      Wipes PX configuration data on this node
+  pool           Storage pool maintenance
+  relaxedreclaim Manage the RelaxedReclaim queue for the node
+  slack          Slack setting commands
+  usage-report   creates & download tgz package for px consumption reports
 
 Flags:
   -h, --help   help for service
@@ -118,7 +120,7 @@ pxctl service diags --help
 ```
 
 ```output
-creates a new tgz package with minimal essential diagnostic information.
+creates a new tgz package with essential diagnostic information.
 
 Usage:
   pxctl service diags [flags]
@@ -135,8 +137,9 @@ Flags:
   -h, --help                help for diags
   -l, --live                gets diags from running px
   -n, --node string         generate diags for a specific remote node with the provided NodeIp or NodeID.
-  -o, --output string       output file name (default "/var/cores/diags.tar.gz")
+  -o, --output string       output file name
   -p, --profile             only dump profile
+  -u, --upload              upload diags to cloud
 
 Global Flags:
       --ca string            path to root certificate for ssl usage
@@ -509,13 +512,21 @@ pxctl service drive show
 
 ```output
 PX drive configuration:
-Pool ID: 0
-	IO_Priority: LOW
-	Size: 100 GiB
-	Status: Online
-	Has meta data: Yes
+Pool ID: 0 
+	Type:  Default 
+	UUID:  d5b8cfd8-3b48-4d06-ab73-2b69eeebb81b 
+	IO Priority:  HIGH 
+	Labels:  medium=STORAGE_MEDIUM_MAGNETIC,beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,iopriority=HIGH,kubernetes.io/arch=amd64,kubernetes.io/hostname=myhostname-k8s1-node0,kubernetes.io/os=linux 
+	Size: 3.0 TiB 
+	Status: Online 
+	Has metadata:  Yes 
+	Balanced:  Yes 
 	Drives:
-	1: /dev/mapper/volume-e85a42ca, 1.0 GiB allocated of 100 GiB, Online
+	3: /dev/vdd, Total size 1.0 TiB, Online
+	1: /dev/vdb, Total size 1.0 TiB, Online
+	2: /dev/vdc, Total size 1.0 TiB, Online
+	Cache Drives:
+	No Cache drives found in this pool
 ```
 <!-- need example output that includes caching -->
 
@@ -528,29 +539,66 @@ pxctl service email
 ```
 
 ```output
-NAME:
-   pxctl service email
+Usage:
+  pxctl service email [flags]
+  pxctl service email [command]
 
-USAGE:
-   pxctl service email command [command options] [arguments...]
+Available Commands:
+  clear       Clear email settings for alerts.
+  get         Get email settings for alerts.
+  set         Configure email settings for alerts.
 
-COMMANDS:
-     clear     Clear email settings for alerts.
-     set       Configure email settings for alerts.
+Flags:
+  -h, --help   help for email
+
+Global Flags:
+      --ca string            path to root certificate for ssl usage
+      --cert string          path to client certificate for ssl usage
+      --color                output with color coding
+      --config string        config file (default is $HOME/.pxctl.yaml)
+      --context string       context name that overrides the current auth context
+  -j, --json                 output in json
+      --key string           path to client key for ssl usage
+      --output-type string   use "wide" to show more details
+      --raw                  raw CLI output for instrumentation
+      --ssl                  ssl enabled for portworx
 ```
 
 #### pxctl service email set
 
 ```text
-pxctl service email set
+pxctl service email set --help
 ```
 ```output
---password string    Password to authenticate with smtp-server (if required)
--r, --recipient string   Recipient of alert emails.
--s, --server string      IP or DNS name for smtp server
---severity string    Minimum severity for email trigger, (warning|critical) (default "critical")
--p, --smtp-port string   IP or DNS name for smtp server
--u, --username string    Username to authenticate with smtp-server (if required)
+Configure email settings for alerts.
+
+Usage:
+  pxctl service email set [flags]
+
+Aliases:
+  set, s
+
+Flags:
+  -h, --help               help for set
+      --password string    Password to authenticate with smtp-server (if required)
+  -r, --recipient string   Recipient of alert emails.
+      --sender string      Sender of alert emails (defaults to noreply@portworx.com) (default "noreply@portworx.com")
+  -s, --server string      IP or DNS name for smtp server
+      --severity string    Minimum severity for email trigger, (warning|critical) (default "critical")
+  -p, --smtp-port string   IP or DNS name for smtp server
+  -u, --username string    Username to authenticate with smtp-server (if required)
+
+Global Flags:
+      --ca string            path to root certificate for ssl usage
+      --cert string          path to client certificate for ssl usage
+      --color                output with color coding
+      --config string        config file (default is $HOME/.pxctl.yaml)
+      --context string       context name that overrides the current auth context
+  -j, --json                 output in json
+      --key string           path to client key for ssl usage
+      --output-type string   use "wide" to show more details
+      --raw                  raw CLI output for instrumentation
+      --ssl                  ssl enabled for portworx
 ```
 
 Receive Warning and Critical alerts:
@@ -584,24 +632,38 @@ Opt-out of Portworx Support receiving critical alerts:
 You can use `pxctl service scan` to scan for bad blocks on a drive:
 
 ```text
-pxctl service scan
+pxctl service scan --help
 ```
 
 ```output
-NAME:
-   pxctl service scan - scan for bad blocks
+scan for bad blocks
 
-USAGE:
-   pxctl service scan command [command options] [arguments...]
+Usage:
+  pxctl service scan [flags]
+  pxctl service scan [command]
 
-COMMANDS:
-     cancel    cancel running scan
-     pause     pause running scan
-     resume    resume paused scan
-     schedule  examine or set schedule
-     start     start scan
-     status    scan status
+Available Commands:
+  cancel      cancel running scan
+  pause       pause running scan
+  resume      resume paused scan
+  schedule    examine or set schedule
+  start       start scan
+  status      scan status
 
+Flags:
+  -h, --help   help for scan
+
+Global Flags:
+      --ca string            path to root certificate for ssl usage
+      --cert string          path to client certificate for ssl usage
+      --color                output with color coding
+      --config string        config file (default is $HOME/.pxctl.yaml)
+      --context string       context name that overrides the current auth context
+  -j, --json                 output in json
+      --key string           path to client key for ssl usage
+      --output-type string   use "wide" to show more details
+      --raw                  raw CLI output for instrumentation
+      --ssl                  ssl enabled for portworx
 ```
 
 ## Delete all Portworx related data
@@ -671,15 +733,32 @@ pxctl service pool
 ```
 
 ```output
-NAME:
-   pxctl service pool - Storage pool maintenance
+Usage:
+  pxctl service pool [flags]
+  pxctl service pool [command]
 
-USAGE:
-   pxctl service pool command [command options] [arguments...]
+Available Commands:
+  cache       Update cache properties on a given pool
+  expand      Expand pool
+  maintenance Pool maintenance
+  rebalance   Rebalance storage pools
+  show        Show pools
+  update      Update pool properties
 
-COMMANDS:
-   show      Show pools
-   update    Update pool properties
+Flags:
+  -h, --help   help for pool
+
+Global Flags:
+      --ca string            path to root certificate for ssl usage
+      --cert string          path to client certificate for ssl usage
+      --color                output with color coding
+      --config string        config file (default is $HOME/.pxctl.yaml)
+      --context string       context name that overrides the current auth context
+  -j, --json                 output in json
+      --key string           path to client key for ssl usage
+      --output-type string   use "wide" to show more details
+      --raw                  raw CLI output for instrumentation
+      --ssl                  ssl enabled for portworx
 ```
 
 ## Update pool properties
@@ -702,11 +781,16 @@ Update pool properties
 Usage:
   pxctl service pool update [flags]
 
+Examples:
+pxctl sv pool update [flags] <pool-id> *pool-id or --uid <pool-uid> flag is mandatory, if both are specified, pool-uid is ignored
+
 Flags:
   -h, --help                 help for update
       --io_priority string   IO Priority (Valid Values: [high medium low]) (default "low")
       --labels string        comma separated name=value pairs (empty value to remove label) (default "NoLabel")
+      --reset-last-op        Admin command to reset pool's last operation. Pool resources won't be cleaned up. Use with caution!
       --resize               extend pool to maximum available physical storage
+  -u, --uid string           Pool's UID
 
 Global Flags:
       --ca string            path to root certificate for ssl usage
