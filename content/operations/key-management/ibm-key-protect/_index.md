@@ -41,16 +41,21 @@ Portworx requires the following IBM Key Protect or HPCS credentials to use its A
 
 - **Base URL [IBM_BASE_URL]**
 
-    The base URL specifies the URL where your Key Protect or HPCS instance resides. It is region specific. The default value Portworx uses is: `https://keyprotect.us-south.bluemix.net`.
+    The base URL specifies the URL where your Key Protect or HPCS instance resides. It is region specific. <br>The default value is: `https://keyprotect.us-south.bluemix.net`.
+    
+     {{<info>}}**NOTE:**
 
-    {{<info>}}
-**NOTE:** If you're using IBM HPCS, take the key management endpoint URL from the overview page of your HPCS service on IBM Cloud.
-    {{</info>}}
+* If you are using IBM HPCS, take the key management endpoint URL from the overview page of your HPCS service on IBM Cloud.
+* The base URL is mandatory if Portworx is running on an IBM (IKS or ROKS) air-gapped cluster. To get the Key Protect endpoint URL for your region, refer to the [IBM Key Protect documentation](https://cloud.ibm.com/docs/key-protect?topic=key-protect-regions#service-endpoints). For example, the IBM_BASE_URL for the `us-south` region is `https://private.us-south.kms.cloud.ibm.com`.
+     {{</info>}}
 
 - **Token URL [IBM_TOKEN_URL]**
 
-    Default value which will be used is: `https://iam.bluemix.net/oidc/token`
-    Based on your installation type use the following methods to provide these credentials to Portworx.
+    Default value which will be used is: `https://iam.bluemix.net/oidc/token`.
+    
+    {{<info>}}**NOTE:** The token URL is mandatory if Portworx is running on an IBM (IKS or ROKS) air-gapped cluster. To get the IAM service private endpoint URL for your region, refer to the [IBM Cloud API documentation](https://cloud.ibm.com/apidocs/iam-identity-token-api). For example, the IBM_TOKEN_URL for the `us-south` region is `https://private.us-south.iam.cloud.ibm.com/identity/token`.{{</info>}}
+
+Based on your installation type use the following methods to provide these credentials to Portworx.
 
 ## For Kubernetes Users
 
