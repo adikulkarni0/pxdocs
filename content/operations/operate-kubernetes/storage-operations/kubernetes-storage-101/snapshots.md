@@ -90,10 +90,6 @@ You can restore both single and group volume snapshots by creating a VolumeSnaps
     kubectl apply -f volSnap.yaml
     ```
 
-{{<info>}}
-**Note:** Volume snapshot restore does not currently support CloudSnap.
-{{</info>}}
-
 ## Migration
 
 Migration is referred to the operation of transferring application workloads (e.g Deployments, Statefulsets, Jobs, ConfigMaps etc) and their data (PVCs) across Kubernetes clusters.
