@@ -9,16 +9,16 @@ Portworx provides a [CustomResouceDefinition (CRD)](https://kubernetes.io/docs/c
 
 - [replicaAffinity](#replicaaffinity)
     - [Schema](#schema)
-    - [Example use cases](#example-use-cases)
+    - [Example use cases](#example-use-cases-of-replicaaffinity)
 - [replicaAntiAffinity](#replicaantiaffinity)
     - [Schema](#schema-1)
-    - [Example use cases](#example-use-cases-1)
+    - [Example use cases](#example-use-cases)
 - [volumeAffinity](#volumeaffinity)
     - [Schema](#schema-2)
-    - [Example use cases](#example-use-cases-2)
+    - [Example use cases](#example-use-cases-1)
 - [volumeAntiAffinity](#volumeantiaffinity)
     - [Schema](#schema-3)
-    - [Example use cases](#example-use-cases-3)
+    - [Example use cases](#example-use-cases-2)
 
 Additional Information:
 
@@ -38,27 +38,21 @@ Additional Information:
 |**weight**|Specifies the weight of the rule. If more than one rule matches, then the rule with the highest weight is applied.|Yes|0|
 |**affected_replicas**|Specifies the number of volume replicas affected by this rule.|Yes|0 (Interpreted as all volume replicas)|
 
-##### Example use cases
+##### Example use cases of replicaAffinity
 
-* {{< open-in-new-tab url="/samples/k8s/volume-placement-ssd-pool-affinity.yaml" name="Affinity to use SSD pools" >}}
-* {{< open-in-new-tab url="/samples/k8s/volume-infra-node-affinity.yaml" name="Place volume on infra nodes" >}}
+* {{< open-in-new-tab url="/samples/k8s/volume-placement-ssd-pool-affinity.yaml" name="Use SSD pools" >}}
+* {{< open-in-new-tab url="/samples/k8s/volume-placement-ssd-sata-pool-spread-affinity.yaml" name="Use SSD and SATA and spread replicas evenly" >}}
+* {{< open-in-new-tab url="/samples/k8s/volume-placement-one-ssd-other-sata-pool.yaml" name="First replica SSD, others SATA" >}}
+* {{< open-in-new-tab url="/samples/k8s/volume-infra-node-affinity.yaml" name="Place volume on specific nodes , example infra etc" >}}
 * {{< open-in-new-tab url="/samples/k8s/volume-rack-1-2-3-affinity.yaml" name="Place volume only on racks 1, 2 and 3" >}}
-<!--* [Affinity to use SSD and SATA and spread replicas evenly](/samples/k8s/volume-placement-ssd-sata-pool-spread-affinity.yaml)-->
-  <!--* First replica on SSD pools, second on SATA-->
-<!--* [First replica SSD, others SATA](/samples/k8s/volume-placement-one-ssd-other-sata-pool.yaml)-->
+
 
 By default, Portworx automatically adds the following labels to each of its storage pools. These can be used for replica affinity rules to target replicas on a specific storage pool type:
 
 * `iopriority`
-* `medium`
-
-<!--
-* `iops` (_coming soon_)
-* `latency` (_coming soon_)
--->
+* `medium (Media Type)`
 
 ### replicaAntiAffinity
-
 
 
 ##### Schema
@@ -70,8 +64,8 @@ By default, Portworx automatically adds the following labels to each of its stor
 
 ##### Example use cases
 
-<!-- [Antiaffinity to not use SATA pools](/samples/k8s/volume-placement-sata-pool-anti-affinity.yaml) -->
 * {{< open-in-new-tab url="/samples/k8s/antiAffinityDataRacks.yaml" name="Antiaffinity to data pools and spread across racks" >}}
+* {{< open-in-new-tab url="/samples/k8s/volume-placement-sata-pool-anti-affinity.yaml" name="Antiaffinity to not use SATA pools" >}}
 
 ### volumeAffinity
 
@@ -111,7 +105,7 @@ By default, Portworx automatically adds the following labels to each of its stor
 If `topologyKey` is not set, by default the rule will avoid/colocate volumes at the node level using built-in unique node identifiers.
 
 ##### Portworx Built-in
-`topologyKey` can use the built-in key `portworx.io/pool` that is set automatically as a unique key/value on every Portworx pool. This can be used with volumeAffinity/volumeAntiAffinity to control volume placement at the pool level.
+`topologyKey` can use the built-in key `portworx.io/pool` that is set automatically as a unique key/value on every Portworx pool. This can be used with volumeAffinity/volumeAntiAffinity to control volume placement at the pool level to work for individual pools.
 
 
 ### Templates
