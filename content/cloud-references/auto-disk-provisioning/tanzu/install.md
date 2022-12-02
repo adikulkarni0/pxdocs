@@ -12,7 +12,6 @@ noicon: true
 
 * Portworx does not support Tanzu Community Edition
 * The installation steps below only apply if you're running with Kubernetes on the TKG or TKGS platforms
-* [Metro DR](/operations/operate-kubernetes/disaster-recovery/) is currently not supported when both clusters are running TKG
 * For the underlying datastore for the PVs and VMs, **do not enable Storage DRS**. VSphere CSI driver and Cloud Native Storage [does not currently support Storage DRS feature in vSphere](https://vsphere-csi-driver.sigs.k8s.io/supported_features_matrix.html)
 {{</info>}}
 
