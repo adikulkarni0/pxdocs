@@ -9,6 +9,27 @@ aliases:
     - /reference/release-notes/operator
 ---
 
+## 1.10.1
+
+Dec 5, 2022
+
+### Updates
+
+* Added support for Kubernetes version 1.25, which includes:
+
+    * Removed `PodSecurityPolicy` when deploying Portworx with Operator.
+
+    * Upgraded the API version of `PodDisruptionBudget` from policy/v1beta1 to policy/v1
+
+* Added a UI option in the spec generator to configure Kubernetes version when you choose to deploy Portworx version 2.12.
+
+* Operator is now deployed without verbose log by default. To enable it, add the `--verbose` argument to the Operator deployment.
+
+* For CSI deployment, the px-csi-ext pods now set Stork as a scheduler in the px-csi-ext deployment spec.
+
+* Operator now chooses `maxStorageNodesPerZone`’s default value to efficiently manage the number of storage nodes in a cluster. For more details, see [Manage the number of storage nodes](/cloud-references/auto-disk-provisioning/manage-storage-nodes/).
+
+
 ## 1.10.0
 
 Oct 24, 2022
