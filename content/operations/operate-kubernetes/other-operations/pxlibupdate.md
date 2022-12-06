@@ -1,6 +1,6 @@
 ---
 title: Update Portworx file system dependencies
-keywords: pxlib
+keywords: pxlib, filesystem dependencies, IBM Cloud 
 description: PX File System Dependency Updates
 aliases:
     - /portworx-install-with-kubernetes/operate-and-maintain-on-kubernetes/other-operations/pxlibupdate/
@@ -52,3 +52,47 @@ kubectl label nodes --all px/service=restart --overwrite
 The DaemonSet above will update the pre-compiled module archives within the Portworx install location on the node (for example, `/opt/pwx`).
 
 Note that this process assumes that Portworx is already installed since it will only update an existing installation.  The existing installation's version will be checked for compatibility with the update container, and if it is not compatible, then the update will not be done.
+
+## Update on an IBM Cloud environment
+
+To update Portworx filesystem dependencies on an IBM Cloud environment, perform the following steps:
+
+1. Download the `pxlibupdate-spec.yaml` file:
+
+   ```text
+   curl -fsL -o pxlibupdate-spec.yaml "https://install.portworx.com?comp=pxlibupdate"
+   ```
+2. Edit the downloaded YAML file:
+
+   ```text
+   sed -i -e "s#image: portworx/px-lib:pxfslibs-updater#image: icr.io/ext/portworx/px-lib:pxfslibs-updater#g" pxlibupdate-spec.yaml
+   sed -i -e '/- key: node-role.kubernetes.io/master/d' pxlibupdate-spec.yaml
+   sed -i -e '/operator: DoesNotExist/d' pxlibupdate-spec.yaml
+   ```
+
+3. Apply the edited YAML file: 
+
+   ```text
+   kubectl apply -f pxlibupdate-spec.yaml
+   ```
+
+4. Verify that all `pxlibupdate` pods are running:
+
+   ```text
+   kubectl get pods -nkube-system -lname=px-libs-update
+   ```
+   ```output
+   NAME                   READY   STATUS    RESTARTS   AGE
+   px-libs-update-m8jvs   1/1     Running   0          42s
+   px-libs-update-mgmcp   1/1     Running   0          42s
+   px-libs-update-qt44w   1/1     Running   0          42s
+   ```
+
+5. Run the following command to restart all Portworx pods:
+
+   ```text
+   kubectl label nodes --all px/service=restart --overwrite 
+   ```
+
+    Wait for a few minutes for the Portworx pods to restart. You will notice that Portworx is deployed with the latest kernel version.
+
