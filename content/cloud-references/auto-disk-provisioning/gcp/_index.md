@@ -5,6 +5,7 @@ keywords: Automatic Disk Provisioning, Dynamic Disk Provisioning, GCP, Google Cl
 weight: 200
 linkTitle: GCP
 noicon: true
+series: "auto-disk-provisioning"
 ---
 
 {{<info>}}If you are running on GKE, visit [Portworx on GKE](/install-portworx/cloud/gcp/gke/).{{</info>}}

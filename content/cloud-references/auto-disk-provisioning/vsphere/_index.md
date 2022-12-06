@@ -5,6 +5,7 @@ keywords: Automatic Disk Provisioning, Dynamic Disk Provisioning, VMWare, vSpher
 linkTitle: VMware vSphere
 weight: 300
 noicon: true
+series: "auto-disk-provisioning"
 ---
 
 This guide explains how the Portworx Dynamic Disk Provisioning feature works within Kubernetes on VMware and the requirements for it.

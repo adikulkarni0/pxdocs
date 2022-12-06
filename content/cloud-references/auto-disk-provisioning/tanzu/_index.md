@@ -4,6 +4,7 @@ description: Learn to scale a Portworx cluster up or down on VMware Tanzu with A
 keywords: Automatic Disk Provisioning, Dynamic Disk Provisioning, VMWare, tanzu, vSphere ASG, Kubernetes, k8s
 linkTitle: VMware Tanzu
 weight: 300
+series: "auto-disk-provisioning"
 ---
 
 This guide explains how the Portworx Dynamic Disk Provisioning feature works within Kubernetes on VMware Tanzu.

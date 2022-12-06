@@ -5,6 +5,7 @@ keywords: Automatic Disk Provisioning, Dynamic Disk Provisioning, AWS, Amazon We
 linkTitle: AWS
 weight: 100
 noicon: true
+series: "auto-disk-provisioning"
 ---
 
 {{<info>}}If you are running on Kubernetes, visit [Portworx on Kubernetes on AWS](/install-portworx/cloud/aws){{</info>}}
