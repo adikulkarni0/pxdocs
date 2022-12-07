@@ -77,16 +77,71 @@ To install Portworx with Kubernetes, you must first generate Kubernetes manifest
 
     <br>The spec generator outputs two `kubectl` commands.
 
-8. To install the Operator, run the first command provided by the spec generator. This command will look similar to the following:
+### Deploy the Operator
 
+To deploy the Operator, run the command that PX-Central provided, which looks similar to the following:
+
+```text
+kubectl apply -f 'https://install.portworx.com/{{<highlight>}}<version-number>{{</highlight>}}?comp=pxoperator'
+```
+```output
+serviceaccount/portworx-operator created
+podsecuritypolicy.policy/px-operator created
+clusterrole.rbac.authorization.k8s.io/portworx-operator created
+clusterrolebinding.rbac.authorization.k8s.io/portworx-operator created
+deployment.apps/portworx-operator created
+```
+
+### Deploy the StorageCluster
+
+To deploy the StorageCluster, use one of the following methods.
+
+* If you are not enabling GCP cloud drive encryption using your own key, run the command that PX-Central provided, which looks similar to the following:
+
+    ```text
+    kubectl apply -f 'https://install.portworx.com/{{<highlight>}}<portworx-version>{{</highlight>}}?operator=true&mc=false&b=true&kd=type%3Dpd-standard%2Csize%3D150&s=%22type%3Dpd-standard%2Csize%3D150%22&c=px-cluster-c5d0f3c4-8344-46b0-95cd-f0a8fba93736&gke=true&stork=true&csi=true&mon=true&tel=false&st=k8s&promop=true'
     ```
-    kubectl apply -f 'https://install.portworx.com/<portworx-version>?comp=pxoperator'
+    ```output
+    storagecluster.core.libopenstorage.org/px-cluster-0d8dad46-f9fd-4945-b4ac-8dfd338e915b created
     ```
 
-9. To install your deployment spec, run the second command provided by the spec generator. This command will look similar to the following:
+* If you want to enable GCP cloud drive encryption using your own key, perform the following steps:<br><br>
 
-    ```
-    kubectl apply -f 'https://install.portworx.com/<portworx-version>?operator=true&mc=false&b=true&kd=type%3Dpd-standard%2Csize%3D150&s=%22type%3Dpd-standard%2Csize%3D150%22&c=px-cluster-c5d0f3c4-8344-46b0-95cd-f0a8fba93736&gke=true&stork=true&csi=true&mon=true&tel=false&st=k8s&promop=true'
-    ```
+    1. Follow the steps in [Create a disk encryption key](/operations/operate-kubernetes/cloud-drive-operations/gcp/#create-a-disk-encryption-key), then return to this page.
+
+    2. Follow the steps in [Create and configure a KMS service account](/operations/operate-kubernetes/cloud-drive-operations/gcp/#create-and-configure-a-kms-service-account), then return to this page.
+
+    3. Download the spec that you generated in PX-Central.
+
+    4. In the StorageCluster spec that you downloaded, specify your KMS key in front of every cloud drive as follows:
+
+        ```text
+        cloudStorage:
+            deviceSpecs:
+            - type=pd-standard,size=150,kms={{<highlight>}}<kms-key>{{</highlight>}},kmsAccount={{<highlight>}}<kmsServiceAccount>{{</highlight>}}
+        ```
+
+        Where:
+
+        * `<kms-key>` is the key resource name in the following format:
+
+            ```text
+            projects/{{<highlight>}}<projectName>{{</highlight>}}/locations/{{<highlight>}}<region>{{</highlight>}}/keyRings/{{<highlight>}}<keyRing>{{</highlight>}}/cryptoKeys/{{<highlight>}}<keyName>{{</highlight>}}
+            ```
+
+        * `<kmsServiceAccount>` is the name of the new service account that you created, in the following format:
+
+            ```text
+            {{<highlight>}}<serviceAccountName>{{</highlight>}}@{{<highlight>}}<project>{{</highlight>}}.iam.gserviceaccount.com
+            ```
+
+    5. Apply the modified spec:
+
+        ```text
+        kubectl apply -f {{<highlight>}}<spec-file.yaml>{{</highlight>}}
+        ```
+        ```output
+        storagecluster.core.libopenstorage.org/px-cluster-0d8dad46-f9fd-4945-b4ac-8dfd338e915b created
+        ```
 
 {{< content "shared/post-installation.md" >}}
