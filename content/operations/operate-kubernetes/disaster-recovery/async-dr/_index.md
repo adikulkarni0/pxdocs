@@ -10,15 +10,15 @@ aliases:
 ## Prerequisites
 
 * **Version**: Portworx v2.1 or later needs to be installed on both clusters. Also requires Stork v2.2+ on both the clusters.
-* **Secret Store** : Make sure you have configured a [secret store](/operations/key-management) on both your clusters. This will be used to store the credentials for the objectstore.
-* **Network Connectivity**: Ports 9001 and 9010 on the destination cluster should be reachable by the source cluster.
+* **Secret Store** : Make sure you have configured a [secret store](/operations/key-management) on both your clusters. This will be used to store the credentials for the objectstore* **Network Connectivity**: Port 9001 on the destination cluster should be reachable by the source cluster.
+* **Network Connectivity**: Port 9001 on the destination cluster should be reachable by the source cluster.
 * **Stork helper**: `storkctl` is a command-line tool for interacting with a set of scheduler extensions.
 {{< content "shared/portworx-install-with-kubernetes-disaster-recovery-stork-helper.md" >}}
 * **Default Storage Class**: Make sure you have configured only one default storage class. Having multiple default storage classes will cause PVC migrations to fail.
 * **License**: You will need a DR enabled Portworx license at both the source and destination cluster to use this feature.
 * If the destination cluster runs on **GKE**, follow the steps in the [Migration with Stork on GKE](/operations/operate-kubernetes/migration/gke/) page.
 * If the destination cluster runs on **EKS**, follow the steps in the [Migration with Stork on EKS](/operations/operate-kubernetes/migration/eks/) page.
-* An external objectstore, such as Minio s3, AWS s3, GCE Object Storage, or Azure Blob Storage, must be setup outside the Kubernetes clusters. If an external objectstore is not provided, Portworx will create an internal objectstore with a 100G backing volume. **Pure Storage does not recommend using the internal objectstore in production.**
+* An external objectstore, such as Minio s3, AWS s3, GCE Object Storage, or Azure Blob Storage, must be setup outside the Kubernetes clusters. If an external objectstore is not provided, Portworx will create an internal objectstore with a 100G backing volume. **Pure Storage does not support using the internal objectstore in production.**
 
 ## Overview
 

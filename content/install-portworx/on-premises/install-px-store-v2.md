@@ -49,7 +49,7 @@ To install Portworx with Kubernetes, you must first generate Kubernetes manifest
 
 3. On the Product Line page, choose any option depending on which license you intend to use, then click **Continue** to start the spec generator.
 
-4. On the Basic page, choose at least version 2.12 version from the **Portworx version** dropdown. In the **Namespace** field, specify an existing namespace where you will be deploying Portworx and click **Next**. 
+4. On the Basic page, choose at least version 2.12 from the **Portworx version** dropdown. In the **Namespace** field, specify an existing namespace where you will be deploying Portworx and click **Next**. 
 
 5. On the Storage page, select **On Premises** as your environment and select the type of **OnPrem storage**. Choose the **PX-StoreV2** option and provide your meta device path in the **Metadata Path** textbox. Select **Skip KVDB device** option and then click **Next**:
 
