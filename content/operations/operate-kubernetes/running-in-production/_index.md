@@ -4,7 +4,7 @@ keywords: production, operations, guide, data recovery, scaling out, alerts, mon
 description: Production operations guide for Portworx on Kubernetes
 weight: 400
 noicon: true
-series: operations-k8s
+# series: operations-k8s
 hidden: true
 aliases:
     - /portworx-install-with-kubernetes/operate-and-maintain-on-kubernetes/running-in-production/
