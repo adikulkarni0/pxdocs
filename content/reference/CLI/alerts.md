@@ -192,7 +192,7 @@ Type    ID    Resource    Severity    Count    LastSeen    FirstSeen    Descript
 {{<info>}}
 {{<companyName>}} recommends setting up monitoring with Prometheus and AlertsManager.
 
-* If you are using Portworx with Kubernetes, see [Install Prometheus and Grafana using Daemonset](/operations/operate-kubernetes/monitoring/monitoring-px-prometheusandgrafana.1/).
+* If you are using Portworx with Kubernetes, see [Install Prometheus and Grafana using Daemonset](/install-portworx/monitoring).
 * If you are using Portworx with other orchestrators, see [Alerting with Portworx](/operations/operate-other/monitoring/alerting/).
 {{</info>}}
 

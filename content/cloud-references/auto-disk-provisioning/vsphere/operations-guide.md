@@ -77,7 +77,7 @@ Portworx exposes many useful metrics out of the box. Refer to the [Portworx Metr
 
 Portworx also alerts users on a predefined set of alerts that are listed on the [Portworx Alerts](/operations/operate-other/monitoring/portworx-alerts/) page.
 
-The [Prometheus and Grafana on Kubernetes](/operations/operate-kubernetes/monitoring/monitoring-px-prometheusandgrafana.1/) page describes how to use Prometheus and Grafana to monitor Portworx in a Kubernetes cluster and extract the metrics and alerts.
+The [Prometheus and Grafana on Kubernetes](/install-portworx/monitoring) page describes how to use Prometheus and Grafana to monitor Portworx in a Kubernetes cluster and extract the metrics and alerts.
 
 ## Capacity Management
 

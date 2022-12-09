@@ -2,8 +2,12 @@
 title: Monitor your Portworx cluster
 weight: 1000
 description: Set up monitoring
-keywords: Portworx, containers, storage
+keywords: Portworx, monitoring, Prometheus, Alertmanager, Grafana, node-exporter
+aliases:
+    - /operations/operate-kubernetes/monitoring/alertmanager-operator/
+    - /operations/operate-kubernetes/monitoring/monitoring-px-prometheusAndGrafana.1
 ---
+
 ## Prerequisites
 * Portworx version 2.11 or later
 * Portworx Operator version 1.9.0 or later
@@ -237,3 +241,171 @@ You can connect to Prometheus using Grafana to visualize your data. Grafana is a
     * **password:** `admin`
 
     ![Grafana Dashboard](/img/monitoring/grafanadashboard.png)
+
+
+## Install Node Exporter
+
+After you have configured Grafana, install the Node Exporter binary. It is required for Grafana to measure various machine resources such as, memory, disk, and CPU utilization. The following DaemonSet will be running in the `kube-system` namespace. 
+
+{{<info>}}
+**NOTE:** The examples below use the `kube-system` namespace, you should update this to the correct namespace for your environment. Be sure to install in the same namespace where Prometheus and Grafana are running.
+{{</info>}}
+
+1. Install node-exporter via DaemonSet by creating a YAML file named `node-exporter.yaml`:
+
+    ```text
+    apiVersion: apps/v1
+    kind: DaemonSet
+    metadata:
+      labels:
+        app.kubernetes.io/component: exporter
+        app.kubernetes.io/name: node-exporter
+      name: node-exporter
+      namespace: kube-system
+    spec:
+      selector:
+        matchLabels:
+          app.kubernetes.io/component: exporter
+          app.kubernetes.io/name: node-exporter
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/component: exporter
+            app.kubernetes.io/name: node-exporter
+        spec:
+          containers:
+          - args:
+            - --path.sysfs=/host/sys
+            - --path.rootfs=/host/root
+            - --no-collector.wifi
+            - --no-collector.hwmon
+            - --collector.filesystem.ignored-mount-points=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/pods/.+)($|/)
+            - --collector.netclass.ignored-devices=^(veth.*)$
+            name: node-exporter
+            image: prom/node-exporter
+            ports:
+              - containerPort: 9100
+                protocol: TCP
+            resources:
+              limits:
+                cpu: 250m
+                memory: 180Mi
+              requests:
+                cpu: 102m
+                memory: 180Mi
+            volumeMounts:
+            - mountPath: /host/sys
+              mountPropagation: HostToContainer
+              name: sys
+              readOnly: true
+            - mountPath: /host/root
+              mountPropagation: HostToContainer
+              name: root
+              readOnly: true
+          volumes:
+          - hostPath:
+              path: /sys
+            name: sys
+          - hostPath:
+              path: /
+            name: root
+    ```
+
+2. Apply the object using the following command:
+
+    ```text 
+    kubectl apply -f node-exporter.yaml -n kube-system
+    ```
+    ```output
+    daemonset.apps/node-exporter created
+    ```
+### Create a service
+
+Kubernetes service will connect a set of pods to an abstracted service name and IP address. The service provides discovery and routing between the pods. The following service will be called `node-exportersvc.yaml`, and it will use port `9100`.
+
+
+1. Create the object file and name it `node-exportersvc.yaml`:
+
+    ```text
+    ---
+    kind: Service
+    apiVersion: v1
+    metadata:
+      name: node-exporter
+      namespace: kube-system
+      labels:
+        name: node-exporter
+    spec:
+      selector:
+          app.kubernetes.io/component: exporter
+          app.kubernetes.io/name: node-exporter
+      ports:
+      - name: node-exporter
+        protocol: TCP
+        port: 9100
+        targetPort: 9100
+    ```
+2.  Create the service by running the following command:
+
+    ```text 
+    kubectl apply -f node-exportersvc.yaml -n kube-system
+    ```
+    ```output
+    service/node-exporter created
+    ```
+
+### Create a service monitor
+
+The Service Monitor will scrape the metrics using the following `matchLabels` and endpoint. 
+
+
+1. Create the object file and name it `node-exporter-svcmonitor.yaml`:
+
+    ```text
+    apiVersion: monitoring.coreos.com/v1
+    kind: ServiceMonitor
+    metadata:
+      name: node-exporter
+      labels:
+        prometheus: portworx
+    spec:
+      selector:
+        matchLabels:
+          name: node-exporter
+      endpoints:
+      - port: node-exporter
+    ```
+
+
+2.  Create the `ServiceMonitor` object by running the following command:
+
+    ```text 
+    kubectl apply -f node-exporter-svcmonitor.yaml -n kube-system
+    ```
+    ```output
+    servicemonitor.monitoring.coreos.com/node-exporter created
+    ```
+3. Verify that the `prometheus` object has the following `serviceMonitorSelector:` appended:
+
+    ```text 
+    kubectl get prometheus -n kube-system -o yaml
+    ```
+    ```output
+        serviceMonitorSelector:
+      matchExpressions:
+      - key: prometheus
+        operator: In
+        values:
+        - portworx
+        - px-backup
+    ```
+
+
+The `serviceMonitorSelector` object is automatically appended to the `prometheus` object that is deployed by the Portworx Operator.
+The `ServiceMonitor` will match any `serviceMonitor` that has the key `prometheus` and value of `portworx` or `backup`
+
+### View Node Exporter dashboard in Grafana
+
+Log in to the Grafana UI, from **Dashboards** navigate to the **Manage** section, and select **Portworx Performance Monitor**. You can see the dashboards with **(Node Exporter)**:
+
+![Grafana UI](/img/grafana-node-exporter.png)

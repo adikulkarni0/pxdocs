@@ -95,5 +95,5 @@ Note that the command shows the list of alerts that have been reported.
 For more details, please see the [alerts page](/operations/operate-other/monitoring/portworx-alerts).
 
 {{<info>}}
-{{<companyName>}} recommends setting up monitoring with Prometheus and AlertsManager. If you are using Portworx with Kubernetes, refer to the [Monitoring with Prometheus and Grafana](/operations/operate-kubernetes/monitoring/monitoring-px-prometheusandgrafana.1/) article. If you are using Portworx with other orchestrators, refer to the [Alerting With Portworx](/operations/operate-other/monitoring/alerting/) article.
+{{<companyName>}} recommends setting up monitoring with Prometheus and AlertsManager. If you are using Portworx with Kubernetes, refer to the [Monitoring with Prometheus and Grafana](/install-portworx/monitoring) article. If you are using Portworx with other orchestrators, refer to the [Alerting With Portworx](/operations/operate-other/monitoring/alerting/) article.
 {{</info>}}

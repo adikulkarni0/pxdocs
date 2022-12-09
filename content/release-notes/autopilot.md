@@ -90,7 +90,7 @@ Portworx has upgraded or enhanced functionality in the following areas:
 |**Improvement Description**|
 |----|
 | Added a new CRD, called AutopilotRuleObject, which can be used to check for useful events in objects that autopilot monitors, such as PVCs and StoragePools. |
-| Added basic metrics for monitoring Autopilot and Grafana dashboards to view them. To view Autopilot metrics, follow the steps in the [Prometheus and Grafana](/operations/operate-kubernetes/monitoring/monitoring-px-prometheusandgrafana.1/) article. |
+| Added basic metrics for monitoring Autopilot and Grafana dashboards to view them. To view Autopilot metrics, follow the steps in the [Prometheus and Grafana](/install-portworx/monitoring) article. |
 
 ### Fixes
 

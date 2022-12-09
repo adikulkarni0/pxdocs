@@ -6,7 +6,7 @@ aliases:
     - /install-with-other/operate-and-maintain/monitoring/prometheus/index/
 ---
 {{<info>}}
-This document presents the **non-Kubernetes** method of monitoring your Portworx cluster with Prometheus. Please refer to the [Prometheus and Grafana](/operations/operate-kubernetes/monitoring/monitoring-px-prometheusandgrafana.1/) page if you are running Portworx on Kubernetes.
+This document presents the **non-Kubernetes** method of monitoring your Portworx cluster with Prometheus. Please refer to the [Prometheus and Grafana](/install-portworx/monitoring) page if you are running Portworx on Kubernetes.
 {{</info>}}
 
 
