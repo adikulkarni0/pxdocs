@@ -37,4 +37,4 @@ Follow these steps to specify the RAID level Portworx should use at installation
       "-x", "kubernetes"]
     ```
 
-3. Continue with the steps from the [Apply the specs](/install-portworx/on-premises/other/daemonset/#apply-the-specs) section.
+3. Continue with the steps from the [Apply the specs](/install-portworx/on-premises/other/daemonset/) section.

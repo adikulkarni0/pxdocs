@@ -5,13 +5,31 @@ description: Shared content for install Portworx with Kubernetes - apply the spe
 keywords: Install, apply the specs, kubernetes, k8s
 ---
 
-### Apply the specs
+### Apply specs
 
-Apply the generated specs to your cluster.
+Apply the Operator and StorageCluster specs you generated in the section above using the `kubectl apply` command:
 
-```text
-kubectl apply -f px-spec.yaml
-```
+1. Deploy the Operator:
+
+    ```
+    kubectl apply -f 'https://install.portworx.com/<version-number>?comp=pxoperator'
+    ```
+    ```output
+    serviceaccount/portworx-operator created
+    podsecuritypolicy.policy/px-operator created
+    clusterrole.rbac.authorization.k8s.io/portworx-operator created
+    clusterrolebinding.rbac.authorization.k8s.io/portworx-operator created
+    deployment.apps/portworx-operator created
+    ```
+
+2. Deploy the StorageCluster:
+
+    ```
+    kubectl apply -f 'https://install.portworx.com/<version-number>?operator=true&mc=false&kbver=&b=true&kd=type%3Dgp2%2Csize%3D150&s=%22type%3Dgp2%2Csize%3D150%22&c=px-cluster-931a7c5f-8ec0-4b03-9b92-568f471c2c26&eks=true&stork=true&csi=true&mon=true&tel=false&st=k8s&e=AWS_ACCESS_KEY_ID%3DAKIAZOOQJGAN7CGTU76V%2CAWS_SECRET_ACCESS_KEY%3DEKeXvI%2FkErIi5v5UtvOZMocC4jJgHsD1lWtv2y1Y&promop=true'
+    ```
+    ```output
+    storagecluster.core.libopenstorage.org/px-cluster-0d8dad46-f9fd-4945-b4ac-8dfd338e915b created
+    ```
 
 #####  Monitor the Portworx pods
 
