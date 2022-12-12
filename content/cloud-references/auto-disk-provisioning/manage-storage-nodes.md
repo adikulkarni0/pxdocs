@@ -80,7 +80,7 @@ For different environments, the following table shows how zones are determined:
 | Cloud provider| Zone|
 |----------|--------------------|
 |Public clouds, such as AWS, Azure, Google Cloud, or IBM Cloud| Detected by Portworx using cloud providers APIs.|
-| VMware vSphere or VMware Tanzu | <ul><li>The value of the zone label `toplogy.portworx.io/zone`[^5] determines the zone for the node.</li><li> Single zone. If the zone label is not specified, every node is considered to be in a single `default` zone.</li></ul>|
+| VMware vSphere or VMware Tanzu | <ul><li>The value of the zone label `topology.portworx.io/zone`[^5] determines the zone for the node.</li><li> Single zone. If the zone label is not specified, every node is considered to be in a single `default` zone.</li></ul>|
 |Pure FlashArray| Single zone. No zoning labels are supported.|
 
 
