@@ -29,7 +29,7 @@ The Portworx Operator easily manages all CSI components based on your Kubernetes
 Explicitly disabling CSI will also prevent the Pure Storage FlashBade DirectAccess mode from working.
 {{</info>}}
 
-## Portworx Operator 1.8 and higher
+## Portworx Operator 1.8 and higher 
 
 Starting with the Portworx [Operator 1.8 and higher](/reference/crd/storage-cluster/), new syntax is available for CSI, which is enabled by default for new Portworx installations. The default values are as follows:
 
@@ -46,28 +46,6 @@ If you migrate from an earlier version to Operator 1.8, your `spec` is automatic
 
 If you previously [enabled Snapshot Controller manually](/operations/operate-kubernetes/storage-operations/csi/dataprotection/#setup-csi-volume-snapshotting), your existing controller will still work but `spec.csi.installSnapshotController` will be set to `false`. If you wish to switch to a Snapshot Controller installation that is managed by Portworx, remove your Snapshot Controller deployment and set `spec.csi.installSnapshotController` equal to `true`.
 
-## Portworx Operator 1.5 through 1.7
-
-CSI is installed and enabled by default for new installations as [previously described](#portworx-csi-installed-by-default). The syntax is as follows:
-
-```
-spec:
-  featureGates:
-    CSI: "true"
-```
-
-## Portworx Operator 1.4 and earlier
-
-Older operator versions do not enable CSI by default. It is highly recommended to upgrade to Portworx Operator 1.5 or later.
-
-To enable CSI on older Portworx Operator versions, you may set the following CSI feature gate:
-
-```
-spec:
-  featureGates:
-    CSI: "true"
-```
-
 ## Openshift installation
 
 If you are using Openshift, you must add the `px-csi-account` service account to the privileged security context.
@@ -78,12 +56,12 @@ oc adm policy add-scc-to-user privileged system:serviceaccount:kube-system:px-cs
 
 
 {{<info>}}**Note**:
-If you experience the following error:
-"errorUnable to update cluster as v1alpha1 version of ... Remove these CRDs to allow the upgrade to proceed", 
+If you experience the error
+`errorUnable to update cluster as v1alpha1 version of ... Remove these CRDs to allow the upgrade to proceed`, 
 follow [this solution from RedHat](https://access.redhat.com/solutions/5372561).
 {{</info>}}
 
 
 ## Contribute
 
-Portworx, Inc. welcomes contributions to its CSI implementation, which is open-source and repository is at [OpenStorage](https://github.com/libopenstorage/openstorage). In addition, we also encourage contributions to the [Kubernetes-CSI open source implementation](https://github.com/kubernetes-csi).
+{{<companyName>}} welcomes contributions to its CSI implementation, which is open-source with a repository located at [OpenStorage](https://github.com/libopenstorage/openstorage). In addition, we also encourage contributions to the [Kubernetes-CSI open source implementation](https://github.com/kubernetes-csi).

@@ -10,21 +10,11 @@ aliases:
 
 ## Create and use persistent volumes
 
-Create and use volumes with CSI by configuring specs you create for your storage class, PVC, and volumes:
+Create and use volumes with CSI by configuring specs you create for your storage class, PVC, and volumes.
 
-1. Enable CSI for a StorageClass by setting the `provisioner` value to `pxd.portworx.com`:
+In this example, we are using the `px-csi-db` storage class out of the box. Please refer to [CSI Enabled Storage Classes](/portworx-install-with-kubernetes/storage-operations/csi/storageclasses/) for a list of available CSI enabled storage classes offered by Portworx.
 
-    ```text
-    kind: StorageClass
-    apiVersion: storage.k8s.io/v1
-    metadata:
-      name: portworx-csi-sc
-    provisioner: pxd.portworx.com
-    parameters:
-      repl: "1"
-    ```
-
-2. Create a PersistentVolumeClaim based on your CSI-enabled StorageClass by referencing the StorageClass you created above with the `storageClassName` parameter:
+1. Create a PersistentVolumeClaim based on the `px-csi-db` StorageClass:
 
     ```text
     kind: PersistentVolumeClaim
@@ -32,7 +22,7 @@ Create and use volumes with CSI by configuring specs you create for your storage
     metadata:
       name: px-mysql-pvc
     spec:
-      storageClassName: portworx-csi-sc
+      storageClassName: {{<highlight>}}px-csi-db{{</highlight>}}
       accessModes:
         - ReadWriteOnce
       resources:
@@ -40,7 +30,7 @@ Create and use volumes with CSI by configuring specs you create for your storage
           storage: 2Gi
     ```
 
-3. Create a volume by referencing the PVC. This example creates a MySQL deployment referencing the `px-mysql-pvc` PVC you created in the step above:
+2. Create a volume by referencing the PVC you created. This example creates a MySQL deployment referencing the `px-mysql-pvc` PVC you created in the previous step:
 
     ```text
     apiVersion: apps/v1
@@ -77,32 +67,14 @@ Create and use volumes with CSI by configuring specs you create for your storage
           volumes:
           - name: mysql-persistent-storage
             persistentVolumeClaim:
-              claimName: px-mysql-pvc
+              claimName: {{<highlight>}}px-mysql-pvc{{</highlight>}}
     ```
 
 ## Create sharedv4 CSI-enabled volumes
 
-Create sharedv4 CSI-enabled volumes by configuring the specs for you create for your storage class and PVCs:
+Create sharedv4 CSI-enabled volumes by performing the following steps.
 
-1. Create a StorageClass `storageclass.yaml` file and apply it:
-
-    ```text
-    kind: StorageClass
-    apiVersion: storage.k8s.io/v1
-    metadata:
-      name: portworx-csi-sc
-    provisioner: pxd.portworx.com
-    parameters:
-      repl: "1"
-    ```
-
-2. Apply the `storageclass.yaml` file:
-
-    ```text
-    kubectl apply -f storageclass.yaml
-    ```
-
-3. Create a sharedv4 PVC by creating the following `shared-pvc.yaml` file:
+1. Create a sharedv4 PVC by creating the following `shared-pvc.yaml` file:
 
     ```text
     kind: PersistentVolumeClaim
@@ -110,7 +82,7 @@ Create sharedv4 CSI-enabled volumes by configuring the specs for you create for 
     metadata:
       name: px-mysql-pvc
     spec:
-      storageClassName: portworx-csi-sc
+      storageClassName: {{<highlight>}}px-csi-db{{</highlight>}}
       accessModes:
         - ReadWriteMany
       resources:
@@ -118,7 +90,7 @@ Create sharedv4 CSI-enabled volumes by configuring the specs for you create for 
           storage: 2Gi
     ```
 
-4. Apply the `shared-pvc.yaml` file:
+2. Apply the `shared-pvc.yaml` file:
 
     ```text
     kubectl apply -f shared-pvc.yaml
@@ -128,7 +100,7 @@ Create sharedv4 CSI-enabled volumes by configuring the specs for you create for 
 
 You can clone CSI-enabled volumes, duplicating both the volume and content within it.
 
-1. Create a PVC that references the PVC you wish to clone, specifying the `dataSource` with the kind and name of the target PVC you wish to clone. The following spec creates a clone of the `px-mysql-pvc` PVC in a YAML file named `clonePVC.yaml`:
+1. Create a PVC that references the PVC you wish to clone, specifying the `dataSource` with the `kind` and `name` of the target PVC you wish to clone. The following spec creates a clone of the `px-mysql-pvc` PVC in a YAML file named `clonePVC.yaml`:
 
       ```text
       kind: PersistentVolumeClaim
@@ -136,15 +108,15 @@ You can clone CSI-enabled volumes, duplicating both the volume and content withi
       metadata:
          name: clone-of-px-mysql-pvc
       spec:
-         storageClassName: portworx-csi-sc
+         storageClassName: px-csi-db
          accessModes:
            - ReadWriteOnce
          resources:
            requests:
              storage: 2Gi
          dataSource:
-          kind: PersistentVolumeClaim
-          name: px-mysql-pvc
+          kind: {{<highlight>}}PersistentVolumeClaim{{</highlight>}}
+          name: {{<highlight>}}px-mysql-pvc{{</highlight>}}
       ```
 
 2. Apply the `clonePVC.yaml` spec to create the clone:
@@ -153,11 +125,12 @@ You can clone CSI-enabled volumes, duplicating both the volume and content withi
       kubectl apply -f clonePVC.yaml
       ```
 
-## Migration to CSI PVCs
+## Migrate to CSI PVCs
 
-Currently, you cannot migrate or convert PVCs created using the native Kubernetes driver to the CSI driver. However, this is not required and both types of PVCs can co-exist on the same cluster.
+Currently, you cannot migrate or convert PVCs created using the native Kubernetes driver to the CSI driver. However, this is not required, and both types of PVCs can co-exist on the same cluster.
 
 
 ## Contribute
 
-Portworx, Inc. welcomes contributions to its CSI implementation, which is open-source and repository is at [OpenStorage](https://github.com/libopenstorage/openstorage). In addition, we also encourage contributions to the [Kubernetes-CSI open source implementation](https://github.com/kubernetes-csi).
+{{<companyName>}} welcomes contributions to its CSI implementation, which is open-source with a repository located at [OpenStorage](https://github.com/libopenstorage/openstorage). In addition, we also encourage contributions to the [Kubernetes-CSI open source implementation](https://github.com/kubernetes-csi).
+
