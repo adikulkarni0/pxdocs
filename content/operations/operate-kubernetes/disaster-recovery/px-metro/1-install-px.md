@@ -250,7 +250,7 @@ sudo docker run --entrypoint /runc-entry-point.sh \
 -v /opt/pwx:/opt/pwx -v /etc/pwx:/etc/pwx \
 $PX_DOCKER_IMAGE
 
-/opt/pwx/bin/px-runc install -k $ETCD -c $CLUSTER_ID --cluster_domain witness -a
+/opt/pwx/bin/px-runc install -k $ETCD -c $CLUSTER_ID --cluster_domain witness -z
 
 sudo systemctl daemon-reload
 sudo systemctl enable portworx
