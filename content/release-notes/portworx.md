@@ -8,10 +8,62 @@ aliases:
     - /reference/release-notes/portworx
 ---
 
+## 2.12.1
+
+December 12, 2022
+
+### New features
+
+Portworx by Pure Storage is proud to introduce the following new features:
+
+* Google Cloud users can now [encrypt GCP cloud drives using customer managed encryption keys](/operations/operate-kubernetes/cloud-drive-operations/gcp/).
+
+* You can now use [Vault Transit](/operations/key-management/vault-transit) to manage key generation for encrypting in-transit data.
+
+
+### Improvements
+
+Portworx has upgraded or enhanced functionality in the following areas:
+
+| **Improvement Number** | **Improvement Description** |
+| ---- | ---- |
+| PWX-26232	| The  Portworx node's IP addresses are now included in the license server's "long client usage" output (`lsctl client ls -l`). |
+| PWX-26304	| Storageless nodes will become storage nodes when `max_storage_nodes_per_zone` is increased. |
+| PWX-27769	| vSphere and IBM cloud platforms will be able to now recognize the zone label `topology.portworx.io/zone`. This will help Portworx honor zone related settings like `maxStorageNodesPerZone`. |
+
+### Fixes
+
+| **Issue Number** | **Issue Description** |
+| ---- | ---- |
+| PWX-27748	| Some incremental fixes in version 2.12.0 introduced issues with DaemonSet YAML generation for K3s and RKE2 Kubernetes platforms.<br><br>**Resolution:** These issues have been fixed. |
+| PWX-27849 | Kubernetes versions 1.25 and later [do no support PodSecurityPolicy] (https://kubernetes.io/docs/concepts/security/pod-security-policy/).<br><br>**Resolution:**[PX-Central](https://central.portworx.com/landing/login) does not include PodSecurityPolicy in the YAML install specs when the Kubernetes version is 1.25 or later. |
+| PWX-27267 | Cloudsnaps for aggregated volumes were failing certain checks when part of the aggregated volume did not have any differential data to upload.<br><br>**Resolution:** This version fixes those checks and prevents failure due to empty differential data. |
+| PWX-27246 | During a new installation of Portworx on a vSphere environment (installation in local mode), several VMs appeared as storage nodes on a single ESXi host. This was because of a race condition in the vSphere environment, which increased the number of nodes forming the cluster and affected quorum decisions.<br><br>**Resolution:** You can choose not to upgrade if you take care of the race condition during installation. You can overcome the race condition by allowing only 1 VM to come up on an ESXi host during installation. Once the installation is complete, you can bring up as many VMs as you want simultaneously. The problem exists only until the first storage VM comes up. |
+| PWX-26021 |	For sharedv4 apps, multiple mount/unmount requests on the same path could become stuck in `Uninterruptible Sleep (D) State`.<br><br>**Resolution:** In the case that the client tries to mount but the previous request still exists, there will be a Kubernetes event stating that the previous request is still in progress. |
+| PWX-27732 |	vSphere cloud drive labels previously contained a space, which is not compatible with Kubernetes standards and caused an error in CSI.<br><br>**Resolution:**  Portworx now replaces the space character with a dash (`-`). All other special characters will be replaced by a period (`.`). |
+| PWX-27227	| If a pool rebalancing was issued with the `--dry-run` option, then Portworx created unnecessary rebalance audit keys in the KVDB. As it was not possible to delete these keys, the disk size of the KVDB increased. <br><br>**Resolution :** Portworx no longer creates audit keys when a pool rebalancing is issued with the `--dry-run` option, and Portworx deletes orphaned keys that have already been created. 
+| PWX-27407	| The KVDB contained inconsistent node entries because of a race condition in the auto decommission of storageless nodes. This was causing Portworx to restart.<br><br>**Resolution:** The race condition is now handled, and Portworx ensures that no inconsistent entries are left behind in the KVDB during the decommission process. |
+| PWX-27917 | Portworx ignored the value of `MaxStorageNodesPerZone` if an uneven number of nodes are labeled as `portworx.io/node-type=storage`.<br><br>**Resolution:** This issue has been fixed.
+
+### Deprecations
+
+The following feature has been deprecated:
+
+* Internal objectstore support
+
+
+### Known issues (Errata)
+
+| **Issue Number** | **Issue Description** |
+| ---- | ---- | 
+| PD-1684 | If the `sharedv4_svc_type` parameter is not specified during ReadWriteMany volume creation, Portworx defaults to a sharedv4 service volume unless Metro DR is enabled, in which case Portworx defaults to sharedv4 (non-service) volumes. You can explicitly set the `sharedv4_svc_type` parameter in the StorageClass. If it is set to an empty string, a sharedv4 (non-service) volume is created. |
+| PD-1729 | On some recent Linux kernels, back to back online resize operations of Ext4 volumes can fail. This is because of a bug in the kernel which has been fixed in the latest kernel release.<br><br>**Workaround:** Upgrade to a more recent kernel version, or restart the application pod that is using the volume. This remounts the volumes and completes the resize operation. |
+
+
 
 ## 2.12.0
 
-Oct 24, 2022
+October 24, 2022
 
 ### Notes
 
@@ -89,7 +141,7 @@ Portworx has upgraded or enhanced functionality in the following areas:
 
 ## 2.11.4
 
-Oct 4, 2022
+October 4, 2022
 
 ### Improvements
 
@@ -108,7 +160,7 @@ Portworx has upgraded or enhanced functionality in the following areas:
 
 ## 2.11.3
 
-Sep 13, 2022
+September 13, 2022
 
 ### Fixes
 | **Issue Number** | **Issue Description** |
