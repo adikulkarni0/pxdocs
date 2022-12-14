@@ -10,7 +10,8 @@ aliases:
 
 ## 2.12.1
 
-December 12, 2022
+December 14, 2022
+
 
 ### New features
 
