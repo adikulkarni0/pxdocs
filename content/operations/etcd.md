@@ -31,10 +31,6 @@ More detailed set of hardware requirements as recommended by etcd can be found [
 
 You can use one of the following methods to setup an etcd cluster
 
-#### Setup an ETCD cluster with a static set of nodes
-
-If you have 3 static nodes where you want to run etcd follow [this](/operations/etcd-quick-setup) guide to setup systemd services for an etcd cluster.
-
 #### Setup an ETCD cluster using the official documentation
 
 Follow [this](https://etcd.io/docs/v3.3.12/op-guide/clustering/) detailed step by step process provided by etcd to setup a brand new multi-node cluster.
