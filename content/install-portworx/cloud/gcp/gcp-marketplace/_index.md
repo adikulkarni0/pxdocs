@@ -6,9 +6,10 @@ weight: 200
 keywords: Install, GCP Marketplace, Google Cloud Platform, Kubernetes, k8s, gcloud
 description: Set up a production-ready Portworx cluster on Google Cloud Platform Marketplace.
 noicon: true
-series: px-k8s-gcp
+# series: px-k8s-gcp
 aliases:
     - /portworx-install-with-kubernetes/cloud/gcp/gcp-marketplace
+hidden: true
 ---
 
 ## Prerequisites
