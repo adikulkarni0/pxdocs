@@ -139,7 +139,12 @@ roleRef:
 EOF
 ```
 
-##### Step 2b: Edit the Portworx DaemonSet
+##### Step 2b: Edit the Portworx spec
+
+Depending on your Portworx installation, proceed to one of the following sections.
+
+
+**Edit the Portworx DaemonSet spec**
 
 Edit the Portworx DaemonSet `secret_type` field to `ibm-kp`, so that all the new Portworx nodes will also start using IBM  or HPCS.
 
@@ -163,6 +168,27 @@ containers:
 ```
 
 Editing the daemonset will restart all the Portworx pods.
+
+**Edit the Portworx Operator spec**
+
+
+1. Get the name of the StorageCluster running in your IBM cluster:
+
+  ```text
+  kubectl get storagecluster  -A
+  ```
+  ```output
+  NAMESPACE     NAME           CLUSTER UUID   STATUS   VERSION   AGE
+  kube-system   px-ocpkptest   89dfb5a4-47d6-440a-95bf-65502f548d97  Online   2.12.1    5h49m
+  ```
+  
+2. Run the following command to edit the above StorageClsuter, then set the `secretsProvider` field of the `spec` section to `ibm-kp`:
+
+  ```text
+  kubectl edit storageCluster px-ocpkptest -n kube-system
+  ```
+    Once the StorageClsuter spec is edited, all Portworx pods will restart and use IBM Key Protect or HPCS. 
+
 
 ## Other users
 
