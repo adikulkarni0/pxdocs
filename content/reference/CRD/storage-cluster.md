@@ -33,7 +33,7 @@ This section provides a few examples of common Portworx configurations you can u
         useAll: true
     ```
 
-* Portworx with external ETCD and Stork.
+* Portworx with external ETCD and Stork as default scheduler.
 
     ```text
     apiVersion: core.libopenstorage.org/v1
@@ -48,13 +48,12 @@ This section provides a few examples of common Portworx configurations you can u
         - etcd:http://etcd-1.net:2379
         - etcd:http://etcd-2.net:2379
         - etcd:http://etcd-3.net:2379
-        authSecret: px-etcd-auth
+        authSecret: px-kvdb-auth
       stork:
         enabled: true
         args:
           health-monitor-interval: "100"
-      userInterface:
-        enabled: true
+          webhook-controller: "true"
     ```
 
 * Portworx with Security enabled.
@@ -87,11 +86,13 @@ This section provides a few examples of common Portworx configurations you can u
           guestAccess: 'Disabled'
           selfSigned:
             issuer: 'openstorage.io'
-            sharedSecret: 'my-k8s-secret'
+            sharedSecret: 'px-shared-secret'
             tokenLifetime: '5d'
     ```
 
 * Portworx with update and delete strategies, and placement rules.
+
+    {{<info>}}**NOTE:** From Kubernetes version 1.24 and newer, the label key `node-role.kubernetes.io/master` is replace by  `node-role.kubernetes.io/control-plane`.{{</info>}}
 
     ```text
     apiVersion: core.libopenstorage.org/v1
@@ -116,8 +117,10 @@ This section provides a few examples of common Portworx configurations you can u
                 operator: NotIn
                 values:
                 - "false"
-              - key: node-role.kubernetes.io/master
+              - key: node-role.kubernetes.io/control-plane
                 operator: DoesNotExist
+              - key: node-role.kubernetes.io/worker
+                operator: Exists
         tolerations:
         - key: infra/node
           operator: Equal
@@ -140,7 +143,7 @@ This section provides a few examples of common Portworx configurations you can u
       customImageRegistry: docker.private.io/repo
       network:
         dataInterface: eth1
-        mgmtInterface: eth1
+        mgmtInterface: eth2
       secretsProvider: vault
       runtimeOptions:
         num_io_threads: "10"
@@ -209,8 +212,8 @@ This section explains the fields used to configure the `StorageCluster` object.
 | spec.<br>env[] | A list of [Kubernetes like environment variables](https://github.com/kubernetes/api/blob/master/core/v1/types.go#L1826). Similar to how environment variables are provided in Kubernetes, you can directly provide values to Portworx or import them from a source like a `Secret`, `ConfigMap`, etc. | `[]object` | None |
 | spec.<br>metadata.<br>annotations | A map of components and custom annotations. [^2] | map[string]map[string]string | None |
 | spec.<br>metadata.<br>labels | A map of components and custom labels. [^3] | map[string]map[string]string | None |
-| spec.<br>resources.<br>cpu | Specifies the cpu that the Portworx container will use, for example: `"4000m"` |  `string`  | None |
-| spec.<br>resources.<br>memory | Specifies the memory that the Portworx container will use, for example: `"4Gi"` | `string` | None |
+| spec.<br>resources.<br>requests.<br>cpu | Specifies the cpu that the Portworx container requests; for example: `"4000m"` |  `string`  | None |
+| spec.<br>resources.<br>requests.<br>memory | Specifies the memory that the Portworx container requests; for example: `"4Gi"` | `string` | None |
 
 [^1]: As an example, here's how you can enable the `CSI` feature.
 
@@ -378,7 +381,7 @@ This section describes the fields used to manage the Stork deployment through th
 | spec.<br>stork.<br>image | Specifies the Stork image. | `string` | None |
 | spec.<br>stork.<br>lockImage | Enables locking Stork to the given image. When set to false, the Portworx Operator will overwrite the Stork image to a recommended image for given Portworx version. | `boolean` | `false` |
 | spec.<br>stork.<br>args | A collection of key-value pairs that overrides the default Stork arguments or adds new arguments. | `map[string]string` | None |
-| spec.<br>stork.<br>args.admin-namespace | Specify an [admin namespace](https://docs.portworx.com/portworx-install-with-kubernetes/migration/cluster-admin-namespace/) | `string` | `kube-system` |
+| spec.<br>stork.<br>args.admin-namespace | Set up a cluster's admin namespace for migration. <br>Refer to [admin namespace](/operations/operate-kubernetes/migration/cluster-admin-namespace/) for more information | `string` | `kube-system` |
 | spec.<br>stork.<br>args.verbose | Set to `true` to enable verbose logging | `boolean` | `false` |
 | spec.<br>stork.<br>args.webhook-controller | Set to `true` to make Stork the default scheduler for workloads using Portworx volumes | `boolean` | `false` |
 | spec.<br>stork.<br>env[] | A list of [Kubernetes like environment variables](https://github.com/kubernetes/api/blob/master/core/v1/types.go#L1826) passed to Stork. | `[]object` | None |
