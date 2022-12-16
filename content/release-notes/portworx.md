@@ -31,6 +31,7 @@ Portworx has upgraded or enhanced functionality in the following areas:
 | PWX-26232	| The  Portworx node's IP addresses are now included in the license server's "long client usage" output (`lsctl client ls -l`). |
 | PWX-26304	| Storageless nodes will become storage nodes when `max_storage_nodes_per_zone` is increased. |
 | PWX-27769	| vSphere and IBM cloud platforms will be able to now recognize the zone label `topology.portworx.io/zone`. This will help Portworx honor zone related settings like `maxStorageNodesPerZone`. |
+| PWX-27174 | `pxctl cluster provision-status` will now show IP addresses for nodes. The IP addresses help you to correlate that command's output with the node list provided by `pxctl status`. |
 
 ### Fixes
 
