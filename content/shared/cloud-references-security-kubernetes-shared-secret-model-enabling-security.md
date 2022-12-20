@@ -41,7 +41,7 @@ Once you've enabled security in Portworx, continue to the next section.
 
 {{<info>}}
 **Note:**
-To use pxctl with security enabled, see using [pxctl with security enabled](/cloud-references/security/kubernetes/shared-secret-model-operator/use-pxctl-security-enabled/). Otherwise, all pxctl commands will fail with access denied.
+To use `pxctl` in this context, see [use `pxctl` with security enabled](/concepts/authorization/use-pxctl-security-enabled/). Otherwise, all `pxctl` commands will fail with an `access denied` error.
 {{</info>}}
 
 

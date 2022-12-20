@@ -158,7 +158,7 @@ setup an environment variable from a Secret:
 
 Prior to 2.6, users must be certain that all [PVCs have user tokens secrets](/operations/operate-kubernetes/authorization/manage) associated with them. If this is not the case, Kubernetes users will not be able to use any Portworx PVCs or create new ones. This means that in order to upgrade to `auth enabled` without any disruption, the admin must add token secrets to all PVCs.
 
-Starting with Portworx 2.6+, upgrading from `auth disabled` to `auth enabled` will not cause any issues for Kubernetes end users. This is because the [system guest role](/concepts/authorization/overview#guest-access) will allow Kubernetes users to create and use [public volumes](/concepts/authorization/overview#public-volumes). However, users are encouraged to make their volumes private by adding authorization to their PVCs.
+Starting with Portworx 2.6+, upgrading from `auth disabled` to `auth enabled` will not cause any issues for Kubernetes end users. This is because the [system guest role](/concepts/authorization/overview#guest-access-role) will allow Kubernetes users to create and use [public volumes](/concepts/authorization/overview#public-volumes). However, users are encouraged to make their volumes private by adding authorization to their PVCs.
 
 ## Step by step guide
 

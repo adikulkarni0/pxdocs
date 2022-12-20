@@ -7,12 +7,12 @@ series: concepts
 keywords: portworx, container, storage, security, jwt, token, rbac
 ---
 
-PX-Security is a critical component of the Portworx platform that provides:
+PX-Security is an important set of features of the Portworx platform that provide:
 
-  - Cluster-wide encryption
-  - Namespace-granular or Storage-class BYOK encryption
   - Role-based access control (RBAC) for authorization, authentication, and ownership
+  - Cluster-wide volume encryption
+  - Namespace-granular or Storage-class BYOK volume encryption
 
-This section describes the role-based access control (RBAC) model used by Portworx.
+This section describes the role-based access control (RBAC) model used by Portworx. For details on volume encryption, see [create encrypted PVCs](/operations/operate-kubernetes/storage-operations/create-pvcs/create-encrypted-pvcs/).
 
 {{<homelist series="authorization">}}

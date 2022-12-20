@@ -188,7 +188,7 @@ This token will now allow access to whichever services and APIs were defined in 
 
 ## Updating the System Guest role
 
-Updating the `system.guest` role will change how Portworx authorization handles users that do not pass a token to any Portworx operation or SDK call. For more information, see the [Guest Role overview.](/concepts/authorization/overview#guest-access).
+Updating the `system.guest` role will change how Portworx authorization handles users that do not pass a token to any Portworx operation or SDK call. For more information, see the [guest role overview](/concepts/authorization/overview#guest-access-role).
 
 ### Disabling the System Guest role
 
