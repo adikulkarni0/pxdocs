@@ -34,12 +34,13 @@ To increase fault tolerance, you can enable **Sharedv4 service** volumes by [set
 
 ### Step 1: Create a StorageClass
 
-1. Create the following storageClass, specifying your own values for the following fields:
+1. Create the following StorageClass, specifying your own values for the following fields:
 
   * The `metadata.name` field with a name for your storageClass
   * The `parameters.repl` field with the replication factor you'd like to set
   * The `sharedv4` field set to `true`
-  * (Optional) The `sharedv4_svc_type` field set to `ClusterIP` if you want to enable the sharedv4 service feature
+  * (Optional) The `sharedv4_svc_type` field set to `"ClusterIP"` if you want to enable the sharedv4 service feature
+  * (Optional) The `stork.libopenstorage.org/preferRemoteNodeOnly` field set to `"true"` if you want to strictly enforce [pod anti-hyperconvergence](/concepts/shared-volumes/#sharedv4-service-pod-anti-hyperconvergence) with respect to volume replica.
   * (Optional) The `sharedv4_failover_strategy` field set to `normal` or `aggressive` (shorter failover grace period)
 {{<info>}}
   **NOTE**: The default value for `sharedv4_failover_strategy` in sharedv4 volumes is `normal`, and the default value for `sharedv4_failover_strategy` in sharedv4 service volumes is `aggressive`.
@@ -55,15 +56,16 @@ To increase fault tolerance, you can enable **Sharedv4 service** volumes by [set
            repl: "2"
            sharedv4: "true"
            sharedv4_svc_type: "ClusterIP"
+           stork.libopenstorage.org/preferRemoteNodeOnly: "true"
         ```
 
-2. Apply the storageClass:
+2. Apply the StorageClass:
 
 ```text
 kubectl apply -f examples/volumes/portworx/portworx-sharedv4-sc.yaml
 ```
 
-3. Verify the storage class is created:
+3. Verify that the StorageClass is created:
 
 ```text
 kubectl describe storageclass px-sharedv4-sc
@@ -80,7 +82,7 @@ Events:     <none>
 
 ### Step 2: Create persistent volume claim
 
-Creating a ReadWriteMany persistent volume claim:
+Create a ReadWriteMany persistent volume claim:
 
 ```text
 kubectl create -f examples/volumes/portworx/portworx-volume-sharedv4-pvc.yaml
@@ -103,9 +105,9 @@ spec:
       storage: 10Gi
 ```
 
-Note the accessMode for this PVC is set to `ReadWriteMany` so the Kubernetes allows mounting this PVC on multiple pods.
+Note that `accessModes` for this PVC is set to `ReadWriteMany` so the Kubernetes allows mounting this PVC on multiple pods.
 
-Verifying persistent volume claim is created:
+Verify that the persistent volume claim is created:
 
 ```text
 kubectl get pvc
@@ -211,12 +213,24 @@ Perform the following steps to convert a sharedv4 service volume to a sharedv4 v
   ```
 1. Scale the pods back up to start the application.
 
+## Convert an existing sharedv4 service volume to use preferRemoteNodeOnly
+
+1. Scale down the application pods.
+
+2. Run the following command to convert the volume to use `preferRemoteNodeOnly`:
+
+    ```
+    pxctl volume update --label stork.libopenstorage.org/preferRemoteNodeOnly="true" <volume>
+    ```
+
+3. Scale the pods back up to start the application.
+
 ## Update a legacy shared volume to a sharedv4 volume
 
 You can update an existing shared volume to use the new v4 protocol and convert it into a sharedv4 volume. Run the following pxctl command to update the volume setting
 
 ```text
-pxctl volume update --sharedv4=on <vol-name>
+pxctl volume update --sharedv4=on <volume>
 ```
 
 {{<info>}}To access PV/PVCs with a non-root user, refer [here](/operations/operate-kubernetes/storage-operations/create-pvcs/access-via-non-root-users).

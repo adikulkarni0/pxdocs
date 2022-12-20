@@ -55,3 +55,11 @@ These defaults can be changed in the following ways:
   ```text
   pxctl volume update --sharedv4_failover_strategy=normal <volume_ID>
   ```
+
+### Sharedv4 service pod anti-hyperconvergence
+
+For sharedv4 service volumes, Portworx supports seamless failover when the NFS server goes offline. However, this seamless failover happens only for the nodes where there is an NFS mountpoint. The pods running on the node where the volume is attached use a direct bind mount, but they need to be bounced once a failover occurs. In order to avoid this, starting with Stork version 2.11.2, by default, Stork scheduler places application pods on the nodes where sharedv4 volume replicas do not exist if such nodes are available. This means pods using sharedv4 service volumes will be anti-hyperconverged with respect to their volume replica.
+
+{{<info>}}
+**NOTE:** You can force a pod using sharedV4 service volumes to be scheduled only on non replica nodes by specifying `stork.libopenstorage.org/preferRemoteNodeOnly: "true"` as a StorageClass parameter. This parameter will strictly enforce this behavior, and application pods will not come up if a valid node is not found.
+{{</info>}}
