@@ -2,6 +2,11 @@
 hidden: true
 ---
 
+
+{{<info>}}
+**NOTE:** The examples below use the `kube-system` namespace, you should update this to the correct namespace for your environment.
+{{</info>}}
+
 Perform the following steps to download `storkctl` from the Stork pod:
 
 * Linux:

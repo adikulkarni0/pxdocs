@@ -7,15 +7,16 @@ keywords: portworx, kubernetes, DR
 
 In Kubernetes, you must define a trust object called **ClusterPair**. Portworx requires this object to communicate with the destination cluster. The ClusterPair object pairs the Portworx storage driver with the Kubernetes scheduler, allowing the volumes and resources to be migrated between clusters.
 
-The ClusterPair is generated and used in the following way:
+The ClusterPair is generated from and used in the following way:
 
-   * The **ClusterPair** spec is generated on the **destination** cluster.
+   * It requires `storkctl` to be running on Kubernetes control plane node in both **destination** and **source** cluster
+   * The **ClusterPair** spec is generated on the **destination** cluster 
    * The generated spec is then applied on the **source** cluster
 
 Perform the following steps to create a cluster pair:
 
 {{<info>}}
-**NOTE:** You must run the `pxctl` commands in this document either on your Portworx nodes directly, or from inside the Portworx containers on your Kubernetes control plane node. 
+**NOTE:** You must run the `pxctl` commands in this document either on your worker nodes directly, or from inside the Portworx containers on your Kubernetes control plane node. 
 {{</info>}} 
 
 ### Create object store credentials for cloud clusters
@@ -35,7 +36,7 @@ The options you use to create your object store credentials differ based on whic
     * The `--s3-region` flag with the name of the S3 region (`us-east-1`)
     * The `--s3-endpoint` flag with the  name of the endpoint (`s3.amazonaws.com`)
     * The optional `--s3-storage-class` flag with either the `STANDARD` or `STANDARD-IA` value, depending on which storage class you prefer
-    * `clusterPair_` with the UUID of your destination cluster. Enter the following command into your cluster to find its UUID:
+    * `clusterPair_<UUID_of_destination_cluster>` Enter the following command into your cluster to find its UUID:
       ```text
       PX_POD=$(kubectl get pods -l name=portworx -n kube-system -o jsonpath='{.items[0].metadata.name}')
       kubectl exec $PX_POD -n kube-system --  /opt/pwx/bin/pxctl status | grep UUID | awk '{print $3}'
@@ -61,7 +62,7 @@ The options you use to create your object store credentials differ based on whic
     * `--provider` as `azure`
     * `--azure-account-name` with the name of your Azure account
     * `--azure-account-key` with your Azure account key
-    * `clusterPair_` with the UUID of your destination cluster appended. Enter the following command into your cluster to find its UUID:
+    * `clusterPair_<UUID_of_destination_cluster>` Enter the following command into your cluster to find its UUID:
       ```text
       PX_POD=$(kubectl get pods -l name=portworx -n kube-system -o jsonpath='{.items[0].metadata.name}')
       kubectl exec $PX_POD -n kube-system --  /opt/pwx/bin/pxctl status | grep UUID | awk '{print $3}'
@@ -84,7 +85,7 @@ The options you use to create your object store credentials differ based on whic
     * `--provider` as `google`
     * `--google-project-id` with the string of your Google project ID
     * `--google-json-key-file` with the filename of your GCP JSON key file
-    * `clusterPair_` with the UUID of your destination cluster appended. Enter the following command into your cluster to find its UUID:
+    * `clusterPair_<UUID_of_destination_cluster>` Enter the following command into your cluster to find its UUID:
       ```text
       PX_POD=$(kubectl get pods -l name=portworx -n kube-system -o jsonpath='{.items[0].metadata.name}')
       kubectl exec $PX_POD -n kube-system --  /opt/pwx/bin/pxctl status | grep UUID | awk '{print $3}'
@@ -109,6 +110,18 @@ Here, `remotecluster` is the Kubernetes object that will be created on the **sou
 
 During the actual migration, you will reference this name to identify the destination of your migration.
 
+{{<info>}}
+**NOTE:** If you plan to enable PX-Security on both source and destination clusters, you will need to add the following two annotations to the `ClusterPair` and `MigrationSchedule`.
+{{</info>}}
+
+
+```text
+  annotations:
+    openstorage.io/auth-secret-namespace -> Points to the namespace where the k8s secret holding the auth token resides.
+    openstorage.io/auth-secret-name -> Points to the name of the k8s secret which holds the auth token.
+```
+
+
 ```text
 apiVersion: stork.libopenstorage.org/v1alpha1
 kind: ClusterPair
@@ -116,6 +129,10 @@ metadata:
     creationTimestamp: null
     name: remotecluster
     namespace: migrationnamespace
+    annotations:
+      # Add the below annotations when PX-Security is enabled on both the clusters
+      #openstorage.io/auth-secret-namespace -> Points to the namespace where the k8s secret holding the auth token resides
+      #openstorage.io/auth-secret-name -> Points to the name of the k8s secret which holds the auth token.
 spec:
    config:
       clusters:
@@ -146,6 +163,11 @@ status:
 
 Save the resulting spec to a file named `clusterpair.yaml`.
 
+Example: 
+```text
+storkctl generate clusterpair -n <migrationnamespace> <remotecluster> -o yaml > clusterpair.yaml
+```
+
 ### Get the destination cluster token
 
 On the destination cluster, run the following command from one of the Portworx nodes to get the cluster token. You'll need this token in later steps:
@@ -158,9 +180,9 @@ pxctl cluster token show
 
 {{<info>}}**NOTE:** When using ClusterPair in the context of Async DR, you must have a DR enabled Portworx license at both the source _and_ destination cluster to enable disaster recovery mode. If you do not have these licenses, enabling disaster recovery mode will fail.{{</info>}}
 
-To pair storage specifying the following fields in the `options` section of your `ClusterPair`:
+To pair the storage, specify the following fields in the `options` section of the `clusterpair.yaml` file saved previously:
 
-* `ip`, with the IP address of the remote Portworx node
+* `ip`, with the IP address of any of the remote Portworx nodes
 * `port`, with the port of the remote Portworx node
 * `token`, the token of the destination cluster obtained fom the previous step.
 * `mode`: by default, every seventh migration is a full migration. If you specify `mode: DisasterRecovery`, then every migration is incremental. When doing a one time Migration (and not DR) this option can be skipped.
@@ -168,6 +190,15 @@ To pair storage specifying the following fields in the `options` section of your
 {{<info>}}
 In the updated spec, ensure values for all fields under options are quoted.
 {{</info>}}
+
+See example below:
+```text
+  options:
+    token: "34b2fd8df839650ed8f9b5cd5a70e1ca6d79c1ebadb5f50e29759525a20aee7daa5aae35e1e23729a4d9f673ce465dbe3679032d1be7a1bcc489049a3c23a460"
+    ip: "10.13.21.125"
+    port: "9001"
+    mode: "DisasterRecovery"
+```
 
 ### Using Rancher Projects with ClusterPair
 
@@ -204,7 +235,7 @@ on the destination cluster.
 
 ### Apply the ClusterPair spec on the source cluster
 
-A typical ClusterPair spec should like the following once you have followed the previous steps
+A typical ClusterPair spec should look like the following example once you have followed the previous steps
 
 ```text
 apiVersion: stork.libopenstorage.org/v1alpha1
@@ -212,6 +243,10 @@ kind: ClusterPair
 metadata:
   creationTimestamp: null
   name: remotecluster
+  annotations:
+    # Add the below annotations when PX-Security is enabled on both the clusters
+    #openstorage.io/auth-secret-namespace -> Points to the namespace where the k8s secret holding the auth token resides
+    #openstorage.io/auth-secret-name -> Points to the name of the k8s secret which holds the auth token.
 spec:
   config:
     clusters:
@@ -232,9 +267,9 @@ spec:
         client-certificate-data: <CLIENT_CERT_DATA>
         client-key-data: <CLIENT_KEY_DATA>
   options:
-    ip:     <ip_of_remote_px_node>
+    ip:     <ip_of_any_remote_px_node>
     port:   <port_of_remote_px_node_default_9001>
-    token:  <token_from_step_3>
+    token:  <token_from_step_with_pxctl cluster token show>
     mode: DisasterRecovery
   platformOptions:
     # This section will be set only when using Rancher
@@ -264,7 +299,7 @@ storkctl -n <namespace> get clusterpair
 ```
 ```output
 NAME            STORAGE-STATUS   SCHEDULER-STATUS   CREATED
-remotecluster   Ready            Ready              07 Mar 22 19:01 PST
+remotecluster   Ready            Ready              09 Nov 22 00:22 UTC
 ```
 
 On a successful pairing, you should see the `STORAGE-STATUS` and `SCHEDULER-STATUS` as `Ready`.
