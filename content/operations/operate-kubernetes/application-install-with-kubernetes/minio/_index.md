@@ -78,8 +78,8 @@ Portworx offers a set of Storage classes out of the box. In the example, we are 
     ```output
     Tenant 'minio-demo' created in 'minio-demo' Namespace
 
-      Username: WERT2T57ZU4XK7XSY8NM
-      Password: DTSZNc1QDSWoNw0smNsLGDMnSlegWJhXL4NGg28r
+      Username: <tenant-id>
+      Password: <tenant-password>
       Note: Copy the credentials to a secure location. MinIO will not display these again.
 
     APPLICATION     SERVICE NAME            NAMESPACE       SERVICE TYPE    SERVICE PORT

@@ -123,8 +123,8 @@ You can specify your object store credentials directly in the BackupLocation con
                 stork.libopenstorage.org/skipresource: "true"
             stringData:
               region: us-east-1
-              accessKeyID: AB123AB43678AABCD12P
-              secretAccessKey: b7D9pA3214Vafo8432023ajksndas43242kjsnfdk
+              accessKeyID: <access-key>
+              secretAccessKey: <secret-key>
               endpoint: "70.0.0.141:9010"
               disableSSL: "false"
               encryptionKey: "testKey"

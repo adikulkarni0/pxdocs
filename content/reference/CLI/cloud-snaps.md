@@ -320,7 +320,7 @@ pxctl credentials list
 ```output
 S3 Credentials
 UUID                        NAME        REGION            ENDPOINT                        ACCESS KEY            SSL ENABLED        ENCRYPTION        BUCKET        WRITE THROUGHPUT (KBPS)
-af563a4d-afd7-48df-90f7-8e8f9414ff77        my-s3-cred    us-east-1        70.0.99.121:9010,70.0.99.122:9010,70.0.99.123:9010    AB6R80F3SY0VW9NS6HYQ        false            false            <nil>        1979
+af563a4d-afd7-48df-90f7-8e8f9414ff77        my-s3-cred    us-east-1        70.0.99.121:9010,70.0.99.122:9010,70.0.99.123:9010    <aws-secret-key>        false            false            <nil>        1979
 
 Google Credentials
 UUID                        NAME            PROJECT ID        ENCRYPTION        BUCKET        WRITE THROUGHPUT (KBPS)
