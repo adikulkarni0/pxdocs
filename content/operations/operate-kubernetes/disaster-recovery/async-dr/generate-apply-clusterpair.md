@@ -145,8 +145,8 @@ Perform the following steps from your destination cluster:
 
 ```text
 options:
-   token: "xxxxxxxxxxxa4d9f673ce465dbe3679032d1be7"
-   ip: "10.13.21.125"
+   token: "XXXX"
+   ip: "192.0.2.0"
    port: "9001"
    mode: "DisasterRecovery"
    ```

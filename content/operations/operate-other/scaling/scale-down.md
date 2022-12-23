@@ -189,7 +189,7 @@ pxctl status
 ```output
 Status: PX is operational
 Node ID: 5f8b8417-af2b-4ea7-930e-0027f6bbcbd1
-        IP: 172.31.46.119
+        IP: 192.0.2.0
         Local Storage Pool: 1 pool
         POOL    IO_PRIORITY     SIZE    USED    STATUS  ZONE    REGION
         0       LOW             64 GiB  11 GiB  Online  c       us-east-1

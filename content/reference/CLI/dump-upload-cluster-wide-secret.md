@@ -28,11 +28,11 @@ pxctl secrets  dump-cluster-wide-secret
 Following are the details about the cluster-wide secret for this cluster:
 
 Secret ID (--secret_id): demo_secret_id
-Secret value (--secret_value): AQIDAHiFBNOMzjedxcurzMsjimuzjkzzx99/lUtayeBPH38SNAF5duc4foWsMAGBmsjOvLPtAAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMZ9WsX37ZmWVPIjsEAgEQgDs+UIl5k3AK4JxpX4uiw1qQbGwBuGALKIL7rYN8k5daq0q3xnz+EXs8PFltmkNbZGcGfkKelIS2Z5dYhA==
+Secret value (--secret_value): XXXX
 
 Run the following command on the destination cluster:
 
- /opt/pwx/bin/pxctl secrets upload-cluster-wide-secret --secret_id demo_secret_id --secret_value AQIDAHiFBNOMzjedxcurzMsjimuzjkzzx99/lUtayeBPH38SNAF5duc4foWsMAGBmsjOvLPtAAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMZ9WsX37ZmWVPIjsEAgEQgDs+UIl5k3AK4JxpX4uiw1qQbGwBuGALKIL7rYN8k5daq0q3xnz+EXs8PFltmkNbZGcGfkKelIS2Z5dYhA==
+ /opt/pwx/bin/pxctl secrets upload-cluster-wide-secret --secret_id demo_secret_id --secret_value XXXX
 
 ```
 
@@ -43,7 +43,7 @@ The `dump` command also spits out the corresponding upload command that needs to
 The `dump-cluster-wide-secret` command outputs an `upload-cluster-wide-secret` command. Use this command on the destination cluster to upload the cluster-wide secret:
 
 ```text
-pxctl secrets upload-cluster-wide-secret --secret_id demo_secret_id --secret_value AQIDAHiFBNOMzjedxcurzMsjimuzjkzzx99/lUtayeBPH38SNAF5duc4foWsMAGBmsjOvLPtAAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMZ9WsX37ZmWVPIjsEAgEQgDs+UIl5k3AK4JxpX4uiw1qQbGwBuGALKIL7rYN8k5daq0q3xnz+EXs8PFltmkNbZGcGfkKelIS2Z5dYhA==
+pxctl secrets upload-cluster-wide-secret --secret_id demo_secret_id --secret_value XXXX
 ```
 
 ```output

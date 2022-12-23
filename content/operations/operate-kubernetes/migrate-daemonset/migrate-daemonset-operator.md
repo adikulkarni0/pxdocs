@@ -240,5 +240,5 @@ Prometheus should still work after migration, but the name of the service will c
 kubectl get service -n kube-system 
 ```
 ```output
-px-prometheus ClusterIP 10.233.54.146 <none> 9090/TCP
+px-prometheus ClusterIP 192.0.2.0 <none> 9090/TCP
 ```

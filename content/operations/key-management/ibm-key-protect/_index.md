@@ -71,9 +71,9 @@ metadata:
   namespace: portworx
 type: Opaque
 data:
-  IBM_SERVICE_API_KEY: RnVWZ1JiSndxVHl5VXblah1TWU5paEdHQzhRUVAwVDVMN1NSSHA5Z2VNa2k=
-  IBM_INSTANCE_ID: NGZkNDA1Y2QtODBmZC00MGblahE0ZWQtZDdhOTFiMTdiZjEx
-  IBM_CUSTOMER_ROOT_KEY: MGYxNGExNzMtODE2blahN2Q3LTg1ZGYtY2M3ZWI5YmYxNzRj
+  IBM_SERVICE_API_KEY: XXXX
+  IBM_INSTANCE_ID: XXXX
+  IBM_CUSTOMER_ROOT_KEY: XXXX
 ```
 
 Portworx is going to look for this secret with name `px-ibm` under the `portworx` namespace. While installing Portworx it creates a Kubernetes role binding which grants access to reading Kubernetes secrets only from the `portworx` namespace.

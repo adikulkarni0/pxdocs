@@ -70,7 +70,7 @@ The following example displays the status of a cluster that is in maintenance mo
 ```text
 PX is in maintenance mode.  Use the service mode option to exit maintenance mode.
 Node ID: a0b87836-f115-4aa2-adbb-c9d0eb597668
-    IP: 147.75.104.185
+    IP: 192.0.2.0
      Local Storage Pool: 0 pool
     Pool    IO_Priority    Size    Used    Status    Zone    Region
     No storage pool

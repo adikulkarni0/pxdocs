@@ -117,7 +117,7 @@ Add the `-cluster_domain` argument in the `args` section of the DaemonSet. The f
           image: portworx/oci-monitor:2.1
           imagePullPolicy: Always
           args:
-            ["-k", "etcd:http://100.26.199.167:2379,etcd:http://100.26.199.168:2379,etcd:http://100.26.199.169:2379", "-c", "px-dr-cluster", "-cluster_domain", "us-east-1a", "-a", "-secret_type", "k8s",
+            ["-k", "etcd:http://192.0.2.0:2379,etcd:http://192.0.2.1:2379,etcd:http://192.0.2.2:2379", "-c", "px-dr-cluster", "-cluster_domain", "us-east-1a", "-a", "-secret_type", "k8s",
              "-x", "kubernetes"]
 
 ```

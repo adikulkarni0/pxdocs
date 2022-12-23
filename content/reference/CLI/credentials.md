@@ -69,11 +69,11 @@ pxctl credentials list
 ```output
 S3 Credentials
 UUID						REGION			ENDPOINT			ACCESS KEY			SSL ENABLED	ENCRYPTION
-ffffffff-ffff-ffff-1111-ffffffffffff		us-east-1		s3.amazonaws.com		AAAAAAAAAAAAAAAAAAAA		false		false
+XXXX                		us-east-1		s3.amazonaws.com    XXXX        		false		false
 
 Azure Credentials
 UUID						ACCOUNT NAME		ENCRYPTION
-ffffffff-ffff-ffff-ffff-ffffffffffff		portworxtest		false
+XXXX                		portworxtest		false
 ```
 
 ##  Create and configure credentials

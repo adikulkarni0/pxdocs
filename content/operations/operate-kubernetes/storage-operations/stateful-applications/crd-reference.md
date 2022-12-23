@@ -26,8 +26,8 @@ location:
   path: "bucket-name"
   s3Config:
     region: us-east-1
-    accessKeyID: ABCDEF1234567890
-    secretAccessKey: ABCDEF1234567890ABCDEF1234567890ABCDEF1234567890
+    accessKeyID: XXXX
+    secretAccessKey: XXXX
     endpoint: "https://bucketEndpoint.com"
     disableSSL: false
 ```
@@ -57,7 +57,7 @@ location:
   path: "bucket-name"
   azureConfig:
     storageAccountName: myaccount
-    storageAccountKey: A634w4534G3424D342s9A5hGyQ+IOP+aadahnbFk5n6G8c9f+DD719G5oht34H26u7Zu9Hjd4laq7F7E7fK67A==
+    storageAccountKey: XXXX
 ```
 
 #### azureConfig Parameters
@@ -87,12 +87,12 @@ location:
       {
        "type": "service_account",
        "project_id": "portworx-eng",
-       "private_key_id": "a125b4235345c4325d3434f335234f32a342b0d1",
+       "private_key_id": "XXXX",
        "private_key": "-----BEGIN PRIVATE KEY-----
        ...
        -----END PRIVATE KEY-----\n",
        "client_email": "username@email.com",
-       "client_id": "842514386544312356786",
+       "client_id": "XXXX",
        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
        "token_uri": "https://oauth2.googleapis.com/token",
        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",

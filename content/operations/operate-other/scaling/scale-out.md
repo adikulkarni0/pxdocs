@@ -23,7 +23,7 @@ pxctl status
 ```output
 Status: PX is operational
 Node ID: a56a4821-6f17-474d-b2c0-3e2b01cd0bc3
-	IP: 147.75.198.197
+	IP: 192.0.2.0
  	Local Storage Pool: 2 pools
 	Pool	IO_Priority	Size	Used	Status	Zone	Region
 	0	LOW		200 GiB	1.0 GiB	Online	default	default
@@ -88,7 +88,7 @@ pxctl status
 ```output
 Status: PX is operational
 Node ID: a0b87836-f115-4aa2-adbb-c9d0eb597668
-	IP: 147.75.104.185
+	IP: 192.0.2.0
  	Local Storage Pool: 1 pool
 	Pool	IO_Priority	Size	Used	Status	Zone	Region
 	0	LOW		100 GiB	1.0 GiB	Online	default	default

@@ -49,7 +49,7 @@ For example:
 spec:
   env:
   - name: PX_HTTP_PROXY
-    value: http://10.7.69.67:8888
+    value: http://192.0.2.0:8888
 ```
 -->
 

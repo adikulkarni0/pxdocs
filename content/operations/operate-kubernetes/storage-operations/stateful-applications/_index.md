@@ -81,8 +81,8 @@ You can specify your object store credentials directly in the BackupLocation con
                   sync: true
                   s3Config:
                     region: us-east-1
-                    accessKeyID: ABCDEF1234567890
-                    secretAccessKey: ABCDEF1234567890ABCDEF1234567890ABCDEF1234567890
+                    accessKeyID: XXXX
+                    secretAccessKey: XXXX
                     endpoint: "https://bucketEndpoint.com"
                     disableSSL: false
                 ```

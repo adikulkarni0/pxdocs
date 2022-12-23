@@ -68,9 +68,9 @@ For example, to generate a token with a shared secret, specify these flags:
 As an example, the following example generates a token:
 
 ```text
-echo "name: Jim Stevens
-email: jstevens@portworx.com
-sub: jstevens@portworx.com/jstevens
+echo "name: Example User
+email: user@example.com
+sub: user@example.com/username
 roles: [\"system.user\"]
 groups: [\"*\"]" > authconfig.yaml
 
@@ -87,8 +87,4 @@ Use the `cat` command to view the content of the `self-signed-token.txt` file:
 
 ```text
 cat self-signed-token.txt
-```
-
-```output
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpzdGV2ZW5zQHBvcnR3b3J4LmNvbSIsImV4cCI6MTU2NzUzMDAyMiwiZ3JvdXBzIjpbIioiXSwiaWF0IjoxNTY3NDQzNjIyLCJpc3MiOiJteV9pc3N1ZXIiLCJuYW1lIjoiSmltIFN0ZXZlbnMiLCJyb2xlcyI6WyJzeXN0ZW0udXNlciJdLCJzdWIiOiJqc3RldmVuc0Bwb3J0d29yeC5jb20vanN0ZXZlbnMifQ.tdhwsn780hpHU73DwGjBNAz6UUCHNboqtAPZFVTb3Cw
 ```

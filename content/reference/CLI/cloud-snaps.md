@@ -184,7 +184,7 @@ If you are using a different region, replace the `--s3-region` and `--s3-endpoin
 If you use the above command to create the credentials for an s3 endpoint that supports only virt-host-style access, then you will hit an error like below:
 
 ```text
-createCred: error validating credential during create: SecondLevelDomainForbidden: Please use virtual hosted style to access. status code: 403, request id: xxyyzzaabbcc, host id:,
+createCred: error validating credential during create: SecondLevelDomainForbidden: Please use virtual hosted style to access. status code: 403, request id: XXXX, host id:,
 ```
 
 In this case, you should specify the `--disable-path-style` parameter while creating credentials as follows:
@@ -233,7 +233,7 @@ Note: Replace `<bucket-name>` with name of your user-provided bucket.
 ##### Without a user-specified bucket
 
 ```text
-pxctl credentials create --provider s3  --s3-access-key AKIAJ7CDD7XGRWVZ7A --s3-secret-key mbJKlOWER4512ONMlwSzXHYA --s3-region us-east-1 --s3-endpoint s3.amazonaws.com my-s3-cred
+pxctl credentials create --provider s3  --s3-access-key XXXX --s3-secret-key XXXX --s3-region us-east-1 --s3-endpoint s3.amazonaws.com my-s3-cred
 ```
 
 ##### Configure a cluster-wide proxy

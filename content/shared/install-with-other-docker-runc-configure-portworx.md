@@ -27,7 +27,7 @@ sudo /opt/pwx/bin/px-runc install -c MY_CLUSTER_ID \
 
 ```text
 px-runc install -k etcd://my.company.com:2379 -c MY_CLUSTER_ID -s /dev/sdc -s /dev/sdb2 {{ include.sched-flags }}
-px-runc install -k etcd://70.0.1.65:2379 -c MY_CLUSTER_ID -s /dev/sdc -m eth1 -d eth2 {{ include.sched-flags }}
+px-runc install -k etcd://192.0.2.65:2379 -c MY_CLUSTER_ID -s /dev/sdc -m eth1 -d eth2 {{ include.sched-flags }}
 ```
 
 #### Modify the Portworx configuration

@@ -96,7 +96,7 @@ data:
        include_tag_key true
        logstash_prefix px-log ## Prefix for creating an Elastic search index.
        ## IP Address or hostname of the Elastic search client service.
-       host 10.111.118.234
+       host 192.0.2.0
        port 9200
        logstash_format true
        buffer_chunk_limit 2M
@@ -172,7 +172,7 @@ fluentd would collect logs from the `path /var/log/containers` and push them to 
 A view of Elastic search indices for cluster level logs collected for all the pods.
 
 ```text
-curl -XGET "http://10.108.118.191:9200/_cat/indices?v&pretty"
+curl -XGET "http://192.0.2.0:9200/_cat/indices?v&pretty"
 ```
 
 ```output

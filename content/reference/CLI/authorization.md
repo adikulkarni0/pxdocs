@@ -101,11 +101,11 @@ contextconfig:
   current: user
   configurations:
   - context: user
-    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpzdGV2ZW5zQHBvcnR3b3J4LmNvbSIsImV4cCI6MTU1MzcyNTMyMSwiZ3JvdXBzIjpbInB4LWVuZ2luZWVyaW5nIiwia3ViZXJuZXRlcy1jc2kiXSwiaWF0IjoxNTUzNjM4OTIxLCJpc3MiOiJwb3J0d29yeC5jb20iLCJuYW1lIjoiSmltIFN0ZXZlbnMiLCJyb2xlcyI6WyJzeXN0ZW0udXNlciJdLCJzdWIiOiJqc3RldmVuc0Bwb3J0d29yeC5jb20vanN0ZXZlbnMifQ.pZDbCIL7ldcImvIaNSjk18Ah3LqxX63MV378NiauRwk
+    token: XXXX
     identity:
-      subject: jstevens@portworx.com/jstevens
-      name: Jim Stevens
-      email: jstevens@portworx.com
+      subject: user@example.com/username
+      name: Example User
+      email: user@example.com
     endpoint: http://localhost:9001
 ```
 

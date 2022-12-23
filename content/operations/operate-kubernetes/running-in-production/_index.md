@@ -77,7 +77,7 @@ pxctl status
 Status: PX is operational
 License: Trial (expires in 23 days)
 Node ID: a17f382d-b2ef-41b8-81fc-d9b86d56b5d1
-IP: 172.31.51.89
+IP: 192.0.2.0
 Local Storage Pool: 2 pools
 POOL	IO_PRIORITY	RAID_LEVEL	USABLE	USED	STATUS	ZONE	REGION
 0	LOW		raid0		64 GiB	1.1 GiB	Online	b	us-east-1

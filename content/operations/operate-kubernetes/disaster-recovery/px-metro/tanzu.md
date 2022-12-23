@@ -82,7 +82,7 @@ kubectl exec portworx-d6rk7 -n kube-system -- /opt/pwx/bin/pxctl status
 Status: PX is operational
 License: Trial (expires in 31 days)
 Node ID: 04de0858-4081-47c3-a2ab-f0835b788738
-        IP: 172.40.40.230
+        IP: 192.0.2.0
         Local Storage Pool: 1 pool
         POOL    IO_PRIORITY     RAID_LEVEL      USABLE  USED    STATUS  ZONE            REGION
         0       LOW             raid0           150 GiB 9.0 GiB Online  us-east-1b      us-east-1

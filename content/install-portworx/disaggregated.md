@@ -45,10 +45,10 @@ A sample StorageCluster spec for AWS looks like this:
 kind: StorageCluster
 apiVersion: core.libopenstorage.org/v1
 metadata:
-  name: px-cluster-496f87a3-9ea4-4b7e-b221-7c14bab91672
+  name: px-cluster-XXXX-XXXX-XXXX-XXXX-XXXX
   namespace: kube-system
   annotations:
-    portworx.io/install-source: "https://install.portworx.com/?operator=true&mc=false&kbver=&b=true&kd=type%3Dgp2%2Csize%3D150&s=%22type%3Dgp2%2Csize%3D150%22&c=px-cluster-496f87a3-9ea4-4b7e-b221-7c14bab91672&stork=true&csi=true&mon=true&tel=false&st=k8s&e=ENABLE_ASG_STORAGE_PARTITIONING%3Dtrue&promop=true"
+    portworx.io/install-source: "https://install.portworx.com/?operator=true&mc=false&kbver=&b=true&kd=type%3Dgp2%2Csize%3D150&s=%22type%3Dgp2%2Csize%3D150%22&c=px-cluster-XXXX-XXXX-XXXX-XXXX-XXXX&stork=true&csi=true&mon=true&tel=false&st=k8s&e=ENABLE_ASG_STORAGE_PARTITIONING%3Dtrue&promop=true"
 spec:
   image: portworx/oci-monitor:2.10.1
   imagePullPolicy: Always

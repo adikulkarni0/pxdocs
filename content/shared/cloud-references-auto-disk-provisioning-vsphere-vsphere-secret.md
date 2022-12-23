@@ -19,8 +19,8 @@ Update the following items in the Secret template below to match your environmen
      namespace: kube-system
    type: Opaque
    data:
-     VSPHERE_USER: YWRtaW5pc3RyYXRvckB2c3BoZXJlLmxvY2Fs
-     VSPHERE_PASSWORD: cHgxLjMuMEZUVw==
+     VSPHERE_USER: XXXX
+     VSPHERE_PASSWORD: XXXX
    ```
 
 `kubectl apply` the above spec after you update the above template with your user and password.
