@@ -39,13 +39,23 @@ Additionally, you must provide access to the backend bucket service through envi
           px-object-controller: "true"
     ```
 
-2. Create a new Kubernetes secret with your S3-compliant secret access key ID and secret access key:
+2. Create a new Kubernetes secret with your AWS S3 or Pure FlashBlade access key ID and secret access key:
 
-    ```text
-    kubectl create secret generic px-object-s3-admin-credentials \ 
-        --from-literal=access-key-id=ACCESS_KEY \ 
-        --from-literal=secret-access-key=SECRET_ACCESS_KEY 
-    ```
+    * For AWS S3, add the following:
+    
+        ```text
+        kubectl create secret generic px-object-s3-admin-credentials \ 
+            --from-literal=access-key-id=ACCESS_KEY \ 
+            --from-literal=secret-access-key=SECRET_ACCESS_KEY 
+        ```
+        
+    * For Pure FlashBlade, add the following:
+    
+        ```text
+        kubectl create secret generic px-object-fb-admin-credentials \ 
+            --from-literal=access-key-id=ACCESS_KEY \ 
+            --from-literal=secret-access-key=SECRET_ACCESS_KEY 
+        ```
 
 3. Add environment variables for bucket credentials to your StorageCluster spec.<br><br>
 
@@ -73,15 +83,15 @@ Additionally, you must provide access to the backend bucket service through envi
 
         ```text
         spec:
-        env:
-        - name: OBJECT_SERVICE_FB_ACCESS_KEY_ID
+          env:
+          - name: OBJECT_SERVICE_FB_ACCESS_KEY_ID
             valueFrom:
-            secretKeyRef:
+              secretKeyRef:
                 name: px-object-fb-admin-credentials
                 key: access-key-id
-        - name: OBJECT_SERVICE_FB_SECRET_ACCESS_KEY
+          - name: OBJECT_SERVICE_FB_SECRET_ACCESS_KEY
             valueFrom:
-            secretKeyRef:
+              secretKeyRef:
                 name: px-object-fb-admin-credentials
                 key: secret-access-key
         ```
