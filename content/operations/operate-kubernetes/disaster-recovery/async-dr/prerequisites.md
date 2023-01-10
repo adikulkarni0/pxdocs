@@ -15,7 +15,7 @@ series: setup-AysncDR
 * **Default Storage Class**: Only one default storage class is configured. Having multiple default storage classes will cause PVC migrations to fail.
 * **License**: A DR enabled Portworx license on both the source and destination clusters.
 * **Objectstore:** An AWS s3 compatible, AWS s3, GCE Object Storage, or Azure Blob Storage.
-**Cloud Environment**:
+* **Cloud Environment**:
   * GKE: The instructions on the [Migration with Stork on GKE](/operations/operate-kubernetes/migration/gke/) page have been implemented on your destination cluster.
   * EKS: The instructions on the [Migration with Stork on EKS](/operations/operate-kubernetes/migration/eks/) page have been implemented on your destination cluster. 
 
