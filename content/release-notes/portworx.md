@@ -139,6 +139,19 @@ Portworx has upgraded or enhanced functionality in the following areas:
 | PD-1655 | You experience telemetry pod crashing issues due to port conflicts.<br><br>**Workaround:** Adjust the Portworx start port by adding the following to your StorageCluster spec:<pre>  startPort: <starting-port></pre> |
 
 
+## 2.11.5
+
+January 12, 2023
+
+### Improvements
+
+Portworx has upgraded or enhanced functionality in the following areas:
+
+
+| **Improvement Number** | **Improvement Description** |
+| ---- | ---- |
+| PD-1769 | It takes less time to upgrade Anthos because Portworx now makes fewer vSphere API calls for the following:<ul><li> To detect attached disks on each node.</li><li> To find the correct disk for attaching to a Portworx node.</li>|
+
 
 
 ## 2.11.4
