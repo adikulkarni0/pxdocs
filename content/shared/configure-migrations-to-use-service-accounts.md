@@ -7,15 +7,13 @@ hidden: true
 
 If you set up migrations and migration schedules using user accounts, you will encounter token expiration-related errors. To avoid these errors, Portworx, Inc. recommends setting up migration and migration schedules using service accounts.
 
-In contrast to user accounts that expire after a specified interval of time has passed, service account tokens do not expire. Using service accounts ensures that you will not encounter token expiration-related errors. See the [User accounts versus service accounts](https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#user-accounts-versus-service-accounts) section of the Kubernetes documentation for more details about the differences between service accounts and user accounts.
-
-<!-- It would be better if we could be more specific, meaning that we should provide the text of the error message-->
+In contrast to user accounts, which expire after a specified interval of time has passed, service account tokens do not expire. Using service accounts ensures that you will not encounter token expiration-related errors. See the [User accounts versus service accounts](https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#user-accounts-versus-service-accounts) section of the Kubernetes documentation for more details about the differences between service accounts and user accounts.
 
 Perform the following steps on the **destination cluster** to configure migrations to use service accounts.
 
 ## Create a service account and a cluster role binding
 
-1. Create a file called `service-account-migration.yaml` with the following content, adjusting the value of the `metadata.namespace` field to match the one you use to set up your migration:
+1. Create a file called `service-account-migration.yaml` with the following content, specifying the `namespace:` to match one of the existing namespaces in your cluster. For this example we will use the `default` namespace: 
 
     ```text
     apiVersion: v1
@@ -30,8 +28,27 @@ Perform the following steps on the **destination cluster** to configure migratio
     ```text
     kubectl apply -f service-account-migration.yaml
     ```
+    {{<info>}}
+  **NOTE:** If you are using Kubernetes version 1.24 or newer, you also need to create a secret. In the example below, the name in the annotation `kubernetes.io/service-account.name` must match the name of the service account that you created.
 
-3. Create a file called `cluster-role-binding-migration.yaml` with the following content, adjusting the `subjects.namespace` field to match with the namespace you wish to set up your migration:
+```text
+   apiVersion: v1
+   kind: Secret
+   metadata:
+     name: migration
+     namespace: default
+     annotations: 
+       kubernetes.io/service-account.name: migration
+   type: kubernetes.io/service-account-token
+```
+  Apply the secret:
+
+```text
+kubectl apply -f <migrationsecretname>.yaml
+```
+    {{</info>}}
+
+3. Create a file called `cluster-role-binding-migration.yaml` with the following content, specifying the `namespace:` field to match the namespace in the previous step:
 
     ```text
     apiVersion: rbac.authorization.k8s.io/v1
@@ -47,50 +64,17 @@ Perform the following steps on the **destination cluster** to configure migratio
       name: migration
       namespace: default
     ```
-    {{<info>}}
-  **NOTE:** The `roleRef.name` field is set to `cluster-admin`. For details about super-user access, see the [User-facing roles](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles) section of the Kubernetes documentation. <!-- "This gives full control over all resources in the cluster and all namespaces". Is this considered a good practice?-->
-{{</info>}}
+    {{<info>}}**NOTE:** The `roleRef.name` field is set to `cluster-admin`. For details about super-user access, see the [User-facing roles](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles) section of the Kubernetes documentation.{{</info>}}
   
 4. Apply the spec:
 
-    ```
-    kubectl apply -f clusterrolebinding-migration.yaml
+    ```text
+    kubectl apply -f cluster-role-binding-migration.yaml
     ```
 
 ## Create a kubeconfig file
 
-1. Create a file called `create-migration-config.sh` with the following content, adjusting the values of the `SERVER` and `NAMESPACE` variables to match your environment:
-
-    ```text
-    SERVICE_ACCOUNT=migration
-    NAMESPACE=default
-    SERVER=https://<SERVER-ADDRESS:PORT>
-
-    SERVICE_ACCOUNT_TOKEN_NAME=$(kubectl -n ${NAMESPACE} get serviceaccount ${SERVICE_ACCOUNT} -o yaml | grep "name: $SERVICE_ACCOUNT-token" | cut -f 3 -d " ")
-    SERVICE_ACCOUNT_TOKEN=$(kubectl -n ${NAMESPACE} get secret ${SERVICE_ACCOUNT_TOKEN_NAME} -o "jsonpath={.data.token}" | base64 --decode)
-    SERVICE_ACCOUNT_CERTIFICATE=$(kubectl -n ${NAMESPACE} get secret ${SERVICE_ACCOUNT_TOKEN_NAME} -o "jsonpath={.data['ca\.crt']}")
-
-    cat <<END
-    apiVersion: v1
-    kind: Config
-    clusters:
-    - name: default-cluster
-      cluster:
-        certificate-authority-data: ${SERVICE_ACCOUNT_CERTIFICATE}
-        server: ${SERVER}
-    contexts:
-    - name: default-context
-      context:
-        cluster: default-cluster
-        namespace: ${NAMESPACE}
-        user: ${SERVICE_ACCOUNT}
-    current-context: default-context
-    users:
-    - name: ${SERVICE_ACCOUNT}
-      user:
-        token: ${SERVICE_ACCOUNT_TOKEN}
-    END
-    ```
+1. Download the {{< direct-download url="/samples/async-dr-script/create-migration-config.sh" name="create-migration-config.sh" >}} script file. Edit the file and change the values of the `SERVER` and `NAMESPACE` variables to match your environment.
 
 2. To create a kubeconfig file, enter the following commands:
 
@@ -98,7 +82,7 @@ Perform the following steps on the **destination cluster** to configure migratio
     chmod +x create-migration-config.sh && ./create-migration-config.sh > ~/.kube/migration-config.conf
     ```
 
-3. Set the value of the `KUBECONFIG` environment variable to point to the kubeconfig file you created in the previous step:
+3. Set the value of the `KUBECONFIG` environment variable to point to the kubeconfig file that you created in the previous step:
 
     ```text
     export KUBECONFIG=~/.kube/migration-config.conf
@@ -106,14 +90,17 @@ Perform the following steps on the **destination cluster** to configure migratio
 
 ## Generate a cluster pair
 
-1. To generate a cluster pair using this service account, enter the following `storkctl generate clusterpair` command:
+1. To generate a cluster pair using this service account, enter the following command:
 
     ```text
-    storkctl generate clusterpair mig-clusterpair --kubeconfig ~/.kube/migration-config.conf  > mig-clusterpair.yaml
+    storkctl generate clusterpair -n <migrationnamespace> <remotecluster> --kubeconfig ~/.kube/migration-config.conf  > clusterpair.yaml
     ```
+    
+    * `<remotecluster>`: The Kubernetes object that will be created on the source cluster representing the pair relationship.
+    * `<migrationnamespace>`: The Kubernetes namespace for the source cluster that you want to migrate to the destination cluster.
 
-2. Copy the `mig-clusterpair.yaml` file to your source cluster, modify the `options` section to match your environment and apply it. Depending on whether you want to configure Portworx for asynchronous or synchronous disaster recovery, follow the steps in one of the following pages:
+2. Copy the `clusterpair.yaml` file to your source cluster, modify the `options` section to match your environment, and apply it. Depending on whether you want to configure Portworx for asynchronous or synchronous disaster recovery, follow the steps in one of the following pages:
 
-  - [Asynchronous disaster recovery](https://docs.portworx.com/portworx-install-with-kubernetes/disaster-recovery/async-dr/#enable-disaster-recovery-mode)
-  - [Synchronous disaster recovery](https://docs.portworx.com/portworx-install-with-kubernetes/disaster-recovery/px-metro/2-pair-clusters/#generate-a-clusterpair-on-the-destination-cluster)
+   * [Asynchronous disaster recovery](/operations/operate-kubernetes/disaster-recovery/async-dr/generate-apply-clusterpair/#generate-a-clusterpair-spec-on-the-destination-cluster)
+   * [Synchronous disaster recovery](/operations/operate-kubernetes/disaster-recovery/px-metro/2-pair-clusters/#generate-a-clusterpair-on-the-destination-cluster)
 

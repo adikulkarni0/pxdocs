@@ -1,7 +1,7 @@
 ---
 title: "Migration with Stork on EKS"
 keywords: cloud, backup, restore, snapshot, DR, migration, migration, eks
-description: How to migrate stateful appliations to EKS
+description: How to migrate stateful applications to EKS
 hidden: true
 aliases:
     - /portworx-install-with-kubernetes/migration/eks/

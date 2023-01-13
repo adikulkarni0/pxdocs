@@ -1,7 +1,7 @@
 ---
 title: "Migration with Stork on GKE"
 keywords: migration, migrate, PX-Motion, GKE, Google Kubernetes Engine, k8s, gcloud, Stork, cloud
-description: How to migrate stateful appliations to GKE
+description: How to migrate stateful applications to GKE
 hidden: true
 aliases:
     - /portworx-install-with-kubernetes/migration/gke/

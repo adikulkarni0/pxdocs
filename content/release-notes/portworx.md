@@ -2303,7 +2303,7 @@ April 19, 2019
   * [Metro DR](/operations/operate-kubernetes/disaster-recovery/px-metro)
   * [Asynchronous DR](/operations/operate-kubernetes/disaster-recovery/async-dr)
 * [Automated application level scheduled snaps and cloudsnaps](/operations/operate-kubernetes/storage-operations/create-snapshots/scheduled)
-* [Automated app-consistent cluster to cluster migration](/operations/operate-kubernetes/migration/#pre-and-post-exec-rules)
+* [Automated app-consistent cluster to cluster migration](/operations/operate-kubernetes/migration/migration-with-stork/#pre-and-post-exec-rules)
 * [Optimized incremental cloudsnap restores](/reference/cli/cloud-snaps/)
 
 ### Key Fixes

@@ -1,34 +1,43 @@
 ---
-title: "Set up a Cluster Admin namespace for Migration"
+title: "Set up a Cluster Admin namespace for migration"
 linkTitle: Set up a Cluster Admin namespace
 keywords: cloud, backup, restore, snapshot, DR, migration, 
 description: How to designate a namespace as the cluster admin namespace
-weight: 100
+weight: 200
+series: migrate-with-stork
 aliases:
     - /portworx-install-with-kubernetes/migration/cluster-admin-namespace/
 ---
-By default, you can only migrate namespaces in which the `ClusterPair`, `MigrationSchedule`, and `migration` are created.
-This is to prevent any user from migrating namespaces for which they do not have access. 
+By default, you can only migrate namespaces in which the Migration object is created. This is to prevent any user from migrating namespaces for which they do not have access. By default, `kube-system` is the admin namespace, but you can also designate a different namespace as the admin namespace. This will allow an admin who has access to that namespace to migrate any namespace from the source cluster.
 
-You can also designate one namespace as an admin namespace, which allows an admin who has access to that namespace to migrate any namespace from the source cluster. This requires passing in the `admin-namespace` argument to the `StorageCluster`, and you also must have created the `ClusterPair`, `MigrationSchedule`, and `migration` in the admin namespace. By default, `kube-system` namespace is designated as an admin namespace. To learn how to create `ClusterPair`, `MigrationSchedule`, and `migration` objects in `admin namespace`, refer to [migration with Stork on Kubernetes](/operations/operate-kubernetes/migration/).
+In the following example, we will set up `portworx` as the admin namespace for migration by adding it to the Stork deployment object and passing in an additional parameter to the Stork deployment.
 
-Run the following command to edit the `StorageCluster`. In the editor, update the arguments to `StorageCluster` (under `spec.stork.args`) to specify the cluster `admin-namespace` argument. For example:
+For a Portworx Operator based installation, perform the following steps.
 
-```text
-kubectl edit stc <StorageCluster-name> -n kube-system
-```
+1. Run the following command to edit the Portworx cluster spec:
 
-```text
-stork:
-      args:
-        admin-namespace: {{<highlight>}}<admin-namespace>{{</highlight>}}
-        webhook-controller: "true"
-      enabled: true
-```
+    ```text
+    kubectl edit storagecluster <clusterspecname> -n kube-system
+    ```
 
-Save the changes and wait for all the Stork pods to be in running state after applying the changes:
+2. In the editor, update the arguments to the Stork container to specify the cluster admin namespace using the `admin-namespace: portworx` parameter:
 
-```text
-kubectl get pods -n kube-system -l name=stork
-```
-{{<info>}}**NOTE:** You can add the above arguments to the `StorageCluster` spec if you need to configure the admin namespace as part of new Portworx installation.{{</info>}}
+    ```
+    stork:
+        args:
+          admin-namespace: portworx
+          webhook-controller: "true"
+    ```
+
+3. Save the changes and wait for all the Stork pods to be recreated and in a running state after applying the changes (making note of the `AGE` section):
+
+    ```text
+    kubectl get pods -l name=stork -n kube-system
+    ```
+    ```output
+    NAME                     READY   STATUS    RESTARTS   AGE
+    stork-6fdd7d567b-4w86q   1/1     Running   0          63s
+    stork-6fdd7d567b-lj47r   1/1     Running   0          60s
+    stork-6fdd7d567b-m6pk7   1/1     Running   0          59s
+    ```
+    
