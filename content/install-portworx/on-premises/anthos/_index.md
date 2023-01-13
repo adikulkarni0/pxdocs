@@ -11,17 +11,10 @@ aliases:
 
 Portworx has been certified with the following Anthos versions:
 
-* 1.1
-* 1.2
-* 1.3 
-* 1.4
-* 1.5
-* 1.6, including Anthos on bare metal
-* 1.7, including Anthos on bare metal
-* 1.8, including Anthos on bare metal
 * 1.9, including Anthos on bare metal
 * 1.10, including Anthos on bare metal
 * 1.11, including Anthos on bare metal
+* 1.12, including Anthos on bare metal
 
 
 ## Architecture
