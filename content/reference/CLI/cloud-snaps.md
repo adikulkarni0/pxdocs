@@ -745,7 +745,7 @@ Global Flags:
 
 This command is used to restore a successful backup from the cloud. It requires the cloudsnap ID and the credentials for the cloud storage provider or the object storage. Restore happens on any node where storage can be provisioned.
 
-You can restore a backup of a Portworx to one of your Portworx volumes in the cluster. Once restored, the volume inherits the attributes from the backup (e.g.: file system, size and block size). The replication level of the restored volume defaults to 1, irrespective of the replication level of the volume that was backed up. Users can increase the replication factor once the restore is complete on the restored volume.
+You can restore a backup of a Portworx to one of your Portworx volumes in the cluster. Once restored, the volume inherits the attributes from the backup (for example, file system, size, and block size). Starting with Portworx version 2.6, the replication level of the restored volume matches the replication level of the backed up volume. You can change the replication level by supplying a `--repl` value to the `pxctl cloudsnap restore` command.
 
 To restore a backup from cloud, enter the following command:
 
