@@ -11,7 +11,7 @@ SharedV4 volumes utilize NFS services, and they therefore require specific open 
 
 This document provides instructions for detecting and opening NFS ports according to various cluster configurations that you may have.
 
-## Prerequistes
+## Prerequisites
 
 All of the use-cases in this document will require that the mandatory Portworx network port ranges are open between nodes in the cluster, as documented [here](/install-portworx/prerequisites/).
 
