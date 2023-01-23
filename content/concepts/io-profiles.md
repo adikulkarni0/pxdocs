@@ -13,15 +13,16 @@ You can optimize the performance of your Portworx volumes by matching the type o
 Portworx currently features the following IO profiles:
 
 * auto
-* db
+* db (deprecated)
 * db_remote
-* sequential
+* sequential (deprecated)
+* none
 
 
 ### The auto profile
 If you don't provide an IO profile, Portworx will default to `auto`. This profile automatically applies an IO profile that based on congifuration details it sees, and switches between `none` and `db_remote`. Portworx chooses `db_remote` when a volume's replication factor is greater than or equal to 2, otherwise it defaults to `none`.
 
-### The db profile
+### The db profile (deprecated)
 Databases typically result in a large number of flush operations on the disk. Because a flush forces Portworx to wait until the data is synched on the disk, it can slow down traffic. When the `db` profile is active, Portworx batches flush operations for a quicker write response time. 
 
 {{<info>}}
@@ -33,7 +34,7 @@ Databases typically result in a large number of flush operations on the disk. Be
 
 ### The db_remote profile
 
-This implements a write-back flush coalescing algorithm. This algorithm attempts to coalesce multiple `syncs` that occur within a 50ms window into a single sync. Coalesced syncs are acknowledged only after copying to all replicas. In order to do this, the algorithm requires a minimum replication (HA factor) of 2. This mode assumes all replicas do not fail (kernel panic or power loss) simultaneously in a 50 ms window. 
+This implements a write-back flush coalescing algorithm. This algorithm attempts to coalesce multiple `syncs` that occur within a 50ms window into a single sync. Coalesced syncs are acknowledged only after copying to all replicas. In order to do this, the algorithm requires a minimum replication (HA factor) of 2. This mode assumes all replicas do not fail (kernel panic or power loss) simultaneously in a 100 ms window. 
 
 {{<info>}}
 **NOTE:**
@@ -42,9 +43,13 @@ This implements a write-back flush coalescing algorithm. This algorithm attempts
 * The `db_remote` profile only applies if you have a repl count of 2 or more. 
 {{</info>}}
 
-### The sequential profile
+### The sequential profile (deprecated)
 
 This profile optimizes the read-ahead algorithm for sequential workloads, such as backup operations. 
+
+### The none profile
+
+This profile indicates that no io-profile optimizations are being done for the volume.
 
 ## Configure profiles
 
