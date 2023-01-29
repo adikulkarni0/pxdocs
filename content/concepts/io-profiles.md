@@ -34,7 +34,7 @@ Databases typically result in a large number of flush operations on the disk. Be
 
 ### The db_remote profile
 
-This implements a write-back flush coalescing algorithm. This algorithm attempts to coalesce multiple `syncs` that occur within a 50ms window into a single sync. Coalesced syncs are acknowledged only after copying to all replicas. In order to do this, the algorithm requires a minimum replication (HA factor) of 2. This mode assumes all replicas do not fail (kernel panic or power loss) simultaneously in a 100 ms window. 
+This implements a write-back flush coalescing algorithm. This algorithm attempts to coalesce multiple `syncs` that occur within a 100ms window into a single sync. Coalesced syncs are acknowledged only after copying to all replicas. In order to do this, the algorithm requires a minimum replication (HA factor) of 2. This mode assumes all replicas do not fail (kernel panic or power loss) simultaneously in a 100 ms window.
 
 {{<info>}}
 **NOTE:**
